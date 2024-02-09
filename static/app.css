@@ -1,0 +1,56 @@
+body {
+  margin: 0px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.rounded_button_filled {
+  border-radius: 44px;
+  padding: 12px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-width: 0px;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #e8def8;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 6px;
+  position: relative;
+  top: 9px;
+}
+
+.rounded_button_filled:hover {
+  /* box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 3px -1px, rgba(0, 0, 0, 0.14) 0px 6px 6px 0px, rgba(0, 0, 0, 0.12) 0px 1px 6px 0px; */
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 3px 1px -2px;
+}
+
+.rounded_button_filled:active {
+  color: black;
+}
+
+.rounded_button_outlined {
+  border-radius: 44px;
+  padding: 11px;
+  padding-left: 18px;
+  padding-right: 18px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #79747e;
+  font-weight: bold;
+  font-size: 14px;
+  color: #6750a4;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 6px;
+  position: relative;
+  top: 9px;
+}
+
+.rounded_button_outlined:hover {
+  background-color: #f4f4f4;
+}
+
+.rounded_button_outlined:active {
+  color: black;
+}
