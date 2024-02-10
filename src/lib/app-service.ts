@@ -44,7 +44,7 @@ export class AppService {
 
           this.currentUser = undefined;
         } else {
-          console.log("User changed event, user is there.");
+          console.log("User changed event, user is there. " + window.location.pathname);
 
           this.currentUser = new AppUser();
           if (u?.email) this.currentUser.Email = u.email;
@@ -52,8 +52,9 @@ export class AppService {
 
           localStorage.setItem("UserSignedIn", "true");
 
-          if (! window.location.pathname.endsWith("/home"))
+          if (window.location.pathname.endsWith("/")) {
             goto("/home");
+          }
           else {
             //First, we initialize our event
             const event = new Event('userUpdated');

@@ -70,12 +70,9 @@
     width: 100vw;
     border-bottom: solid 3px rgba(242, 242, 242, 1);
 
-    font-weight: 550;
-    /* color: #8f8f8f; */
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
     font-weight: 560;
     color: #333;
-    font-size: 18px;
+    font-size: 20px;
 
     padding: 0px;
     margin: 0px;
@@ -98,7 +95,7 @@
 
   .profile_button {
     position: relative;
-    top: 6px;
+    top: 2px;
     width: 40px;
     height: 40px;
     border-radius: 50%;

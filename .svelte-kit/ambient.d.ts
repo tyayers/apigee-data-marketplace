@@ -38,6 +38,7 @@ declare module '$env/static/private' {
 	export const SOMMELIER_VERSION: string;
 	export const HOME: string;
 	export const CHROME_DESKTOP: string;
+	export const OLDPWD: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const NVM_BIN: string;
 	export const npm_package_json: string;
@@ -146,6 +147,7 @@ declare module '$env/dynamic/private' {
 		SOMMELIER_VERSION: string;
 		HOME: string;
 		CHROME_DESKTOP: string;
+		OLDPWD: string;
 		TERM_PROGRAM_VERSION: string;
 		NVM_BIN: string;
 		npm_package_json: string;
