@@ -30,7 +30,7 @@
     <div>
       <div class="product_filter_search">
         <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
-        <input class="product_filter_search_input" placeholder="Search for data proucts" />
+        <input class="product_filter_search_input" placeholder="Filter categories" />
       </div>
     </div>
   </span>
@@ -124,6 +124,7 @@
     background-color: #fafafa;
     position: relative;
     top: -3px;
+    width: 80%;
   }
 
   .product_filter_search_input:focus {

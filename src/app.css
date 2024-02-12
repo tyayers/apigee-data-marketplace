@@ -8,6 +8,17 @@ a {
   color: #333;
 }
 
+/* Buttons */
+
+button {
+  text-align: left;
+  border: 0px;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0px;
+  padding-right: 4px;
+}
+
 .rounded_button_filled {
   border-radius: 44px;
   padding: 12px;
@@ -58,4 +69,132 @@ a {
 
 .rounded_button_outlined:active {
   color: black;
+}
+
+.text_button {
+  padding: 11px;
+  padding-left: 18px;
+  padding-right: 18px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #6750a4;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+.text_button:hover {
+  color: #000;
+}
+
+/* Back Button */
+.back_button {
+  border: 0px;
+  border-radius: 100px;
+  background-color: transparent;
+  padding: 6px;
+}
+
+.back_button:hover {
+  cursor: pointer;
+  background-color: #eee;
+}
+
+/* Side Menu Buttons */
+
+.side_menu_button {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  height: 44px;
+  /* width: 100%; */
+}
+
+.side_menu_button:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+  color: black;
+}
+
+.side_menu_button_selected {
+  background-color: rgba(161, 194, 250, 0.16);
+  color: #3367d6;
+  border-left: solid 4px #3367d6;
+}
+
+.side_menu_button_logo {
+  position: relative;
+  left: 22px;
+  fill: #333;
+}
+
+.side_menu_button_logo_selected {
+  fill: #3367d6;
+  left: 18px;
+}
+
+.side_menu_button_name {
+  position: relative;
+  left: 38px;
+  height: auto;
+}
+
+.side_menu_button_name_selected {
+  left: 34px;
+}
+
+/* Input Field */
+.input_field_panel {
+  --padding: 8px;
+  --focus-color: rgb(61, 87, 255);
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  max-width: 524px;
+  width: 100%;
+}
+
+.input_field {
+  font-family: Google Sans,
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  padding: var(--padding);
+  /* border: 2px solid gray; */
+  border: 0px;
+  border-bottom: 1px solid gray;
+  outline: none;
+  border-radius: 0px;
+  /* background-color: #f1f3f4; */
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+}
+
+.input_field_box {
+  width: 100%;
+}
+
+.input_field_placeholder {
+  position: absolute;
+  top: 6px;
+  /* background-color: #f1f3f4; */
+  background-color: transparent;
+  color: gray;
+  left: var(--padding);
+  padding: 0 4px;
+  transition: all 0.2s ease-in;
+  /* pointer-events: none; */
+}
+
+.input_field:is(:focus, :valid) {
+  border: 2px solid var(--primary-color);
+}
+
+.input_field:is(:focus, :valid)+.input_field_placeholder {
+  transform: translatey(calc(-1 * var(--padding) - 11px)) translatex(-4px);
+  font-size: 14px;
+  color: var(--primary-color);
 }

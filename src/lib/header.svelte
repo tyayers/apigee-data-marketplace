@@ -12,6 +12,10 @@
     document.addEventListener("userUpdated", () => {
       currentUser = appService.currentUser;
     });
+
+    document.addEventListener("cancelEvent", () => {
+      menuVisible = false;
+    });
   });
 
   function signOut() {
@@ -26,16 +30,17 @@
 </script>
 
 <div class="header">
-  <span class="header-left-panel1">
-    <a href="/home">Data Marketplace</a>
+  <span class="header_left_panel1">
+    <svg class="leader_left_panel1_logo" fill="none" fill-rule="evenodd" height="36px" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M5.803 16l1.98-1.98-2.69-2.692a4.41 4.41 0 0 1 6.235-6.235l2.692 2.69L16 5.803l-2.692-2.69A7.164 7.164 0 0 0 8.21 1 7.218 7.218 0 0 0 1 8.21a7.17 7.17 0 0 0 2.112 5.1L5.802 16zm20.394 0l-1.98 1.98 2.69 2.692a4.41 4.41 0 0 1-6.235 6.236l-2.69-2.693L16 26.195l2.692 2.693A7.162 7.162 0 0 0 23.79 31c1.926 0 3.736-.75 5.098-2.112A7.162 7.162 0 0 0 31 23.79a7.16 7.16 0 0 0-2.112-5.098L26.198 16z" fill="#757575"></path><path d="M11.328 26.908a4.41 4.41 0 0 1-6.236-6.236l2.692-2.69 6.235 6.234-2.7 2.692zm9.345-21.815a4.41 4.41 0 0 1 6.234 6.235l-2.69 2.692-6.236-6.236 2.7-2.69zM16 20.778a4.778 4.778 0 0 1-.002-9.555h.004A4.778 4.778 0 0 1 16 20.777zM26.197 16l2.69-2.692A7.162 7.162 0 0 0 31 8.21C31 4.235 27.765 1 23.79 1a7.17 7.17 0 0 0-5.1 2.112L16 5.804 5.803 16l-2.69 2.692A7.16 7.16 0 0 0 1 23.79c0 1.926.75 3.736 2.112 5.098A7.16 7.16 0 0 0 8.21 31a7.17 7.17 0 0 0 5.1-2.112L16 26.196 26.197 16z" fill="#434343"></path><path d="M1 1h30v30H1z"></path></svg>
+    <a class="header_left_panel1_name" href="/home">Data Marketplace</a>
   </span>
 
-  <span class="header-right-panel1">
+  <span class="header_right_panel1">
     
     {#if currentUser}
       <button
-        on:click={() => { menuVisible = !menuVisible; }}
-        on:keydown={() => { menuVisible = !menuVisible; }}
+        on:click|stopPropagation={() => { menuVisible = !menuVisible; }}
+        on:keydown|stopPropagation={() => { menuVisible = !menuVisible; }}
         class="profile_button"
       >
         <img class="profile_button_image" src={currentUser.PhotoURL} alt="The user's profile." />
@@ -57,7 +62,7 @@
     {:else}
       <span>
         <a href="/sign-in" class="rounded_button_filled">Sign In</a>
-        <a href="/sign-in" class="rounded_button_outlined">Register</a>
+        <a href="/register" class="rounded_button_outlined">Register</a>
       </span>
     {/if}
   </span>
@@ -86,13 +91,19 @@
     top: 0;
   }
 
-  .header-left-panel1 {
-    margin-top: 16px;
+  .header_left_panel1 {
+    margin-top: 12px;
     margin-left: 24px;
     cursor: pointer;
   }
 
-  .header-right-panel1 {
+  .header_left_panel1_name {
+    position: relative;
+    top: -12px;
+    left: 4px;
+  }
+
+  .header_right_panel1 {
     margin-top: 7px;
     margin-right: 24px;
     

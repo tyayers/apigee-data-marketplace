@@ -19,7 +19,7 @@
 
 <div class="product_header">
   
-  <button class="product_back_button" on:click={back}>
+  <button class="back_button" on:click={back}>
     <svg data-icon-name="arrowBackIcon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill-rule="evenodd" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path></svg>
   </button>
 
@@ -79,28 +79,14 @@
     padding-left: 42px;
     border-bottom: solid 2px rgba(242, 242, 242, 1);
     font-size: 16px;
-  }
-
-
-  .product_back_button {
-    border: 0px;
-    border-radius: 100px;
-    background-color: transparent;
-    padding: 6px;
-    position: relative;
-    top: -8px;
-    left: -22px;
-  }
-
-  .product_back_button:hover {
-    cursor: pointer;
-    background-color: #eee;
+    display: flex;
+    align-items: center;
+    padding: 8px 24px;
   }
 
   .product_title {
-    position: relative;
-    top: -14px;
     font-size: 18px;
+    padding-left: 10px;
   }
 
   .product_overview {
@@ -156,7 +142,6 @@
     font-size: 16px;
     color: #333;
     height: 34px;
-    
   }
 
   .product_tab_menu_item_selected {
