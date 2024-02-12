@@ -19,11 +19,15 @@
     goto("/");
   }
 
+  function goToMyApps() {
+    goto("/apps");
+  }
+
 </script>
 
 <div class="header">
   <span class="header-left-panel1">
-    Data Marketplace
+    <a href="/home">Data Marketplace</a>
   </span>
 
   <span class="header-right-panel1">
@@ -42,6 +46,7 @@
           <div class="arrow" />
           <div class="menu">
             <div class="panel">
+              <button class="result" on:click={goToMyApps}>My apps</button>
               <button class="result">Account</button>
               <button class="result" on:click={signOut}>Sign Out</button>
             </div>

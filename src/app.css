@@ -3,6 +3,11 @@ body {
   font-family: sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: #333;
+}
+
 .rounded_button_filled {
   border-radius: 44px;
   padding: 12px;
