@@ -4,15 +4,27 @@
 
   let email: string = "";
   let password1: string = "";
-  let password2: string = "";
 
   function cancel() {
     history.back();
   }
 
-  function signInWithGoogle() {
-    history.back();
-    appService.SignInWithGoogle();
+  function submit(e: { key: string; }) {
+    if (e.key == "Escape")
+      cancel();
+    else if (e.key == "Enter")
+      signInWithEmail();
+  }
+
+  function signInWithEmail() {
+    if (email == "" || !email.includes("@")) {
+      appService.ShowSnackbar("Email address is invalid.");
+    }
+    else if (password1 == "") {
+      appService.ShowSnackbar("Please enter your password.");
+    }
+    else 
+      appService.SignInWithEmail(email, password1);
   }
 </script>
 
@@ -23,17 +35,17 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
     <h2>Sign in with your email.</h2>
-    <div class="so">
+    <div class="so" on:keydown={submit}>
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="email" required value={email} autocomplete="off" title="none" />
-        <label for="Email" class='input_field_placeholder'>
+        <input class="input_field" type="text" id="email" required bind:value={email} autocomplete="off" autofocus title="none" />
+        <label for="email" class='input_field_placeholder'>
           Email
         </label>
       </div>
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="password1" required value={password1} autocomplete="off" title="none" />
+        <input class="input_field" type="password" id="password1" required bind:value={password1} autocomplete="off" title="none" />
         <label for="password1" class='input_field_placeholder'>
           Password
         </label>
@@ -42,7 +54,7 @@
     </div>
 
     <div class="controls">
-      <button class="rounded_button_filled">Sign in</button>
+      <button on:click={signInWithEmail} class="rounded_button_filled">Sign in</button>
       <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
     </div>
   </div>

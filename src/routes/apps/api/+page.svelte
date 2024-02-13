@@ -1,5 +1,14 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import Header from "$lib/header.svelte";
+    import { ApiApps } from "$lib/interfaces";
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
+
+    function open(appId: string) {
+        goto("/apps/api/" + appId);
+    }
 </script>
 
 <Header />
@@ -35,7 +44,7 @@
             </div>
 
             <div class="panel_table_content">
-                <table class="panel_table">
+                <table class="flat_table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -44,17 +53,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>fds</td>
-                            <td>fds</td>
-                            <td>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
-                                </button>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
-                            </td>
-                        </tr>
+                        {#each data.apps as app, i}
+                                <tr on:click={() => open(app.appId)}>
+                                        <td>{app.name}</td>
+                                        <td>{app.createdAt}</td>
+                                        <td>
+                                            <button>
+                                                <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
+                                            </button>
+                                            <button>
+                                                <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
+                                        </td>
+                                </tr>
+                            
+                        {/each}
                     </tbody>
                 </table>
             </div>
@@ -128,38 +140,5 @@
         margin-left: 24px;
     }
 
-    .panel_table {
-        margin-top: 44px;
-       
-        width: 100%;
-        border-collapse: collapse; 
-        margin: 25px 0;
-        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
-    }
 
-    .panel_table thead {
-        background-color: #ececec;
-        height: 34px;
-        font-size: 14px;
-        
-    }
-
-    .panel_table thead tr th {
-        text-align: left;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 12px;
-    }
-
-    .panel_table tbody tr:hover {
-        height: 30px;
-        cursor: pointer;
-        border-bottom: solid 1px #d1d1d1;
-        background-color: #ececec;
-    }
-
-    .panel_table tbody tr td {
-        height: 30px;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 14px;
-    }
 </style>

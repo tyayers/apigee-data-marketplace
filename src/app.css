@@ -8,6 +8,12 @@ a {
   color: #333;
 }
 
+:root {
+  /* --primary-color: #6750a4; */
+  --primary-color: #3367d6;
+  --secondary-color: #f1f1f1;
+}
+
 /* Buttons */
 
 button {
@@ -190,11 +196,81 @@ button {
 }
 
 .input_field:is(:focus, :valid) {
-  border: 2px solid var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
 
 .input_field:is(:focus, :valid)+.input_field_placeholder {
   transform: translatey(calc(-1 * var(--padding) - 11px)) translatex(-4px);
   font-size: 14px;
   color: var(--primary-color);
+}
+
+/* Snackbar */
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 2000;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.8s;
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+/* Table */
+
+.flat_table {
+  margin-top: 44px;
+ 
+  width: 100%;
+  border-collapse: collapse; 
+  margin: 25px 0;
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+}
+
+.flat_table thead {
+  background-color: var(--secondary-color);
+  height: 34px;
+  font-size: 14px;
+  
+}
+
+.flat_table thead tr th {
+  text-align: left;
+  border-bottom: solid 1px #d1d1d1;
+  padding-left: 12px;
+}
+
+.flat_table tbody tr:hover {
+  height: 30px;
+  cursor: pointer;
+  border-bottom: solid 1px #d1d1d1;
+  background-color: var(--secondary-color);
+}
+
+.flat_table tbody tr td {
+  height: 30px;
+  border-bottom: solid 1px #d1d1d1;
+  padding-left: 14px;
 }

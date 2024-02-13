@@ -1,10 +1,26 @@
 <script lang="ts">
-  import { goto, invalidate } from "$app/navigation";
+  import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
   import Header from "$lib/header.svelte";
+  import { ApiApp } from "$lib/interfaces";
+  import type { PageData } from "./$types";
 
-  let name: string = "";
-  let description: string = "";
+  export let data: PageData;
+
+  let appData: ApiApp | undefined = undefined;
+
+	onMount(() => {
+    fetch("/api/apiapp?email=" + appService.currentUser?.email + "&appid=" + data.appid, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).then((response) => {
+      return response.json();
+    }).then((data: ApiApp) => {
+      appData = data;
+    });
+	});
 
   function back() {
     history.back();
@@ -43,7 +59,7 @@
               <button class="back_button" on:click={back}>
                 <svg data-icon-name="arrowBackIcon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill-rule="evenodd" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path></svg>
               </button>            
-              <span>Create API credentials</span>
+              <span>API credentials</span>
           </div>
 
           <div class="right_content">
@@ -55,41 +71,79 @@
               <a href="/home" target="_blank">Learn more <svg class="right_content_tip_learnmore" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M13.85 5H14V4h-4v1h2.15l-5.36 5.364.848.848L13 5.85V8h1V4h-1v.15l.15-.15.85.85-.15.15zM8 4H4.995A1 1 0 004 4.995v8.01a1 1 0 00.995.995h8.01a1 1 0 00.995-.995V10h-1v3H5V5h3V4z"></path></svg></a>
             </div>
 
-            <form method="POST">
+            {#if appData}
+              <form method="POST">
 
-              <input type="hidden" id="email" name="email" value={appService.currentUser?.email} />
+                <input type="hidden" id="email" name="email" value={appService.currentUser?.email} />
 
-              <div class="input_field_panel">
-                <!-- svelte-ignore a11y-autofocus -->
-                <input class="input_field" type="text" name="name" id="name" required bind:value={name} autocomplete="off" autofocus title="none" />
-                <label for="name" class='input_field_placeholder'>
-                  Name
-                </label>
-              </div>
-
-              <div class="input_field_panel">
-                <input class="input_field" type="text" name="description" id="description" bind:value={description} autocomplete="off" title="none" />
-                <label for="description" class='input_field_placeholder'>
-                  Description
-                </label>
-              </div>
-
-              <div class="product_list">
-                <h4>Product subscriptions</h4>
-                <div class="product_list_line">
-                  <input id="product1" type="checkbox" /><label for="product1">Data product 1</label>
+                <div class="input_field_panel">
+                  <!-- svelte-ignore a11y-autofocus -->
+                  <input class="input_field" type="text" name="name" id="name" required bind:value={appData.name} autocomplete="off" autofocus title="none" />
+                  <label for="name" class='input_field_placeholder'>
+                    Name
+                  </label>
                 </div>
-                <div class="product_list_line">
-                  <input id="product2" type="checkbox" /><label for="product2">Data product 2</label>
+
+                <div class="input_field_panel">
+                  <input class="input_field" type="text" name="description" id="description" required bind:value={appData.description} autocomplete="off" title="none" />
+                  <label for="description" class='input_field_placeholder'>
+                    Description
+                  </label>
                 </div>
-              </div>
 
-              <div class="controls">
-                <button type="submit" class="rounded_button_filled">Create</button>
-                <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
-              </div>
+                <div>
+                  <div class="keys_panel">
+                    <h4>Keys</h4><button class="text_button add_key_button">+ Add key</button>
+                  </div>
 
-            </form>
+                  <div class="panel_table_content">
+                    <table class="flat_table key_table">
+                          <thead>
+                              <tr>
+                                  <th>Key</th>
+                                  <th>Secret</th>
+                                  <th>Status</th>
+                                  <th>Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            {#if appData.credentials}
+                              {#each appData.credentials as cred, i}
+                                      <tr>
+                                          <td>{cred.consumerKey}</td>
+                                          <td>*************************</td>
+                                          <td>{cred.status}</td>
+                                          <td>
+                                              <button>
+                                                  <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>
+                                                </button>
+                                          </td>
+                                      </tr>
+                              {/each}
+                            {/if}
+                          </tbody>
+                      </table>
+                  </div>
+
+                </div>
+
+                <div class="product_list">
+                  <h4>Product subscriptions</h4>
+                  <div class="product_list_line">
+                    <input id="product1" type="checkbox" /><label for="product1">Data product 1</label>
+                  </div>
+                  <div class="product_list_line">
+                    <input id="product2" type="checkbox" /><label for="product2">Data product 2</label>
+                  </div>
+                </div>
+
+                <div class="controls">
+                  <button type="submit" class="rounded_button_filled">Save</button>
+                  <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
+                </div>
+
+              </form>
+            {/if}
           </div>
 
       </div>
@@ -175,6 +229,19 @@
       position: relative;
       top: 5px;
       left: -3px;
+    }
+
+    .keys_panel {
+      display: flex;
+      align-items: center;
+    }
+
+    .add_key_button {
+      font-size: 15px;
+    }
+
+    .key_table {
+      margin-top: 0px;
     }
 
     .product_list {

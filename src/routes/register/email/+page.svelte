@@ -1,6 +1,8 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
 	import { appService } from "$lib/app-service";
   import Header from "$lib/header.svelte";
+    import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
   let email: string = "";
   let password1: string = "";
@@ -10,9 +12,22 @@
     history.back();
   }
 
-  function signInWithGoogle() {
-    history.back();
-    appService.SignInWithGoogle();
+  function submit(e: { key: string; }) {
+    if (e.key == "Escape")
+      cancel();
+    else if (e.key == "Enter")
+      registerWithEmail();
+  }
+
+  function registerWithEmail() {
+    if (email == "") {
+      appService.ShowSnackbar("Email address is invalid.");
+    }
+    else if (password1 == "" || password1 != password2) {
+      appService.ShowSnackbar("Passwords don't match.");
+    }
+    else
+      appService.RegisterWithEmail(email, password1);
   }
 </script>
 
@@ -23,24 +38,24 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
     <h2>Register with your email account.</h2>
-    <div class="so">
+    <div class="so" on:keydown={submit}>
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="email" required value={email} autocomplete="off" title="none" />
-        <label for="Email" class='input_field_placeholder'>
+        <input class="input_field" type="text" id="email" required bind:value={email} autocomplete="off" title="none" autofocus />
+        <label for="email" class='input_field_placeholder'>
           Email
         </label>
       </div>
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="password1" required value={password1} autocomplete="off" title="none" />
+        <input class="input_field" type="password" id="password1" required bind:value={password1} autocomplete="off" title="none" />
         <label for="password1" class='input_field_placeholder'>
           Password
         </label>
       </div>      
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="password2" required value={password2} autocomplete="off" title="none" />
+        <input class="input_field" type="password" id="password2" required bind:value={password2} autocomplete="off" title="none" />
         <label for="password2" class='input_field_placeholder'>
           Repeat password
         </label>
@@ -49,7 +64,7 @@
     </div>
 
     <div class="controls">
-      <button class="rounded_button_filled">Register</button>
+      <button on:click={registerWithEmail} class="rounded_button_filled">Register</button>
       <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
     </div>
   </div>
