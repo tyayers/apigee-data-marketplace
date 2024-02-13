@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="input_field_panel">
-                  <input class="input_field" type="text" name="description" id="description" required bind:value={appData.description} autocomplete="off" title="none" />
+                  <input class="input_field" type="text" name="description" id="description" bind:value={appData.description} autocomplete="off" title="none" />
                   <label for="description" class='input_field_placeholder'>
                     Description
                   </label>
