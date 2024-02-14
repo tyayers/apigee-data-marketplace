@@ -1,17 +1,63 @@
-import type { ApiProducts, ApiProduct, Apps, App } from "apigee-x-module";
-import type { ApiApp, ApiApps, DataInterface } from "./interfaces";
+// import type { ApiProducts, ApiProduct, Apps, App } from "apigee-x-module";
+import type { ApiApp, ApiApps, AppUser, DataInterface, Product, Products } from "./interfaces";
 
 
-export class DataService implements DataInterface {
+export class TestDataService implements DataInterface {
 
-  private products: ApiProducts = {
-    apiProducts: []
+  private products: Products = {
+    products: [
+      {
+        name: "Data Product 1",
+        displayName: "Data Product 1",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+      {
+        name: "Data Product 2",
+        displayName: "Data Product 2",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+      {
+        name: "Data Product 3",
+        displayName: "Data Product 3",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+      {
+        name: "Data Product 4",
+        displayName: "Data Product 4",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+      {
+        name: "Data Product 5",
+        displayName: "Data Product 5",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+      {
+        name: "Data Product 6",
+        displayName: "Data Product 6",
+        approvalType: "auto",
+        access: "public",
+        description: "Data Product 1"
+      },
+    ]
   }
+
+  private developers: { [key: string]: AppUser } = {};
 
   private apps: ApiApps = {
     apps: [{
       appId: "test",
       name: "test",
+      description: "test",
       products: ["test"],
       createdAt: new Date().toString(),
       credentials: [
@@ -24,13 +70,33 @@ export class DataService implements DataInterface {
     }]
   }
 
-  public getProducts(): Promise<ApiProducts> {
+  public getProducts(): Promise<Products> {
     return new Promise((resolve, reject) => {
       resolve(this.products);
     });
   }
 
-  public getApiApps(): Promise<ApiApps> {
+  public getProduct(name: string): Promise<Product> {
+    return new Promise<Product>((resolve, reject) => {
+      console.log("searching for product name: " + name);
+      let result = this.products.products.find(product => product.name === name);
+
+      if (result)
+        resolve(result);
+      else
+        reject("Product not found!");
+    });
+  }
+
+  public createDeveloper(email: string, firstName: string, lastName: string, userName: string): void {
+    this.developers[email] = {
+      email: email,
+      userName: userName,
+      photoUrl: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+    };
+  }
+
+  public getApiApps(email: string): Promise<ApiApps> {
     return new Promise((resolve, reject) => {
       resolve(this.apps);
     });
@@ -41,6 +107,7 @@ export class DataService implements DataInterface {
       let newApp: ApiApp = {
         appId: appName,
         name: appName,
+        description: appName,
         products: products,
         createdAt: new Date().toString()
       };

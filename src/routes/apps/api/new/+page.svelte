@@ -2,7 +2,10 @@
   import { goto, invalidate } from "$app/navigation";
   import { appService } from "$lib/app-service";
   import Header from "$lib/header.svelte";
+  import type { PageData } from "./$types";
 
+  export let data: PageData;
+  
   let name: string = "";
   let description: string = "";
 
@@ -76,17 +79,16 @@
 
               <div class="product_list">
                 <h4>Product subscriptions</h4>
+                {#each data.products as product}
                 <div class="product_list_line">
-                  <input id="product1" type="checkbox" /><label for="product1">Data product 1</label>
+                  <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
                 </div>
-                <div class="product_list_line">
-                  <input id="product2" type="checkbox" /><label for="product2">Data product 2</label>
-                </div>
+                {/each}
               </div>
 
               <div class="controls">
                 <button type="submit" class="rounded_button_filled">Create</button>
-                <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
+                <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
               </div>
 
             </form>

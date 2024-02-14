@@ -14,11 +14,7 @@ import {
 import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App } from "apigee-x-module";
-// import { ApigeeService } from "apigee-x-module";
-
-import { ApiApp, ApiApps, AppUser, type DataInterface } from "./interfaces";
-import { DataService } from "./data-service.test";
+import { AppUser } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
@@ -32,10 +28,6 @@ export class AppService {
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
   currentUser: AppUser | undefined = undefined;
-  dataService: DataInterface = new DataService();
-
-  // Initialize Apigee X Service
-  // apigeeService: ApiManagementInterface = new ApigeeService();
 
   constructor() {
     if (browser) {
@@ -45,12 +37,12 @@ export class AppService {
         // if u is an object, means user is signed in
 
         if (!u) {
-          localStorage.setItem("UserSignedIn", "false");
-
           this.currentUser = undefined;
+          //First, we initialize our event
+          const event = new Event('userUpdated');
+          // Next, we dispatch the event.
+          document.dispatchEvent(event);
         } else {
-          console.log("User changed event, user is there. " + window.location.pathname);
-
           this.currentUser = new AppUser();
           if (u?.email) this.currentUser.email = u.email;
           if (u?.photoURL) 
@@ -58,7 +50,20 @@ export class AppService {
           else
             this.currentUser.photoUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
-          localStorage.setItem("UserSignedIn", "true");
+          if (u?.displayName) {
+            this.currentUser.userName = u.displayName;
+          }
+          else {
+            this.currentUser.userName = "User";
+          }
+
+          // Create developer if they don't exist
+          fetch("/api/developers?email=" + appService.currentUser?.email + "&username=" + appService.currentUser?.userName, {
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+              },
+          });
 
           if (window.location.pathname.endsWith("/")) {
             goto("/home");
@@ -126,78 +131,6 @@ export class AppService {
     setTimeout(function(){ if (x) {
       x.className = x.className.replace("show", ""); 
     }}, 3000);
-  }
-
-  GetApiProducts(): Promise<ApiProducts> {
-    return new Promise<ApiProducts>((resolve, reject) => {
-      resolve({
-        apiProducts: [
-          {
-            name: "Test Product 1",
-            displayName: "Test Product",
-            description: "Test Product",
-            status: "published",
-            approvalType: "auto"
-          },{
-            name: "Test Product 2",
-            displayName: "Test Product",
-            description: "Test Product",
-            status: "published",
-            approvalType: "auto"
-          },{
-            name: "Test Product 2",
-            displayName: "Test Product",
-            description: "Test Product",
-            status: "published",
-            approvalType: "auto"
-          },{
-            name: "Test Product 2",
-            displayName: "Test Product",
-            description: "Test Product",
-            status: "published",
-            approvalType: "auto"
-          },{
-            name: "Test Product 2",
-            displayName: "Test Product",
-            description: "Test Product",
-            status: "published",
-            approvalType: "auto"
-          }
-        ]
-      })
-    });
-  }
-
-  GetApiProduct(id: string): Promise<ApiProduct> {
-    return new Promise<ApiProduct>((resolve, reject) => {
-      resolve({
-          name: id,
-          displayName: "Test Product",
-          description: "Test Product",
-          status: "published",
-          approvalType: "auto"
-        });
-    });
-  }
-
-  GetApiApps(): Promise<ApiApps> {
-    return this.dataService.getApiApps();
-  }
-
-  CreateApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
-    return new Promise<ApiApp>((resolve, reject) => {
-      this.dataService.createApiApp(devEmail, appName, products).then((app: ApiApp) => {
-        resolve(app);
-      });
-    });
-  }
-
-  GetApiApp(devEmail: string, appid: string): Promise<ApiApp> {
-    return new Promise<ApiApp>((resolve, reject) => {
-      this.dataService.getApiApp(devEmail, appid).then((app: ApiApp) => {
-        resolve(app);
-      });
-    });
   }
 }
 

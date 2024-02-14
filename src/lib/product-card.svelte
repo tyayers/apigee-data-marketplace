@@ -26,7 +26,7 @@ import type { ApiProduct } from "apigee-x-module";
 {/if}
 
 <style>
-    .product-box {
+  .product-box {
     color: black;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 3px 1px -2px;
@@ -34,7 +34,6 @@ import type { ApiProduct } from "apigee-x-module";
     transition: box-shadow 0.2s ease 0s;
     width: 246px;
     height: 246px;
-    display: inline-block;
     margin: 14px;
 
   }

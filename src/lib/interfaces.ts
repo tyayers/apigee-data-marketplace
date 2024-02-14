@@ -1,18 +1,36 @@
-import type { ApiProducts, Apps, App } from "apigee-x-module";
 
 export class AppUser {
   email = "";
+  userName = "";
   photoUrl = "";
+}
+
+export class Products {
+  products: Product[] = [];
+}
+
+export class Product {
+  name: string = "";
+  type?: string;
+  displayName: string = "";
+  description?: string;
+  approvalType: string = "";
+  imageUrl?: string;
+  specUrl?: string;
+  status?: string;
+  access?: string;
 }
 
 export class ApiApp {
   appId: string = "";
   name: string = "";
-  description: string = "";
-  products: string[] = [];
+  description?: string = "";
   createdAt: string = "";
+  callbackUrl?: string;
+  apiProducts?: string[];
+  status?: string;
   credentials?: ApiAppCredential[];
-  status?: string = "";
+  error?: Error;
 }
 
 export class ApiAppCredential {
@@ -36,8 +54,10 @@ export class ApiApps {
 }
 
 export interface DataInterface {
-  getProducts(): Promise<ApiProducts>;
-  getApiApps(): Promise<ApiApps>;
+  getProducts(): Promise<Products>;
+  getProduct(name: string): Promise<Product>;
+  createDeveloper(email: string, firstName: string, lastName: string, userName: string): void;
+  getApiApps(email: string): Promise<ApiApps>;
   createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp>;
   getApiApp(devEmail: string,appId: string): Promise<ApiApp>;
 }

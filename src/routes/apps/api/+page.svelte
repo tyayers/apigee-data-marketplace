@@ -1,10 +1,40 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import Header from "$lib/header.svelte";
-    import { ApiApps } from "$lib/interfaces";
+    import {appService} from "$lib/app-service";
+    import { ApiApp, ApiApps, AppUser } from "$lib/interfaces";
+    import { onMount } from "svelte";
     import type { PageData } from "./$types";
 
-    export let data: PageData;
+    let appData: ApiApps | undefined = undefined;
+
+	onMount(() => {
+
+        document.addEventListener("userUpdated", () => {
+            if (!appData && appService.currentUser) {
+                // Load again with user
+                loadApps(appService.currentUser.email);
+            }
+        });
+
+        if (appService.currentUser) {
+            loadApps(appService.currentUser.email);
+        }
+	});
+
+    function loadApps(email: string) {
+        fetch("/api/apiapps?email=" + appService.currentUser?.email, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                },
+            }).then((response) => {
+                return response.json();
+            }).then((data: ApiApps) => {
+                console.log(data);
+                appData = data;
+            });
+    }
 
     function open(appId: string) {
         goto("/apps/api/" + appId);
@@ -53,8 +83,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {#each data.apps as app, i}
-                                <tr on:click={() => open(app.appId)}>
+                        {#if appData}
+                            {#each appData.apps as app, i}
+                                <tr on:click={() => open(app.name)}>
                                         <td>{app.name}</td>
                                         <td>{app.createdAt}</td>
                                         <td>
@@ -65,8 +96,8 @@
                                                 <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
                                         </td>
                                 </tr>
-                            
-                        {/each}
+                            {/each}
+                        {/if}
                     </tbody>
                 </table>
             </div>

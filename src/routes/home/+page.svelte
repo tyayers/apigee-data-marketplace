@@ -1,12 +1,30 @@
 <script lang="ts">
   import type { PageServerData } from './$types';
-  import type { ApiProducts, ApiProduct } from "apigee-x-module";
 
   import Header from "$lib/header.svelte";
   import ProductCard from '$lib/product-card.svelte';
-  import { appService } from "$lib/app-service";
 
   export let data: PageServerData;
+
+  let category_filter: string = "";
+  let categories: { [key: string]: string[] } = {
+    "Type": [
+      "API",
+      "Analytics hub",
+      "Data sync"
+    ],
+    "Finance": [
+      "Banking",
+      "FX",
+      "Trading"
+    ],
+    "Corporate": [
+      "HR",
+      "Trading"
+    ]
+  }
+
+  console.log(data.products);
 </script>
 
 <Header />
@@ -26,19 +44,46 @@
 </div>
 
 <div class="product_showcase">
-  <span class="product_filter">
+  <div class="product_filter">
     <div>
       <div class="product_filter_search">
         <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
-        <input class="product_filter_search_input" placeholder="Filter categories" />
+        <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
       </div>
+      {#each Object.keys(categories) as cat}
+      <div class="product_filter_header">
+        <h4>{cat}</h4>
+      </div>
+      {#each categories[cat] as subcat}
+      {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
+      <div class="product_filter_checkbox">
+        <input type="checkbox" id={subcat} /><label for={subcat}>{subcat}</label>
+      </div>
+      {/if}
+      {/each}
+      {/each}
     </div>
-  </span>
-  <span class="product_list">
-    {#each data.products.apiProducts as product, i}
+  </div>
+  <div class="product_list">
+    <div class="product_list_header">
+      <h3>Finance data</h3>
+    </div>
+    {#each data.products.products as product, i}
       <ProductCard data={product} />
     {/each}
-  </span>
+    <div class="product_list_header">
+      <h3>Corporate data</h3>
+    </div>
+    {#each data.products.products as product, i}
+      <ProductCard data={product} />
+    {/each}
+    <div class="product_list_header">
+      <h3>Customer analytics</h3>
+    </div>
+    {#each data.products.products as product, i}
+      <ProductCard data={product} />
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -90,7 +135,6 @@
 
   .banner_search_input:focus {
     outline: none;
-    
   }
 
   .product_showcase {
@@ -99,14 +143,37 @@
   }
 
   .product_filter {
-    
     width: 240px;
     height: 700px;
   }
 
+  .product_filter_header {
+    margin-left: 18px;
+  }
+
+  .product_filter_checkbox {
+    margin-left: 18px;
+    margin-top: 8px;
+    color: #333;
+    font-size: 16px;
+    user-select: none;
+  }
+
+  .product_filter_checkbox label {
+    margin-left: 6px;
+  }
+
   .product_list {
-    
+    margin-top: 10px;
     width: calc(100% - 240px);
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+
+  .product_list_header {
+    width: 100%;
+    margin-left: 14px;
   }
 
   .product_filter_search {

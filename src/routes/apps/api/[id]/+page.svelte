@@ -8,9 +8,24 @@
   export let data: PageData;
 
   let appData: ApiApp | undefined = undefined;
+  let apiProductSubscriptions: string[] = [];
 
 	onMount(() => {
-    fetch("/api/apiapp?email=" + appService.currentUser?.email + "&appid=" + data.appid, {
+
+    document.addEventListener("userUpdated", () => {
+      if (!appData && appService.currentUser) {
+        // Load again with user
+        loadApp(appService.currentUser.email);
+      }
+    });
+
+    if (appService.currentUser) {
+      loadApp(appService.currentUser.email);
+    }
+	});
+
+  function loadApp(email: string) {
+    fetch("/api/apiapps/" + data.appid + "?email=" + email, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -18,9 +33,18 @@
     }).then((response) => {
       return response.json();
     }).then((data: ApiApp) => {
+
       appData = data;
+
+      if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
+        for (let credProd of appData?.credentials[0].apiProducts) {
+          if (credProd.status === "approved") {
+            apiProductSubscriptions.push(credProd.apiproduct);
+          }
+        }
+      }
     });
-	});
+  }
 
   function back() {
     history.back();
@@ -93,7 +117,7 @@
 
                 <div>
                   <div class="keys_panel">
-                    <h4>Keys</h4><button class="text_button add_key_button">+ Add key</button>
+                    <h4>Keys</h4><button class="text_button add_key_button" type="button">+ Add key</button>
                   </div>
 
                   <div class="panel_table_content">
@@ -129,17 +153,20 @@
 
                 <div class="product_list">
                   <h4>Product subscriptions</h4>
+                  {#each data.products.products as product}
                   <div class="product_list_line">
-                    <input id="product1" type="checkbox" /><label for="product1">Data product 1</label>
+                    {#if apiProductSubscriptions.includes(product.name)}
+                      <input id={product.name} name={product.name} type="checkbox" checked /><label for={product.name}>{product.name}</label>
+                    {:else}
+                      <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
+                    {/if}
                   </div>
-                  <div class="product_list_line">
-                    <input id="product2" type="checkbox" /><label for="product2">Data product 2</label>
-                  </div>
+                  {/each}
                 </div>
 
                 <div class="controls">
                   <button type="submit" class="rounded_button_filled">Save</button>
-                  <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
+                  <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
                 </div>
 
               </form>

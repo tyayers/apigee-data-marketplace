@@ -1,9 +1,10 @@
 <script lang="ts">
    
-    import Header from "../lib/header.svelte";
-    import { appService } from "$lib/app-service";
-    
-    
+   console.log("hi!");
+   
+  import Header from "../lib/header.svelte";
+
+  
 </script>
 
 <Header />
