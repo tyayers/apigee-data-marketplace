@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-import type { ApiProduct } from "apigee-x-module";
+    import type { Product } from "./interfaces";
 
-  export let data: ApiProduct | undefined = undefined;
+  export let data: Product | undefined = undefined;
+  let tags: { [key: string]: string } = {};
+
+  if (data && data.attributes) {
+    for (let tagData of data.attributes) {
+      tags[tagData.name] = tagData.value;
+    }
+  }
 
   function OpenProduct() {
     goto("/products/" + data?.name);
@@ -13,14 +20,29 @@ import type { ApiProduct } from "apigee-x-module";
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="product-box" on:click={OpenProduct}>
     <div>
-      <img height="32px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
+      {#if data.imageUrl}
+        <img height="32px" alt="Product" src={data.imageUrl} />
+      {:else}
+        <img height="32px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
+      {/if}
     </div>
     {data.name}
     <div class="product-owner-box">
-      {data.access}
+      {data.groupArray?.join(", ")}
     </div>
     <div class="product-description-box">
       {data.description}
+    </div>
+    <div class="tags_box">
+      {#if data.type?.includes("api")}
+      <span class="tag tag_api">API</span>
+      {/if}
+      {#if data.type?.includes("ah")}
+      <span class="tag tag_ah">Analytics Hub</span>
+      {/if}
+      {#if data.type?.includes("sync")}
+      <span class="tag tag_sync">Data sync</span>
+      {/if}
     </div>
   </div>
 {/if}
@@ -35,7 +57,7 @@ import type { ApiProduct } from "apigee-x-module";
     width: 246px;
     height: 246px;
     margin: 14px;
-
+    position: relative;
   }
 
   .product-box:hover {
@@ -55,5 +77,34 @@ import type { ApiProduct } from "apigee-x-module";
     margin-top: 8px;
     max-height: 80px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  }
+
+  .tags_box {
+    position: absolute;
+    bottom: 10px;
+  }
+
+  .tag {
+    padding: 2px 8px 2px 8px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .tag_api {
+    background-color: rgb(85, 153, 85);
+  }
+
+  .tag_ah {
+    background-color: rgb(240, 74, 74);
+  }
+
+  .tag_sync {
+    background-color: orange;
   }
 </style>

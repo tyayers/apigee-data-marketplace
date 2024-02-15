@@ -93,6 +93,7 @@
 
     position: sticky;
     top: 0;
+    z-index: 1;
   }
 
   .header_left_panel1 {

@@ -1,8 +1,8 @@
-
 export class AppUser {
   email = "";
   userName = "";
   photoUrl = "";
+  developerData?: Developer;
 }
 
 export class Products {
@@ -19,6 +19,25 @@ export class Product {
   specUrl?: string;
   status?: string;
   access?: string;
+  attributes?: KeyValue[] = [];
+  // New properties
+  attrArray?: string[] = [];
+  groupArray?: string[] = [];
+}
+
+export class Developer {
+  email: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  userName: string = "";
+  developerId?: string;
+  organizationName?: string;
+  createdAt?: string;
+  lastModifiedAt?: string;
+  status?: string;
+  apps?: string[];
+  error?: Error;
+  attributes?: KeyValue[];
 }
 
 export class ApiApp {
@@ -53,10 +72,16 @@ export class ApiApps {
   apps: ApiApp[] = [];
 }
 
+export interface KeyValue {
+  name: string;
+  value: string;
+}
+
 export interface DataInterface {
   getProducts(): Promise<Products>;
   getProduct(name: string): Promise<Product>;
   createDeveloper(email: string, firstName: string, lastName: string, userName: string): void;
+  getDeveloper(email: string): Promise<Developer>;
   getApiApps(email: string): Promise<ApiApps>;
   createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp>;
   getApiApp(devEmail: string,appId: string): Promise<ApiApp>;

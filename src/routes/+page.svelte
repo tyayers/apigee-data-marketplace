@@ -1,13 +1,6 @@
 <script lang="ts">
-   
-   console.log("hi!");
-   
-  import Header from "../lib/header.svelte";
-
-  
+ 
 </script>
-
-<Header />
 
 <div class="signed_out_main_panel">
     <div class="signed_out_heading">

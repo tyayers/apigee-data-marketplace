@@ -58,7 +58,7 @@ export class TestDataService implements DataInterface {
       appId: "test",
       name: "test",
       description: "test",
-      products: ["test"],
+      apiProducts: ["test"],
       createdAt: new Date().toString(),
       credentials: [
         {    
@@ -108,7 +108,7 @@ export class TestDataService implements DataInterface {
         appId: appName,
         name: appName,
         description: appName,
-        products: products,
+        apiProducts: products,
         createdAt: new Date().toString()
       };
   

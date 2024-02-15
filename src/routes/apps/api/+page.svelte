@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import Header from "$lib/header.svelte";
     import {appService} from "$lib/app-service";
     import { ApiApp, ApiApps, AppUser } from "$lib/interfaces";
     import { onMount } from "svelte";
@@ -40,8 +39,6 @@
         goto("/apps/api/" + appId);
     }
 </script>
-
-<Header />
 
 <div class="apps">
 

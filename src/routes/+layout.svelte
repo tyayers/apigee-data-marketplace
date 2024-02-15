@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Header from "$lib/header.svelte";
   import "../app.css"
 
   function sendCancel() {
@@ -12,5 +13,6 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click={sendCancel} on:keyup={sendCancel}>
+  <Header />
   <slot />
 </div>

@@ -1,4 +1,4 @@
-import type { ApiApp, ApiApps, DataInterface, Product, Products } from "./interfaces";
+import type { ApiApp, ApiApps, DataInterface, Product, Products, Developer } from "./interfaces";
 import { GoogleCloudDataService } from "./data-service.gcp";
 import { TestDataService } from "./data-service.test";
 
@@ -11,6 +11,10 @@ export class AppServiceServer {
 
   GetApiProduct(name: string): Promise<Product> {
     return this.dataService.getProduct(name);
+  }
+
+  GetDeveloper(email: string): Promise<Developer> {
+    return this.dataService.getDeveloper(email);
   }
 
   CreateDeveloper(email: string, firstName: string, lastName: string, userName: string) {

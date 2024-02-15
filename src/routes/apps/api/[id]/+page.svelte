@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
-  import Header from "$lib/header.svelte";
   import { ApiApp } from "$lib/interfaces";
   import type { PageData } from "./$types";
 
@@ -50,8 +49,6 @@
     history.back();
   }
 </script>
-
-<Header />
 
 <div class="apps">
 

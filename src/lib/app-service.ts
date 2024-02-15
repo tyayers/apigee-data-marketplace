@@ -14,7 +14,7 @@ import {
 import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { AppUser } from "./interfaces";
+import { AppUser, Developer } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
@@ -63,6 +63,24 @@ export class AppService {
               headers: {
                 'content-type': 'application/json',
               },
+          });
+
+          // Get developer data
+          fetch("/api/developers?email=" + appService.currentUser?.email, {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json',
+            },
+          }).then((response) => {
+            return response.json();
+          }).then((data: Developer) => {
+            console.log("Developer data received:");
+            console.log(data);
+            if (this.currentUser) this.currentUser.developerData = data;
+            //First, we initialize our event
+            const event = new Event('userUpdated');
+            // Next, we dispatch the event.
+            document.dispatchEvent(event);
           });
 
           if (window.location.pathname.endsWith("/")) {

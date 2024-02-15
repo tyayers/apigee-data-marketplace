@@ -1,7 +1,7 @@
-import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer, Developers } from "apigee-x-module";
+import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import type { ApiApp, ApiApps, DataInterface, Product, Products } from "./interfaces";
-
+import type { ApiApp, ApiApps, DataInterface, Product, Products, Developer } from "./interfaces";
+import { product_index } from "./products";
 
 export class GoogleCloudDataService implements DataInterface {
 
@@ -13,36 +13,53 @@ export class GoogleCloudDataService implements DataInterface {
 
   public getProducts(): Promise<Products> {
     return new Promise((resolve, reject) => {
-      console.log("calling apigee get products..");
-      this.apigeeService.getApiProducts().then((products) => {
-        resolve({
-          products: products.apiProducts as Product[]
-        });
-      }).catch((err) => {
-        console.error(err);
-        reject(err);
-      });
+      resolve(product_index);
+      // this.apigeeService.getApiProducts().then((products) => {
+      //   resolve({
+      //     products: products.apiProducts as Product[]
+      //   });
+      // }).catch((err) => {
+      //   console.error(err);
+      //   reject(err);
+      // });
     });
   }
 
   public getProduct(name: string): Promise<Product> {
     return new Promise((resolve, reject) => {
-      console.log("calling apigee get product..");
-      this.apigeeService.getApiProduct(name).then((product) => {
-        resolve(product as Product);
+      let result: Product | undefined;
+      result = product_index.products.find((item) => item.name === name);
+
+      if (result)
+        resolve(result);
+      else
+        reject("Product not found!");
+      // this.apigeeService.getApiProduct(name).then((product) => {
+      //   resolve(product as Product);
+      // }).catch((err) => {
+      //   console.error(err);
+      //   reject(err);
+      // });
+    });
+  }
+
+  public getDeveloper(email: string): Promise<Developer> {
+    return new Promise((resolve, reject) => {
+      this.apigeeService.getDeveloper(email).then((developer) => {
+        resolve(developer as Developer);
       }).catch((err) => {
-        console.error(err);
         reject(err);
       });
     });
   }
 
   public createDeveloper(email: string, firstName: string, lastName: string, userName: string): void {
-    let devData: Developer = {
+    let devData: ApigeeDeveloper = {
       email: email,
       firstName: firstName,
       lastName: lastName,
-      userName: userName
+      userName: userName,
+      attributes: []
     }
 
     this.apigeeService.createDeveloper(devData);

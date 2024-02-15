@@ -1,33 +1,95 @@
 <script lang="ts">
   import type { PageServerData } from './$types';
 
-  import Header from "$lib/header.svelte";
   import ProductCard from '$lib/product-card.svelte';
+  import type { AppUser, Product } from '$lib/interfaces';
+  import { onMount } from 'svelte';
+  import { appService } from '$lib/app-service';
 
   export let data: PageServerData;
 
+  let currentUser: AppUser | undefined = appService.currentUser;
   let category_filter: string = "";
-  let categories: { [key: string]: string[] } = {
-    "Type": [
-      "API",
-      "Analytics hub",
-      "Data sync"
-    ],
-    "Finance": [
-      "Banking",
-      "FX",
-      "Trading"
-    ],
-    "Corporate": [
-      "HR",
-      "Trading"
-    ]
-  }
+  let categories: { [key: string]: string[] } = {};
+  let catChecked: string[] = [];
+  let userGroups: string[] = [];
 
   console.log(data.products);
-</script>
+  
+  loadUserGroups();
 
-<Header />
+	onMount(() => {
+    document.addEventListener("userUpdated", () => {
+      if (appService.currentUser) {
+        currentUser = appService.currentUser;
+        loadUserGroups();
+      }
+    });
+  });
+
+  if (data.products) {
+    for (let prod of data.products.products) {
+      prod.attrArray = [];
+      prod.groupArray = [];
+      if (prod.attributes) {
+        for (let tagData of prod.attributes){
+          if (tagData.name === "tags") {
+            let tags = tagData.value.split(", ");
+
+            for (let tag of tags) {
+              prod.attrArray.push(tag);
+              let pieces = tag.split("/");
+              if (! prod.attrArray.includes(pieces[0])) prod.attrArray.push(pieces[0]);
+              // prod.attrArray.push(pieces[1]);
+
+              if (! categories[pieces[0]])
+                categories[pieces[0]] = [];
+
+              if (!categories[pieces[0]].includes(tag)) {
+                categories[pieces[0]].push(tag)
+              }
+              // if (!categories[pieces[0]].includes(pieces[1])) {
+              //   categories[pieces[0]].push(pieces[1])
+              // }
+            }
+          }
+          else if (tagData.name === "groups") {
+            prod.groupArray = tagData.value.split(", ");
+          }
+        }
+      }
+    }
+  }
+
+  function loadUserGroups() {
+    if (currentUser?.developerData?.attributes) {
+      for (let tag of currentUser.developerData?.attributes) {
+        if (tag.name == "Groups") {
+          userGroups = tag.value.split(", ");
+        }
+      }
+    }
+  }
+
+  function onCatChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+    let tempChecked = catChecked;
+    if (e.target.checked) {
+      if (!catChecked.includes(name)) 
+      tempChecked.push(name);
+    }
+    else {
+      if (catChecked.includes(name)) {
+        let index = catChecked.indexOf(name);
+        console.log(index);
+        tempChecked.splice(index, 1);
+      }
+    }
+
+    catChecked = tempChecked;
+    console.log(catChecked);
+  }
+</script>
 
 <div class="banner">
   <div class="banner_title">
@@ -45,43 +107,47 @@
 
 <div class="product_showcase">
   <div class="product_filter">
-    <div>
+    <div class="product_filter_box">
       <div class="product_filter_search">
         <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
         <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
       </div>
-      {#each Object.keys(categories) as cat}
       <div class="product_filter_header">
-        <h4>{cat}</h4>
+        <h4>Type</h4>
       </div>
-      {#each categories[cat] as subcat}
-      {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
       <div class="product_filter_checkbox">
-        <input type="checkbox" id={subcat} /><label for={subcat}>{subcat}</label>
+        <input type="checkbox" id="api" /><label for="api">API</label>
       </div>
-      {/if}
-      {/each}
+      <div class="product_filter_checkbox">
+        <input type="checkbox" id="ah" /><label for="ah">Analytics Hub</label>
+      </div>
+      <div class="product_filter_checkbox">
+        <input type="checkbox" id="data_sync" /><label for="data_sync">Data sync</label>
+      </div>
+      {#each Object.keys(categories) as cat}
+        <div class="product_filter_header">
+          <h4>{cat}</h4>
+        </div>
+        {#each categories[cat] as subcat}
+          {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
+            <div class="product_filter_checkbox">
+              <input type="checkbox" id={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
+            </div>
+          {/if}
+        {/each}
       {/each}
     </div>
   </div>
   <div class="product_list">
-    <div class="product_list_header">
-      <h3>Finance data</h3>
-    </div>
-    {#each data.products.products as product, i}
-      <ProductCard data={product} />
-    {/each}
-    <div class="product_list_header">
-      <h3>Corporate data</h3>
-    </div>
-    {#each data.products.products as product, i}
-      <ProductCard data={product} />
-    {/each}
-    <div class="product_list_header">
-      <h3>Customer analytics</h3>
-    </div>
-    {#each data.products.products as product, i}
-      <ProductCard data={product} />
+    {#each Object.keys(categories) as catName}
+      <div class="product_list_header">
+        <h3>{catName} products</h3>
+      </div>
+      {#each data.products.products as product, i}
+        {#if product.attrArray?.includes(catName) && (product.groupArray?.length === 0 || userGroups.some(item => product.groupArray?.includes(item))) && (catChecked.length === 0 || catChecked.some(item => product.attrArray?.includes(item)))}
+          <ProductCard data={product} />
+        {/if}
+      {/each}
     {/each}
   </div>
 </div>
@@ -147,6 +213,10 @@
     height: 700px;
   }
 
+  .product_filter_box {
+    padding-bottom: 100px;
+  }
+
   .product_filter_header {
     margin-left: 18px;
   }
@@ -169,6 +239,7 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    margin-bottom: 100px;
   }
 
   .product_list_header {
@@ -201,6 +272,25 @@
   .product_filter_search_icon {
     margin-left: 9px;
     margin-top: 9px;
+  }
+
+  .tag {
+    padding: 4px 12px 4px 8px;
+    border-radius: 24px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .tag_api {
+    background-color: rgb(85, 153, 85);
+  }
+
+  .tag_ah {
+    background-color: rgb(240, 74, 74);
+  }
+
+  .tag_sync {
+    background-color: orange;
   }
 
 </style>

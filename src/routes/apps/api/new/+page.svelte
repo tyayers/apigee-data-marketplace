@@ -1,7 +1,6 @@
 <script lang="ts">
   import { goto, invalidate } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import Header from "$lib/header.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -13,8 +12,6 @@
     history.back();
   }
 </script>
-
-<Header />
 
 <div class="apps">
 

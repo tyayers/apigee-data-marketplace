@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Header from "$lib/header.svelte";
 	import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -15,8 +14,6 @@
   }
 </script>
 
-<Header />
-
 <div class="product_header">
   
   <button class="back_button" on:click={back}>
@@ -28,17 +25,30 @@
 
 <div class="product_overview">
   <div class="product_overview_icon">
-    <img height="62px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
+
+    {#if data.product.imageUrl}
+      <img height="62px" alt="Product" src={data.product.imageUrl} />
+    {:else}
+      <img height="62px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
+    {/if}
   </div>
   <div class="product_overview_details">
     <h2>{data.product.name}</h2>
-    <div class="product_overview_owner">Google Enterprise Data</div>
+    <div class="product_overview_owner">{data.product.groupArray?.join(", ")}</div>
     <div class="product_overview_description">
       {data.product.description}
     </div>
 
     <div class="product_overview_buy">
-      <a href="/home" class="rounded_button_filled">Subscribe</a>
+      {#if data.product.type?.includes("api")}
+        <a href="/home" class="rounded_button_filled">Subscribe to API</a>
+      {/if}
+      {#if data.product.type?.includes("ah")}
+        <a href="/home" class="rounded_button_filled">Analytics Hub</a>
+      {/if}
+      {#if data.product.type?.includes("sync")}
+        <a href="/home" class="rounded_button_filled">Enable data sync</a>
+      {/if}      
       <a href="/home" class="rounded_button_outlined">Preview data</a>
     </div>
 
@@ -61,7 +71,7 @@
     <div class="product_tab_content_inner">
       <h3>Overview</h3>
       <div class="product_tab_content_text">
-        Builds conversational interfaces (for example, chatbots, and voice-powered apps and devices).
+        {data.product.description}
       </div>
     </div>
   {:else if selectedProductTab == "pricing"}

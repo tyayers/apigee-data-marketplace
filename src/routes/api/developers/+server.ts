@@ -19,9 +19,20 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	console.log("Creating developer: " + email);
-
 	let appData = await appService.CreateDeveloper(email, firstName, lastName, userName);
 
 	return json({});
+};
+
+export const GET: RequestHandler = async ({ url }) => {
+
+	const email = url.searchParams.get('email') ?? '';
+  
+	if (!email) {
+		error(400, 'Developer email is required');
+	}
+
+	let devData = await appService.GetDeveloper(email);
+
+	return json(devData);
 };
