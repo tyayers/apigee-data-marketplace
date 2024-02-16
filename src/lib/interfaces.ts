@@ -23,6 +23,7 @@ export class Product {
   // New properties
   attrArray?: string[] = [];
   groupArray?: string[] = [];
+  typeArray?: string[] = [];
 }
 
 export class Developer {
@@ -45,6 +46,7 @@ export class ApiApp {
   name: string = "";
   description?: string = "";
   createdAt: string = "";
+  createdAtDate?: string = "";
   callbackUrl?: string;
   apiProducts?: string[];
   status?: string;
@@ -85,5 +87,5 @@ export interface DataInterface {
   getApiApps(email: string): Promise<ApiApps>;
   createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp>;
   getApiApp(devEmail: string,appId: string): Promise<ApiApp>;
+  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp>;
 }
-

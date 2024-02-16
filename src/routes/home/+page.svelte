@@ -9,28 +9,33 @@
   export let data: PageServerData;
 
   let currentUser: AppUser | undefined = appService.currentUser;
+  let productsByName: {[key: string]: Product} = {};
+  let catProducts: {[key: string]: string[]} = {};
+  let catSubProducts: {[key: string]: string[]} = {};
   let category_filter: string = "";
   let categories: { [key: string]: string[] } = {};
   let catChecked: string[] = [];
+  let typesChecked: string[] = [];
   let userGroups: string[] = [];
 
-  console.log(data.products);
-  
-  loadUserGroups();
+  if (currentUser) loadUserGroups(currentUser);
 
 	onMount(() => {
     document.addEventListener("userUpdated", () => {
       if (appService.currentUser) {
         currentUser = appService.currentUser;
-        loadUserGroups();
+        loadUserGroups(currentUser);
+        refreshProductList();
       }
     });
   });
 
   if (data.products) {
     for (let prod of data.products.products) {
+      productsByName[prod.name] = prod;
       prod.attrArray = [];
       prod.groupArray = [];
+      prod.typeArray = prod.type?.split(",");
       if (prod.attributes) {
         for (let tagData of prod.attributes){
           if (tagData.name === "tags") {
@@ -40,7 +45,10 @@
               prod.attrArray.push(tag);
               let pieces = tag.split("/");
               if (! prod.attrArray.includes(pieces[0])) prod.attrArray.push(pieces[0]);
-              // prod.attrArray.push(pieces[1]);
+              if (! catProducts[pieces[0]]) catProducts[pieces[0]] = [];
+              if (! catProducts[pieces[0]].includes(prod.name)) catProducts[pieces[0]].push(prod.name);
+              if (! catSubProducts[tag]) catSubProducts[tag] = [];
+              catSubProducts[tag].push(prod.name);
 
               if (! categories[pieces[0]])
                 categories[pieces[0]] = [];
@@ -48,9 +56,6 @@
               if (!categories[pieces[0]].includes(tag)) {
                 categories[pieces[0]].push(tag)
               }
-              // if (!categories[pieces[0]].includes(pieces[1])) {
-              //   categories[pieces[0]].push(pieces[1])
-              // }
             }
           }
           else if (tagData.name === "groups") {
@@ -59,11 +64,13 @@
         }
       }
     }
+
+    refreshProductList();
   }
 
-  function loadUserGroups() {
-    if (currentUser?.developerData?.attributes) {
-      for (let tag of currentUser.developerData?.attributes) {
+  function loadUserGroups(newUser: AppUser) {
+    if (newUser.developerData?.attributes) {
+      for (let tag of newUser.developerData?.attributes) {
         if (tag.name == "Groups") {
           userGroups = tag.value.split(", ");
         }
@@ -71,23 +78,83 @@
     }
   }
 
-  function onCatChange(e: any) {
+  function onTypeChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];
-    let tempChecked = catChecked;
+    let tempTypesChecked = typesChecked;
+
     if (e.target.checked) {
-      if (!catChecked.includes(name)) 
-      tempChecked.push(name);
+      
+      if (!tempTypesChecked.includes(name)){
+        tempTypesChecked.push(name);
+      }
     }
     else {
-      if (catChecked.includes(name)) {
+
+      if (tempTypesChecked.includes(name)) {
         let index = catChecked.indexOf(name);
-        console.log(index);
+        tempTypesChecked.splice(index, 1);
+      }
+    }
+
+    typesChecked = tempTypesChecked;
+    refreshProductList();
+  }
+
+  function onCatChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+    let category: string = name.split("/")[0];
+
+    let tempChecked = catChecked;
+    if (e.target.checked) {
+      
+      if (!tempChecked.includes(name)){
+        tempChecked.push(name);
+      }
+    }
+    else {
+
+      if (tempChecked.includes(name)) {
+        let index = catChecked.indexOf(name);
         tempChecked.splice(index, 1);
       }
     }
 
     catChecked = tempChecked;
-    console.log(catChecked);
+    refreshProductList();
+  }
+
+  function refreshProductList() {
+    let tempCatProducts: {[key: string]: string[]} = {};
+    for (let subCatSel of catChecked) {
+      let cat = subCatSel.split("/")[0];
+      if (! tempCatProducts[cat]) tempCatProducts[cat] = [];
+
+      for (let prodName of catSubProducts[subCatSel]) {
+        let prod = productsByName[prodName];
+        if (!tempCatProducts[cat].includes(prodName) &&
+            (typesChecked.length === 0 || prod.typeArray?.some(item => typesChecked.includes(item))) &&
+            (prod.groupArray?.length === 0 || userGroups.some(item => prod.groupArray?.includes(item)))) {
+          tempCatProducts[cat].push(prodName);
+        }
+      }
+    }
+
+    if (catChecked.length === 0) {
+      for (let subCat of Object.keys(catSubProducts)) {
+        let cat: string = subCat.split("/")[0];
+        for (let prodName of catSubProducts[subCat]) {
+          let prod = productsByName[prodName];
+          if (!tempCatProducts[cat]) tempCatProducts[cat] = [];
+          if (!tempCatProducts[cat].includes(prodName) &&
+            (typesChecked.length === 0 || prod.typeArray?.some(item => typesChecked.includes(item))) &&
+            (prod.groupArray?.length === 0 || userGroups.some(item => prod.groupArray?.includes(item)))) {
+            tempCatProducts[cat].push(prodName);
+          }
+        }
+      }
+    }
+
+    catProducts = tempCatProducts;
   }
 </script>
 
@@ -116,13 +183,13 @@
         <h4>Type</h4>
       </div>
       <div class="product_filter_checkbox">
-        <input type="checkbox" id="api" /><label for="api">API</label>
+        <input type="checkbox" id="api" name="api" on:change={onTypeChange} /><label for="api">API</label>
       </div>
       <div class="product_filter_checkbox">
-        <input type="checkbox" id="ah" /><label for="ah">Analytics Hub</label>
+        <input type="checkbox" id="ah" name="ah" on:change={onTypeChange}/><label for="ah">Analytics Hub</label>
       </div>
       <div class="product_filter_checkbox">
-        <input type="checkbox" id="data_sync" /><label for="data_sync">Data sync</label>
+        <input type="checkbox" id="sync" name="sync" on:change={onTypeChange}/><label for="sync">Data sync</label>
       </div>
       {#each Object.keys(categories) as cat}
         <div class="product_filter_header">
@@ -131,7 +198,7 @@
         {#each categories[cat] as subcat}
           {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
             <div class="product_filter_checkbox">
-              <input type="checkbox" id={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
+              <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
             </div>
           {/if}
         {/each}
@@ -139,7 +206,19 @@
     </div>
   </div>
   <div class="product_list">
-    {#each Object.keys(categories) as catName}
+
+    {#each Object.keys(catProducts) as catName}
+      {#if catProducts[catName].length > 0}
+        <div class="product_list_header">
+          <h3>{catName} products</h3>
+        </div>
+        {#each catProducts[catName] as prodName, i}
+          <ProductCard data={productsByName[prodName]} />
+        {/each}
+      {/if}
+    {/each}
+
+    <!-- {#each Object.keys(categories) as catName}
       <div class="product_list_header">
         <h3>{catName} products</h3>
       </div>
@@ -148,7 +227,7 @@
           <ProductCard data={product} />
         {/if}
       {/each}
-    {/each}
+    {/each} -->
   </div>
 </div>
 

@@ -11,6 +11,8 @@ a {
 :root {
   /* --primary-color: #6750a4; */
   --primary-color: #3367d6;
+  --primary-color-light: #d4ebff;
+  --primary-color-dark: #6595fc;
   --secondary-color: #f1f1f1;
 }
 
@@ -33,7 +35,8 @@ button {
   border-width: 0px;
   font-weight: bold;
   font-size: 14px;
-  background-color: #e8def8;
+  /* background-color: #e8def8; */
+  background-color: var(--primary-color-light);
   cursor: pointer;
   text-decoration: none;
   margin-right: 6px;
@@ -57,10 +60,12 @@ button {
   padding-right: 18px;
   border-width: 1px;
   border-style: solid;
-  border-color: #79747e;
+  /* border-color: #79747e; */
+  border-color: var(--primary-color-dark);
   font-weight: bold;
   font-size: 14px;
-  color: #6750a4;
+  /* color: #6750a4; */
+  color: var(--primary-color);
   background-color: transparent;
   cursor: pointer;
   text-decoration: none;

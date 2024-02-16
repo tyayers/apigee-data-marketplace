@@ -5,38 +5,43 @@
     import { onMount } from "svelte";
     import type { PageData } from "./$types";
 
-    let appData: ApiApps | undefined = undefined;
+    let appData: ApiApps | undefined = appService.apiApps;
+    updateApps();
 
 	onMount(() => {
-
-        document.addEventListener("userUpdated", () => {
-            if (!appData && appService.currentUser) {
-                // Load again with user
-                loadApps(appService.currentUser.email);
-            }
+        document.addEventListener("appsUpdated", () => {
+            appData = appService.apiApps;
+            updateApps();            
         });
-
-        if (appService.currentUser) {
-            loadApps(appService.currentUser.email);
-        }
 	});
 
-    function loadApps(email: string) {
-        fetch("/api/apiapps?email=" + appService.currentUser?.email, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                },
-            }).then((response) => {
-                return response.json();
-            }).then((data: ApiApps) => {
-                console.log(data);
-                appData = data;
-            });
+    function updateApps() {
+        if (appData && appData.apps) {
+            for (let app of appData?.apps) {
+                var d = new Date(parseInt(app.createdAt));
+                app.createdAtDate = d.toLocaleString();
+            }
+        }
     }
 
     function open(appId: string) {
         goto("/apps/api/" + appId);
+    }
+
+    function deleteApp(app: ApiApp) {
+
+        appService.ShowDialog("Do you really want to delete this app?", 0).then((result) => {
+            let newAppData = appData;
+            let index = newAppData?.apps.indexOf(app);
+            if (index) {
+                newAppData?.apps.splice(index, 1);
+                appService.apiApps = newAppData;
+                appData = newAppData;
+            }
+
+            if (appService.currentUser)
+                appService.DeleteApp(appService.currentUser?.email, app.name);
+        });
     }
 </script>
 
@@ -50,7 +55,7 @@
         <div class="apps_left_panel_menu">
             <a href="/apps/api" class="side_menu_button side_menu_button_selected">
                 <svg class="side_menu_button_logo side_menu_button_logo_selected" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M9.874 10H12v2h3v-2h1V8H9.874A4.002 4.002 0 0 0 2 9a4 4 0 0 0 7.874 1zM6 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill-rule="evenodd"></path></svg>
-                <span class="side_menu_button_name side_menu_button_name_selected">API credentials</span>
+                <span class="side_menu_button_name side_menu_button_name_selected">Credentials</span>
             </a>
             <a href="/apps/bigquery" class="side_menu_button">
                 <svg class="side_menu_button_logo" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.9 8.76L6 7.58a1.09 1.09 0 000-.26 1 1 0 10-.33.75l2 1.17a.28.28 0 00.15 0A.31.31 0 008 9.15a.29.29 0 00-.1-.39zM5 7.78a.46.46 0 010-.92.46.46 0 010 .92z"></path><path d="M6.9 14.12A5.12 5.12 0 1112 9a5.13 5.13 0 01-5.1 5.12zM6.9 5a4 4 0 104 4 4 4 0 00-4-4z"></path><path d="M14.83 11.66a1.4 1.4 0 00-.83.27L9.68 9.45a1.72 1.72 0 000-.9L14 6.07A1.39 1.39 0 1013.43 5a.68.68 0 000 .14L9.08 7.59a1.85 1.85 0 100 2.82l4.37 2.5a.68.68 0 000 .14 1.4 1.4 0 101.4-1.39z"></path></svg>            
@@ -67,7 +72,7 @@
 
         <div class="right_panel_content">
             <div class="right_panel_header">
-                <span>API credentials</span><a href="/apps/api/new" class="text_button right_panel_header_button">+ Create credentials</a>
+                <span>Credentials</span><a href="/apps/api/new" class="text_button right_panel_header_button">+ Add credentials</a>
             </div>
 
             <div class="panel_table_content">
@@ -84,13 +89,18 @@
                             {#each appData.apps as app, i}
                                 <tr on:click={() => open(app.name)}>
                                         <td>{app.name}</td>
-                                        <td>{app.createdAt}</td>
+                                        {#if app.createdAtDate}
+                                            <td>{app.createdAtDate}</td>
+                                        {:else}
+                                            <td></td>
+                                        {/if}
                                         <td>
                                             <button>
                                                 <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
                                             </button>
-                                            <button>
-                                                <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
+                                            <button on:click|stopPropagation={() => deleteApp(app)}>
+                                                <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    
+                                            </button>
                                         </td>
                                 </tr>
                             {/each}

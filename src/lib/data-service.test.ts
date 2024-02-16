@@ -1,5 +1,5 @@
 // import type { ApiProducts, ApiProduct, Apps, App } from "apigee-x-module";
-import type { ApiApp, ApiApps, AppUser, DataInterface, Product, Products } from "./interfaces";
+import type { ApiApp, ApiApps, AppUser, DataInterface, Developer, Product, Products } from "./interfaces";
 
 
 export class TestDataService implements DataInterface {
@@ -127,5 +127,12 @@ export class TestDataService implements DataInterface {
       }
       reject()
     });
+  }
+
+  getDeveloper(email: string): Promise<Developer> {
+    throw new Error("Method not implemented.");
+  }
+  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp> {
+    throw new Error("Method not implemented.");
   }
 }

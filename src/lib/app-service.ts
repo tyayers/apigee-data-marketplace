@@ -14,7 +14,7 @@ import {
 import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { AppUser, Developer } from "./interfaces";
+import { AppUser, Developer, ApiApps } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
@@ -28,6 +28,7 @@ export class AppService {
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
   currentUser: AppUser | undefined = undefined;
+  apiApps: ApiApps | undefined = undefined;
 
   constructor() {
     if (browser) {
@@ -63,33 +64,44 @@ export class AppService {
               headers: {
                 'content-type': 'application/json',
               },
-          });
+          }).then((result) => {
+            // Get developer data
+            fetch("/api/developers?email=" + appService.currentUser?.email, {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+              },
+            }).then((response) => {
+              return response.json();
+            }).then((data: Developer) => {
+              if (this.currentUser) this.currentUser.developerData = data;
 
-          // Get developer data
-          fetch("/api/developers?email=" + appService.currentUser?.email, {
-            method: 'GET',
-            headers: {
-              'content-type': 'application/json',
-            },
-          }).then((response) => {
-            return response.json();
-          }).then((data: Developer) => {
-            console.log("Developer data received:");
-            console.log(data);
-            if (this.currentUser) this.currentUser.developerData = data;
-            //First, we initialize our event
-            const event = new Event('userUpdated');
-            // Next, we dispatch the event.
-            document.dispatchEvent(event);
+              //First, we initialize our event
+              const event = new Event('userUpdated');
+              // Next, we dispatch the event.
+              document.dispatchEvent(event);
+            });
+
+            // Get developer app data
+            fetch("/api/apiapps?email=" + appService.currentUser?.email, {
+              method: 'GET',
+              headers: {
+                  'content-type': 'application/json',
+              },
+            }).then((response) => {
+                return response.json();
+            }).then((data: ApiApps) => {
+                this.apiApps = data;
+                const event = new Event('appsUpdated');
+                document.dispatchEvent(event);
+            });
           });
 
           if (window.location.pathname.endsWith("/")) {
             goto("/home");
           }
           else {
-            //First, we initialize our event
             const event = new Event('userUpdated');
-            // Next, we dispatch the event.
             document.dispatchEvent(event);
           }
         }
@@ -149,6 +161,33 @@ export class AppService {
     setTimeout(function(){ if (x) {
       x.className = x.className.replace("show", ""); 
     }}, 3000);
+  }
+
+  RegisterModalDialogHandler: ((message: string, type: number) => Promise<string>) | undefined = undefined;
+
+  ShowDialog(message: string, type: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (this.RegisterModalDialogHandler) {
+        this.RegisterModalDialogHandler(message, type).then((result: string) => {
+          resolve(result);
+        });
+      }
+    });
+  }
+
+  DeleteApp(email: string, appName: string) {
+    fetch("/api/apiapps/" + appName + "?email=" + email, {
+      method: 'DELETE',
+      headers: {
+          'content-type': 'application/json',
+      },
+    }).then((response) => {
+        return response.json();
+    }).then((data: ApiApps) => {
+        this.apiApps = data;
+        const event = new Event('appsUpdated');
+        document.dispatchEvent(event);
+    });
   }
 }
 

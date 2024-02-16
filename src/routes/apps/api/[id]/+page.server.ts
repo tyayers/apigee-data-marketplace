@@ -6,6 +6,6 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		products: await appService.GetApiProducts(),
-		appid: params.id
+		appName: params.id
 	};
 };

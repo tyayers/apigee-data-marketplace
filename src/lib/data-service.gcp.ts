@@ -94,4 +94,14 @@ export class GoogleCloudDataService implements DataInterface {
       });
     });
   }
+
+  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp> {
+    return new Promise((resolve, reject) => {
+      this.apigeeService.deleteApp(devEmail, appId).then((app) => {
+        resolve(app as ApiApp);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
 }

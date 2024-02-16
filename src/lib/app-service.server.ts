@@ -41,6 +41,14 @@ export class AppServiceServer {
     });
   }
 
+  DeleteApiApp(devEmail: string, appid: string): Promise<ApiApp> {
+    return new Promise<ApiApp>((resolve, reject) => {
+      this.dataService.deleteApiApp(devEmail, appid).then((app: ApiApp) => {
+        resolve(app);
+      });
+    });
+  }
+
 }
 
 export let appService: AppServiceServer = new AppServiceServer();
