@@ -3,20 +3,22 @@
 </script>
 
 <div class="header">
-  <div class="header_tab_button header_tab_button_selected">
-    Overview
-  </div>
-  <div class="header_tab_button">
-    Our mission
-  </div>
-  <div class="header_tab_button">
-    Pricing
-  </div>
-  <div class="header_tab_button">
-    Products
-  </div>
-  <div class="header_tab_button">
-    Privacy
+  <div class="header_tabs">
+    <div class="header_tab_button header_tab_button_selected">
+      Overview
+    </div>
+    <div class="header_tab_button">
+      Our mission
+    </div>
+    <div class="header_tab_button">
+      Pricing
+    </div>
+    <div class="header_tab_button">
+      Products
+    </div>
+    <div class="header_tab_button">
+      Privacy
+    </div>
   </div>
 </div>
 
@@ -60,14 +62,14 @@
 <style>
 
 .header {
-  display: flex;
+  /* display: flex;
   flex-flow: row wrap;
   justify-content: left;
-  align-items: center;
+  align-items: center; */
   
   height: 57px;
   background-color: rgba(255, 255, 255, 1);
-  width: calc(100% - 264px);
+  width: 100%;
   border-bottom: solid 3px rgba(242, 242, 242, 1);
 
   font-weight: 560;
@@ -76,8 +78,15 @@
 
   padding: 0px;
   margin: 0px;
-  padding-left: 264px;
+}
 
+.header_tabs {
+  display: flex;
+  width: 60vw;
+  height: 70%;
+  position: relative;
+  top: 7px;
+  margin: auto;
 }
 
 .header_tab_button {

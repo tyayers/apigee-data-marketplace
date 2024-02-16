@@ -3,56 +3,85 @@
   import { appService } from "$lib/app-service";
   import { ApiApp } from "$lib/interfaces";
   import type { PageData } from "./$types";
+    import { goOffline } from 'firebase/database';
+    import { goto } from '$app/navigation';
 
   export let data: PageData;
 
-  let appData: ApiApp | undefined = appService.apiApps?.apps.find((item) => item.name === data.appName);
-  let apiProductSubscriptions: string[] = [];
+  let appData: ApiApp | undefined = undefined;
+  if (appService.apiApps) appService.apiApps?.apps.find((item) => item.name === data.appName);
+  let apiProductChecks: {[key: string]: boolean} = {};
 
 	onMount(() => {
-
     document.addEventListener("appsUpdated", () => {
-      appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
+      if (appService.apiApps?.apps)
+        appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
+
+      setProductChecks();
     });
 
     if (!appData) appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
+    setProductChecks();
+    console.log(appData);
 	});
 
-	// onMount(() => {
+  function setProductChecks() {
 
-  //   document.addEventListener("userUpdated", () => {
-  //     if (!appData && appService.currentUser) {
-  //       // Load again with user
-  //       loadApp(appService.currentUser.email);
-  //     }
-  //   });
+    for (let product of data.products.products) {
+      apiProductChecks[product.name] = false;
+    }
 
-  //   if (appService.currentUser) {
-  //     loadApp(appService.currentUser.email);
-  //   }
-	// });
+    if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
+      for (let product of appData.credentials[0].apiProducts) {
+        apiProductChecks[product.apiproduct] = true;
+      }
 
-  // function loadApp(email: string) {
-  //   fetch("/api/apiapps/" + data.appName + "?email=" + email, {
-  //     method: 'GET',
-  //     headers: {
-  //       'content-type': 'application/json',
-  //     },
-  //   }).then((response) => {
-  //     return response.json();
-  //   }).then((data: ApiApp) => {
+      console.log(apiProductChecks);
+    }
+    
+  }
 
-  //     appData = data;
+  function submit() {
+    if (appData) {
 
-  //     if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
-  //       for (let credProd of appData?.credentials[0].apiProducts) {
-  //         if (credProd.status === "approved") {
-  //           apiProductSubscriptions.push(credProd.apiproduct);
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+      // First reset all the api product subscriptions
+      if (appData.credentials && appData.credentials.length > 0) {
+        for (let cred of appData.credentials) {
+          cred.apiProducts = [];
+        }
+      }
+
+      // Now set the products
+      for (let product of Object.keys(apiProductChecks)) {
+        if (apiProductChecks[product]) {
+          if (appData.credentials && appData.credentials.length > 0) {
+            for (let cred of appData.credentials) {
+              cred.apiProducts?.push({
+                  apiproduct: product,
+                  status: "approved"
+              })
+            }
+          }
+        }
+      }
+
+      console.log(apiProductChecks);
+      console.log(appData);
+
+      if (appService.currentUser?.email)
+        appService.UpdateApp(appService.currentUser?.email, appData);
+
+      // if (appService.apiApps) {
+      //   for (let i = 0; i < appService.apiApps?.apps.length; i++) {
+      //     if (appService.apiApps?.apps[i].name === appData.name) {
+      //       appService.apiApps.apps[i] = appData;
+      //     }
+      //   }
+      // }
+    }
+
+    goto("/apps/api");
+  }
 
   function back() {
     history.back();
@@ -108,7 +137,7 @@
 
                 <div class="input_field_panel">
                   <!-- svelte-ignore a11y-autofocus -->
-                  <input class="input_field" type="text" name="name" id="name" required bind:value={appData.name} autocomplete="off" autofocus title="none" />
+                  <input class="input_field" disabled type="text" name="name" id="name" required bind:value={appData.name} autocomplete="off" autofocus title="none" />
                   <label for="name" class='input_field_placeholder'>
                     Name
                   </label>
@@ -160,18 +189,14 @@
                 <div class="product_list">
                   <h4>Product subscriptions</h4>
                   {#each data.products.products as product}
-                  <div class="product_list_line">
-                    {#if apiProductSubscriptions.includes(product.name)}
-                      <input id={product.name} name={product.name} type="checkbox" checked /><label for={product.name}>{product.name}</label>
-                    {:else}
-                      <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
-                    {/if}
-                  </div>
+                    <div class="product_list_line">
+                      <input type="checkbox" id={product.name} name={product.name} bind:checked={apiProductChecks[product.name]}/><label for={product.name}>{product.name}</label>
+                    </div>
                   {/each}
                 </div>
 
                 <div class="controls">
-                  <button type="submit" class="rounded_button_filled">Save</button>
+                  <button type="button" class="rounded_button_filled" on:click={submit}>Save</button>
                   <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
                 </div>
 

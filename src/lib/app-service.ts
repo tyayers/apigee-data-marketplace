@@ -10,14 +10,16 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  SAMLAuthProvider
 } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { AppUser, Developer, ApiApps } from "./interfaces";
+import { AppUser, Developer, ApiApps, ApiApp } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
+  SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
  
   firebaseConfig = {
     apiKey: "AIzaSyC9rR3wblvxeWdARAV6juR2uw8dBCYfiZM",
@@ -92,6 +94,7 @@ export class AppService {
                 return response.json();
             }).then((data: ApiApps) => {
                 this.apiApps = data;
+                console.log(data);
                 const event = new Event('appsUpdated');
                 document.dispatchEvent(event);
             });
@@ -146,6 +149,11 @@ export class AppService {
     });
   }
 
+  SignInWithSAML() {
+    const auth = getAuth();
+    signInWithRedirect(auth, this.SAMLprovider);
+  }
+
   SignOut(): void {
     const auth = getAuth();
     signOut(auth);
@@ -163,12 +171,12 @@ export class AppService {
     }}, 3000);
   }
 
-  RegisterModalDialogHandler: ((message: string, type: number) => Promise<string>) | undefined = undefined;
+  RegisterModalDialogHandler: ((message: string, SubmitButtonText: string, type: number) => Promise<string>) | undefined = undefined;
 
-  ShowDialog(message: string, type: number): Promise<string> {
+  ShowDialog(message: string, SubmitButtonText: string, type: number): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this.RegisterModalDialogHandler) {
-        this.RegisterModalDialogHandler(message, type).then((result: string) => {
+        this.RegisterModalDialogHandler(message, SubmitButtonText, type).then((result: string) => {
           resolve(result);
         });
       }
@@ -187,6 +195,20 @@ export class AppService {
         this.apiApps = data;
         const event = new Event('appsUpdated');
         document.dispatchEvent(event);
+    });
+  }
+
+  UpdateApp(email: string, app: ApiApp) {
+    fetch("/api/apiapps/" + app.name + "?email=" + email, {
+      method: 'PUT',
+      body: JSON.stringify(app),
+      headers: {
+          'content-type': 'application/json',
+      },
+    }).then((response) => {
+        return response.json();
+    }).then((data: ApiApps) => {
+      console.log(data);
     });
   }
 }

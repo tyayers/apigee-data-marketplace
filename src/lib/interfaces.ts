@@ -57,8 +57,8 @@ export class ApiApp {
 export class ApiAppCredential {
   consumerKey: string = "";
   consumerSecret: string = "";
-  issuedAt?: string = "";
-  expiresAt?: string = "";
+  issuedAt: string = "";
+  expiresAt: string = "";
   scopes?: string[];
   apiProducts?: ApiAppCredentialProduct[];
   status?: string;
@@ -79,13 +79,8 @@ export interface KeyValue {
   value: string;
 }
 
-export interface DataInterface {
-  getProducts(): Promise<Products>;
-  getProduct(name: string): Promise<Product>;
-  createDeveloper(email: string, firstName: string, lastName: string, userName: string): void;
-  getDeveloper(email: string): Promise<Developer>;
-  getApiApps(email: string): Promise<ApiApps>;
-  createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp>;
-  getApiApp(devEmail: string,appId: string): Promise<ApiApp>;
-  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp>;
+export interface Error {
+  code: string;
+  message: string;
+  status: string;
 }

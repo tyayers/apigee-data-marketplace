@@ -1,9 +1,9 @@
 import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import type { ApiApp, ApiApps, DataInterface, Product, Products, Developer } from "./interfaces";
+import type { ApiApp, ApiApps, Product, Products, Developer } from "./interfaces";
 import { product_index } from "./products";
 
-export class GoogleCloudDataService implements DataInterface {
+export class GoogleCloudDataService {
 
   apigeeService: ApiManagementInterface = new ApigeeService();
 
@@ -78,6 +78,25 @@ export class GoogleCloudDataService implements DataInterface {
   public createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
       this.apigeeService.createApp(devEmail, appName, products).then((app) => {
+        resolve(app as ApiApp);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
+  public updateApiApp(devEmail: string, app: ApiApp): Promise<ApiApp> {
+    return new Promise((resolve, reject) => {
+
+      let updatedApp: App = {
+        appId: app.appId,
+        name: app.name,
+        createdAt: app.createdAt,
+        status: app.status,
+        credentials: app.credentials
+      };
+
+      this.apigeeService.updateApp(devEmail, updatedApp.name, updatedApp).then((app) => {
         resolve(app as ApiApp);
       }).catch((err) => {
         reject(err);

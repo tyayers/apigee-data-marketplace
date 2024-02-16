@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { appService } from '$lib/app-service.server';
+import type { ApiApp } from '$lib/interfaces';
 
 export const GET: RequestHandler = async ({ params, url }) => {
 
@@ -11,6 +12,23 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	}
 	
 	let appData = await appService.GetApiApp(email, params.id)
+
+	return json(appData);
+};
+
+export const PUT: RequestHandler = async ({ params, url, request }) => {
+
+	const email = url.searchParams.get('email') ?? '';
+
+	const app: ApiApp = await request.json();
+
+	console.log(app);
+
+	if (!email || !params.id) {
+		error(400, 'email and appid are required');
+	}
+	
+	let appData = await appService.UpdateApiApp(email, app);
 
 	return json(appData);
 };

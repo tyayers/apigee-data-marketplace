@@ -1,6 +1,7 @@
 <script lang="ts">
 
   export let message = "";
+  export let submitButtonText = "OK";
   export let type = 0;
 
   export let submit: (result: string) => void
@@ -25,7 +26,7 @@
       {message}
     </div>
     <div class="modal_controls">
-      <button class="rounded_button_filled" on:click={onOk}>Ok</button>
+      <button class="rounded_button_filled" on:click={onOk}>{submitButtonText}</button>
       <button class="rounded_button_outlined" on:click={onCancel}>Cancel</button>
     </div>
   </div>
@@ -48,8 +49,8 @@
   }
 
   .modal_dialog {
-    width: 420px;
-    text-align: center;
+    width: 400px;
+    text-align: left;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -60,13 +61,13 @@
     animation: 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0s 1 normal forwards
       running k3;
 
-    padding: 44px 56px;
+    padding: 44px 64px;
     background: rgb(255, 255, 255);
     box-shadow: rgb(0 0 0 / 15%) 0px 2px 10px;
     border-radius: 44px;
     display: block;
     
-    height: 260px;
+    height: 194px;
     flex-direction: row;
 
     margin: 0;
@@ -75,11 +76,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .modal_message {
-    margin-top: 70px;
+    margin-top: 60px;
 
   }
 

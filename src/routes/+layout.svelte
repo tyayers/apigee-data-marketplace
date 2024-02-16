@@ -7,6 +7,7 @@
 
   let modalDialogVisible = false;
   let modalDialogMessage = "";
+  let modalSubmitButtonText = "OK";
   let modalDialogType = 0;
   let modalPromise: Promise<string> | undefined = undefined;
 
@@ -18,10 +19,11 @@
 
   appService.RegisterModalDialogHandler = modalDialog;
 
-  function modalDialog(message: string, type: number): Promise<string> {
+  function modalDialog(message: string, submitButtonText: string, type: number): Promise<string> {
     modalPromise = new Promise((resolve, reject) => {
       modalDialogMessage = message;
       modalDialogType = type;
+      modalSubmitButtonText = submitButtonText;
       modalDialogVisible = true;
     });
 
@@ -46,7 +48,7 @@
   <Header />
 
   {#if modalDialogVisible}
-    <ModalDialog message={modalDialogMessage} type={modalDialogType} submit={modalResult}></ModalDialog>
+    <ModalDialog message={modalDialogMessage} submitButtonText={modalSubmitButtonText} type={modalDialogType} submit={modalResult}></ModalDialog>
   {/if}
   <slot />
 </div>

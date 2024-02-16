@@ -210,6 +210,11 @@ button {
   color: var(--primary-color);
 }
 
+.input_field:is(:disabled)+.input_field_placeholder {
+  transform: translatey(calc(-1 * var(--padding) - 11px)) translatex(-4px);
+  font-size: 14px;
+  color: gray;
+}
 /* Snackbar */
 
 #snackbar {

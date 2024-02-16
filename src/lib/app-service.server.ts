@@ -3,7 +3,7 @@ import { GoogleCloudDataService } from "./data-service.gcp";
 import { TestDataService } from "./data-service.test";
 
 export class AppServiceServer {
-  dataService: DataInterface = new GoogleCloudDataService();
+  dataService: GoogleCloudDataService = new GoogleCloudDataService();
 
   GetApiProducts(): Promise<Products> {
     return this.dataService.getProducts();
@@ -28,6 +28,14 @@ export class AppServiceServer {
   CreateApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
     return new Promise<ApiApp>((resolve, reject) => {
       this.dataService.createApiApp(devEmail, appName, products).then((app: ApiApp) => {
+        resolve(app);
+      });
+    });
+  }
+
+  UpdateApiApp(devEmail: string, app: ApiApp): Promise<ApiApp> {
+    return new Promise<ApiApp>((resolve, reject) => {
+      this.dataService.updateApiApp(devEmail, app).then((app: ApiApp) => {
         resolve(app);
       });
     });

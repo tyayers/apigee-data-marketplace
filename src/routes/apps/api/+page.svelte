@@ -30,7 +30,7 @@
 
     function deleteApp(app: ApiApp) {
 
-        appService.ShowDialog("Do you really want to delete this app?", 0).then((result) => {
+        appService.ShowDialog("Do you really want to delete this app?", "Delete", 0).then((result) => {
             let newAppData = appData;
             let index = newAppData?.apps.indexOf(app);
             if (index) {
@@ -85,7 +85,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {#if appData}
+                        {#if appData && appData.apps}
                             {#each appData.apps as app, i}
                                 <tr on:click={() => open(app.name)}>
                                         <td>{app.name}</td>
