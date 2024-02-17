@@ -17,8 +17,17 @@ export class AppServiceServer {
     return this.dataService.getDeveloper(email);
   }
 
-  CreateDeveloper(email: string, firstName: string, lastName: string, userName: string) {
-    this.dataService.createDeveloper(email, firstName, lastName, userName);
+  CreateDeveloper(email: string, firstName: string, lastName: string, userName: string): Promise<Developer> {
+    return new Promise<Developer>((resolve, reject) => {
+      this.dataService.createDeveloper(email, firstName, lastName, userName).then((result) => {
+        console.log("Create developer result: ");
+        console.log(result);
+        resolve(result);
+      }).catch((error) => {
+        console.log("Create developer error: ");
+        console.log(error);
+      })
+    });
   }
 
   GetApiApps(email: string): Promise<ApiApps> {

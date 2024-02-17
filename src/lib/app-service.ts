@@ -45,9 +45,11 @@ export class AppService {
           const event = new Event('userUpdated');
           // Next, we dispatch the event.
           document.dispatchEvent(event);
+          // Goto signed-out landing page
+          goto("/");
         } else {
           this.currentUser = new AppUser();
-          if (u?.email) this.currentUser.email = u.email;
+          if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
           if (u?.photoURL) 
             this.currentUser.photoUrl = u.photoURL;
           else
@@ -57,8 +59,11 @@ export class AppService {
             this.currentUser.userName = u.displayName;
           }
           else {
-            this.currentUser.userName = "User";
+            this.currentUser.userName = "New User";
           }
+
+          if (u.providerData && u.providerData.length > 0)
+            this.currentUser.providerId = u.providerData[0].providerId;
 
           // Create developer if they don't exist
           fetch("/api/developers?email=" + appService.currentUser?.email + "&username=" + appService.currentUser?.userName, {

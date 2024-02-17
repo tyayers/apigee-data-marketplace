@@ -2,6 +2,7 @@ export class AppUser {
   email = "";
   userName = "";
   photoUrl = "";
+  providerId = "";
   developerData?: Developer;
 }
 

@@ -19,8 +19,9 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
+	console.log("creating developer: " + email);
 	let appData = await appService.CreateDeveloper(email, firstName, lastName, userName);
-
+	console.log(appData);
 	return json({});
 };
 

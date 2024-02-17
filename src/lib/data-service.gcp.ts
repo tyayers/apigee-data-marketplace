@@ -2,6 +2,7 @@ import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Develo
 import { ApigeeService } from "apigee-x-module";
 import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential } from "./interfaces";
 import { product_index } from "./products";
+import { resolveConfig } from "vite";
 
 export class GoogleCloudDataService {
 
@@ -53,16 +54,22 @@ export class GoogleCloudDataService {
     });
   }
 
-  public createDeveloper(email: string, firstName: string, lastName: string, userName: string): void {
-    let devData: ApigeeDeveloper = {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      userName: userName,
-      attributes: []
-    }
-
-    this.apigeeService.createDeveloper(devData);
+  public createDeveloper(email: string, firstName: string, lastName: string, userName: string): Promise<Developer> {
+    return new Promise<Developer>((resolve, reject) => {
+      let devData: ApigeeDeveloper = {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        attributes: []
+      }
+  
+      this.apigeeService.createDeveloper(devData).then((result) => {
+        resolve(result as Developer);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
 
   public getApiApps(email: string): Promise<ApiApps> {

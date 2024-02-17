@@ -158,6 +158,7 @@
   }
 </script>
 
+{#if currentUser}
 <div class="banner">
   <div class="banner_title">
     Welcome to the Data Marketplace
@@ -173,6 +174,7 @@
 </div>
 
 <div class="product_showcase">
+  
   <div class="product_filter">
     <div class="product_filter_box">
       <div class="product_filter_search">
@@ -206,7 +208,6 @@
     </div>
   </div>
   <div class="product_list">
-
     {#each Object.keys(catProducts) as catName}
       {#if catProducts[catName].length > 0}
         <div class="product_list_header">
@@ -217,19 +218,13 @@
         {/each}
       {/if}
     {/each}
-
-    <!-- {#each Object.keys(categories) as catName}
-      <div class="product_list_header">
-        <h3>{catName} products</h3>
-      </div>
-      {#each data.products.products as product, i}
-        {#if product.attrArray?.includes(catName) && (product.groupArray?.length === 0 || userGroups.some(item => product.groupArray?.includes(item))) && (catChecked.length === 0 || catChecked.some(item => product.attrArray?.includes(item)))}
-          <ProductCard data={product} />
-        {/if}
-      {/each}
-    {/each} -->
   </div>
+
 </div>
+
+{:else}
+<div class="ring_lower lds-ring"><div></div><div></div><div></div><div></div></div>
+{/if}
 
 <style>
   .banner {
@@ -370,6 +365,12 @@
 
   .tag_sync {
     background-color: orange;
+  }
+
+  .ring_lower div {
+    position: absolute;
+    top: 11vh;
+    margin-left: 45vw;
   }
 
 </style>
