@@ -10,6 +10,7 @@
   let modalSubmitButtonText = "OK";
   let modalDialogType = 0;
   let modalPromise: Promise<string> | undefined = undefined;
+  let modalPromiseResolve: (value: string) => void;
 
   onMount(async () => {
     document.addEventListener("cancelEvent", () => {
@@ -25,6 +26,7 @@
       modalDialogType = type;
       modalSubmitButtonText = submitButtonText;
       modalDialogVisible = true;
+      modalPromiseResolve = resolve;
     });
 
     return modalPromise;
@@ -32,6 +34,7 @@
 
   function modalResult(result: string): void {
     modalDialogVisible = false;
+    modalPromiseResolve(result);
   }
 
   function sendCancel() {

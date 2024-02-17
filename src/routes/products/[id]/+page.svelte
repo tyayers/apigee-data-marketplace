@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageServerData } from "./$types";
-
   export let data: PageServerData;
 
   let selectedProductTab = "overview";
@@ -61,7 +60,7 @@
 <div class="product_tab_menu">
   <button on:click={() => setSelectedProductTag("overview")} class={selectedProductTab == "overview" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>Overview</button>
   <button on:click={() => setSelectedProductTag("pricing")} class={selectedProductTab == "pricing" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>Pricing</button>
-  <button on:click={() => setSelectedProductTag("documentation")} class={selectedProductTab == "documentation" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>Documentation</button>
+  <button on:click={() => setSelectedProductTag("documentation")} class={selectedProductTab == "documentation" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>API Documentation</button>
   <button on:click={() => setSelectedProductTag("support")} class={selectedProductTab == "support" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>Support</button>
   <button on:click={() => setSelectedProductTag("related")} class={selectedProductTab == "related" ? "product_tab_menu_item product_tab_menu_item_selected" : "product_tab_menu_item"}>Related products</button>
 </div>
@@ -73,6 +72,32 @@
       <div class="product_tab_content_text">
         {data.product.description}
       </div>
+    </div>
+  {:else if selectedProductTab == "documentation"}
+    <div class="product_tab_content_inner">
+      {#if data.product.specUrl}
+        <rapi-doc
+          spec-url={data.product.specUrl}
+          show-header = 'false'
+          show-info = 'true'
+          bg-color = "#fafafa"
+          nav-bg-color = '#fcfcfc'
+          primary-color = "#3367d6"
+          api-key-name = 'x-api-key'
+          api-key-location = 'header'
+          api-key-value = {"fdsfsdjkfjsdlj"}
+          allow-authentication ='true'
+          allow-server-selection = 'false'
+          allow-api-list-style-selection ='false'
+          allow-search = "false"
+          allow-advanced-search = "false"
+          theme = 'light'
+          render-style = "focused"
+          style = {{ textAlign: "left" }}
+          data-reveal-delay="200"
+          class="blue_text"
+        > </rapi-doc>
+      {/if}
     </div>
   {:else if selectedProductTab == "pricing"}
     <div class="product_tab_content_inner">
@@ -168,13 +193,19 @@
   }
 
   .product_tab_content_inner {
+    display: flex;
     position: relative;
-    top: 36px;
-    margin-left: 42px;
+    top: 10px;
+    margin-left: 28px;
+    height: 500px;
   }
 
   .product_tab_content_text {
     color: #333;
     font-size: 14px;
+  }
+
+  .blue_text {
+    --blue: #3367d6;
   }
 </style>

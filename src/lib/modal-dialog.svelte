@@ -67,7 +67,7 @@
     border-radius: 44px;
     display: block;
     
-    height: 194px;
+    height: 164px;
     flex-direction: row;
 
     margin: 0;
@@ -77,6 +77,8 @@
     transform: translate(-50%, -50%);
 
     font-size: 20px;
+    font-weight: 100;
+    padding-top: 20px;
   }
 
   .modal_message {

@@ -1,6 +1,6 @@
 import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import type { ApiApp, ApiApps, Product, Products, Developer } from "./interfaces";
+import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential } from "./interfaces";
 import { product_index } from "./products";
 
 export class GoogleCloudDataService {
@@ -118,6 +118,36 @@ export class GoogleCloudDataService {
     return new Promise((resolve, reject) => {
       this.apigeeService.deleteApp(devEmail, appId).then((app) => {
         resolve(app as ApiApp);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+  
+  public addApiAppKey(devEmail: string, app: ApiApp): Promise<ApiApp> {
+    return new Promise((resolve, reject) => {
+
+      let updatedApp: App = {
+        appId: app.appId,
+        name: app.name,
+        apiProducts: app.apiProducts,
+        createdAt: app.createdAt,
+        status: app.status,
+        credentials: app.credentials
+      };
+
+      this.apigeeService.addAppCredential(devEmail, updatedApp.name, updatedApp).then((app) => {
+        resolve(app as ApiApp);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
+  deleteApiAppKey(devEmail: string, appId: string, keyId: string): Promise<ApiAppCredential> {
+    return new Promise((resolve, reject) => {
+      this.apigeeService.deleteAppCredential(devEmail, appId, keyId).then((key) => {
+        resolve(key as ApiAppCredential);
       }).catch((err) => {
         reject(err);
       });

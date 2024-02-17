@@ -21,7 +21,11 @@
                 var d = new Date(parseInt(app.createdAt));
                 app.createdAtDate = d.toLocaleString();
             }
+
+            appData.apps.sort((a, b) => parseInt(a.createdAt) - parseInt(b.createdAt));
         }
+
+       
     }
 
     function open(appId: string) {
@@ -31,16 +35,22 @@
     function deleteApp(app: ApiApp) {
 
         appService.ShowDialog("Do you really want to delete this app?", "Delete", 0).then((result) => {
-            let newAppData = appData;
-            let index = newAppData?.apps.indexOf(app);
-            if (index) {
-                newAppData?.apps.splice(index, 1);
-                appService.apiApps = newAppData;
-                appData = newAppData;
-            }
+            if (result === "ok") {
+                if (appData) {
+                    // let index = appData.apps.indexOf(app);
+                    // if (index) {
+                    //     let newAppData = appData;
+                    //     newAppData?.apps.splice(index, 1);
+                    //     appService.apiApps = newAppData;
+                    //     appData = newAppData;
+                    // }                    
 
-            if (appService.currentUser)
-                appService.DeleteApp(appService.currentUser?.email, app.name);
+                    if (appService.currentUser)
+                        appService.DeleteApp(appService.currentUser?.email, app.name);
+
+                    appService.ShowSnackbar("App has been deleted.")
+                }
+            }
         });
     }
 </script>

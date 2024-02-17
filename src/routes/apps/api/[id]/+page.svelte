@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
-  import { ApiApp } from "$lib/interfaces";
+  import { ApiApp, ApiAppCredential } from "$lib/interfaces";
   import type { PageData } from "./$types";
-    import { goOffline } from 'firebase/database';
-    import { goto } from '$app/navigation';
+  import { goto } from '$app/navigation';
 
   export let data: PageData;
 
@@ -36,9 +35,54 @@
         apiProductChecks[product.apiproduct] = true;
       }
 
-      console.log(apiProductChecks);
+      appData.credentials.sort((a, b) => parseInt(a.issuedAt) - parseInt(b.issuedAt));
     }
     
+  }
+
+  function addKey() {
+    if (appService.currentUser && appData) {
+
+      appData.apiProducts = [];
+      for (let product of Object.keys(apiProductChecks)) {
+        if (apiProductChecks[product]) {
+          appData.apiProducts.push(product);
+        }
+      }
+
+      appService.AddAppKey(appService.currentUser?.email, appData).then((result) => {
+
+        if (appService.apiApps && appData) {
+          let index = appService.apiApps.apps.indexOf(appData);
+          appService.apiApps.apps[index] = result;
+        }
+
+        appData = result;
+        setProductChecks();
+
+        appService.ShowSnackbar("Key has been created.");
+      });
+    }
+  }
+
+  function deleteKey(key: ApiAppCredential) {
+    appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
+      console.log("result from dialog: " + result);
+      if (result === "ok") {
+        if (appService.currentUser && appData) {
+          appService.DeleteAppKey(appService.currentUser?.email, appData?.name, key.consumerKey);
+          // remove credential from local data
+          let tempAppData = appData;
+          let index = tempAppData.credentials?.indexOf(key);
+          if (index)
+            tempAppData.credentials?.splice(index, 1);
+
+          appData = tempAppData;
+
+          appService.ShowSnackbar("Key has been deleted.");
+        }
+      }
+    });
   }
 
   function submit() {
@@ -70,14 +114,6 @@
 
       if (appService.currentUser?.email)
         appService.UpdateApp(appService.currentUser?.email, appData);
-
-      // if (appService.apiApps) {
-      //   for (let i = 0; i < appService.apiApps?.apps.length; i++) {
-      //     if (appService.apiApps?.apps[i].name === appData.name) {
-      //       appService.apiApps.apps[i] = appData;
-      //     }
-      //   }
-      // }
     }
 
     goto("/apps/api");
@@ -152,7 +188,7 @@
 
                 <div>
                   <div class="keys_panel">
-                    <h4>Keys</h4><button class="text_button add_key_button" type="button">+ Add key</button>
+                    <h4>Keys</h4><button class="text_button add_key_button" type="button" on:click={addKey}>+ Add key</button>
                   </div>
 
                   <div class="panel_table_content">
@@ -173,9 +209,9 @@
                                           <td>*************************</td>
                                           <td>{cred.status}</td>
                                           <td>
-                                              <button>
-                                                  <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>
-                                                </button>
+                                            <button type="button" on:click|stopPropagation={() => deleteKey(cred)}>
+                                              <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>
+                                            </button>
                                           </td>
                                       </tr>
                               {/each}

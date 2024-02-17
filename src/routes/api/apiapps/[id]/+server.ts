@@ -16,13 +16,29 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	return json(appData);
 };
 
+// POST on an app creates a new key
+export const POST: RequestHandler = async({ params, url, request}) => {
+	const email = url.searchParams.get('email') ?? '';
+
+	const app: ApiApp = await request.json();
+
+	if (!email || !params.id) {
+		error(400, 'email and appid are required');
+	}
+
+	console.log("Start add key for app:");
+	console.log(app);
+
+	let appData = await appService.AddApiAppKey(email, app);
+
+	return json(appData);
+}
+
 export const PUT: RequestHandler = async ({ params, url, request }) => {
 
 	const email = url.searchParams.get('email') ?? '';
 
 	const app: ApiApp = await request.json();
-
-	console.log(app);
 
 	if (!email || !params.id) {
 		error(400, 'email and appid are required');

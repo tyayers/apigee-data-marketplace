@@ -32,7 +32,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"apigee-x-module": "^1.1.2",
-		"firebase": "^10.8.0"
+		"apigee-x-module": "^1.2.0",
+		"firebase": "^10.8.0",
+		"rapidoc": "^9.3.4"
 	}
 }

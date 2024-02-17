@@ -180,6 +180,9 @@ export class AppService {
           resolve(result);
         });
       }
+      else {
+        console.error("No dialog registered handler!");
+      }
     });
   }
 
@@ -191,10 +194,15 @@ export class AppService {
       },
     }).then((response) => {
         return response.json();
-    }).then((data: ApiApps) => {
-        this.apiApps = data;
-        const event = new Event('appsUpdated');
-        document.dispatchEvent(event);
+    }).then((data: ApiApp) => {
+      let index = this.apiApps?.apps.indexOf(data);
+      if (index) {
+          let newAppData = this.apiApps;
+          newAppData?.apps.splice(index, 1);
+          this.apiApps = newAppData;
+      }   
+      const event = new Event('appsUpdated');
+      document.dispatchEvent(event);
     });
   }
 
@@ -210,6 +218,37 @@ export class AppService {
     }).then((data: ApiApps) => {
       console.log(data);
     });
+  }
+
+  AddAppKey(email: string, app: ApiApp): Promise<ApiApp> {
+    return new Promise<ApiApp>((resolve, reject) => {
+      fetch("/api/apiapps/" + app.name + "?email=" + email, {
+        method: 'POST',
+        body: JSON.stringify(app),
+        headers: {
+            'content-type': 'application/json',
+        },
+      }).then((response) => {
+          return response.json();
+      }).then((data: ApiApp) => {
+        console.log("AddAppkey result:")
+        console.log(data);
+        resolve(data);
+      });
+    });
+  }
+
+  DeleteAppKey(email: string, appName: string, keyId: string) {
+    fetch("/api/apiapps/" + appName + "/keys/" + keyId + "?email=" + email, {
+      method: 'DELETE',
+      headers: {
+          'content-type': 'application/json',
+      },
+    }).then((response) => {
+        return response.json();
+    }).then((data: ApiApps) => {
+        console.log(data);
+    });    
   }
 }
 
