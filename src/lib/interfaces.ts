@@ -51,6 +51,7 @@ export class ApiApp {
   apiProducts?: string[];
   status?: string;
   credentials?: ApiAppCredential[];
+  attributes?: KeyValue[];
   error?: Error;
 }
 

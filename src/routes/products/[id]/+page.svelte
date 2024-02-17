@@ -81,7 +81,7 @@
           show-header = 'false'
           show-info = 'true'
           bg-color = "#fafafa"
-          nav-bg-color = '#fcfcfc'
+          nav-bg-color = '#f3f3f3'
           primary-color = "#3367d6"
           api-key-name = 'x-api-key'
           api-key-location = 'header'

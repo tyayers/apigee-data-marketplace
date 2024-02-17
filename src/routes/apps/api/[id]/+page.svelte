@@ -8,7 +8,7 @@
   export let data: PageData;
 
   let appData: ApiApp | undefined = undefined;
-  if (appService.apiApps) appService.apiApps?.apps.find((item) => item.name === data.appName);
+  //if (appService.apiApps) appService.apiApps?.apps.find((item) => item.name === data.appName);
   let apiProductChecks: {[key: string]: boolean} = {};
 
 	onMount(() => {
@@ -26,6 +26,8 @@
 
   function setProductChecks() {
 
+    console.log(appData);
+
     for (let product of data.products.products) {
       apiProductChecks[product.name] = false;
     }
@@ -38,6 +40,37 @@
       appData.credentials.sort((a, b) => parseInt(a.issuedAt) - parseInt(b.issuedAt));
     }
     
+    if (appData && appData.attributes) {
+      for (let attr of appData.attributes) {
+        if (attr.name === "Notes") {
+          appData.description = attr.value;
+        }
+      }
+    }
+  }
+
+  function setDescription() {
+    if (appData && appData.description) {
+      let foundNotes: boolean = false;
+      if (appData.attributes) {
+        for (let attr of appData.attributes) {
+          if (attr.name === "Notes") {
+            foundNotes = true;
+            attr.value = appData.description;
+          }
+        }
+      }
+
+      if (!foundNotes) {
+        if (!appData.attributes)
+          appData.attributes = [];
+
+        appData.attributes.push({
+            name: 'Notes',
+            value: appData.description
+        });
+      }
+    }   
   }
 
   function addKey() {
@@ -49,6 +82,8 @@
           appData.apiProducts.push(product);
         }
       }
+
+      setDescription();
 
       appService.AddAppKey(appService.currentUser?.email, appData).then((result) => {
 
@@ -109,8 +144,9 @@
         }
       }
 
-      console.log(apiProductChecks);
-      console.log(appData);
+      setDescription();
+
+      appService.ShowSnackbar("App updated.")
 
       if (appService.currentUser?.email)
         appService.UpdateApp(appService.currentUser?.email, appData);
@@ -173,14 +209,14 @@
 
                 <div class="input_field_panel">
                   <!-- svelte-ignore a11y-autofocus -->
-                  <input class="input_field" disabled type="text" name="name" id="name" required bind:value={appData.name} autocomplete="off" autofocus title="none" />
+                  <input class="input_field" disabled type="text" name="name" id="name" required bind:value={appData.name} autocomplete="off" title="none" />
                   <label for="name" class='input_field_placeholder'>
                     Name
                   </label>
                 </div>
 
                 <div class="input_field_panel">
-                  <input class="input_field" type="text" name="description" id="description" bind:value={appData.description} autocomplete="off" title="none" />
+                  <input class="input_field" type="text" name="description" id="description" bind:value={appData.description} autocomplete="off" autofocus title="none" />
                   <label for="description" class='input_field_placeholder'>
                     Description
                   </label>
@@ -241,7 +277,9 @@
           </div>
 
       </div>
-  
+      {#if !appData}
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+      {/if}
   </div>
 
 </div>

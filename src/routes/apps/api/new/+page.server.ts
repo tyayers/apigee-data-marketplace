@@ -43,14 +43,14 @@ export const actions = {
     console.log(email + " " + name);
     
     if (email && name) {
-		  appService.CreateApiApp(email.toString(), name.toString(), products);
+		  appService.CreateApiApp(email.toString(), name.toString(), description.toString(), products);
       redirect(303, "/apps/api");
     }
     else {
       console.error("Missing email or name!");
-      // return fail(400, {
-      //   error: "Missing email or name",
-      // });
+      return fail(400, {
+        error: "Missing email or name",
+      });
     }
 	},
 } satisfies Actions;

@@ -75,9 +75,9 @@ export class GoogleCloudDataService {
     });
   }
 
-  public createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
+  public createApiApp(devEmail: string, appName: string, description: string, products: string[]): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
-      this.apigeeService.createApp(devEmail, appName, products).then((app) => {
+      this.apigeeService.createApp(devEmail, appName, products, description).then((app) => {
         resolve(app as ApiApp);
       }).catch((err) => {
         reject(err);
@@ -93,11 +93,23 @@ export class GoogleCloudDataService {
         name: app.name,
         createdAt: app.createdAt,
         status: app.status,
-        credentials: app.credentials
+        credentials: app.credentials,
+        attributes: app.attributes
       };
 
+      // First update the app
       this.apigeeService.updateApp(devEmail, updatedApp.name, updatedApp).then((app) => {
-        resolve(app as ApiApp);
+        // Now update all credentials
+        if (updatedApp.credentials) {
+          var credPromises: Promise<ApiAppCredential>[] = [];
+          for (let cred of updatedApp.credentials) {
+            let credUpdatePromise: Promise<ApiAppCredential> = this.apigeeService.updateAppCredential(devEmail, updatedApp.name, cred);
+          }
+
+          Promise.all(credPromises).then((results) => {
+            resolve(app as ApiApp);
+          });
+        }
       }).catch((err) => {
         reject(err);
       });
@@ -133,7 +145,8 @@ export class GoogleCloudDataService {
         apiProducts: app.apiProducts,
         createdAt: app.createdAt,
         status: app.status,
-        credentials: app.credentials
+        credentials: app.credentials,
+        attributes: app.attributes
       };
 
       this.apigeeService.addAppCredential(devEmail, updatedApp.name, updatedApp).then((app) => {

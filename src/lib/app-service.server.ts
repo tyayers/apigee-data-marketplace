@@ -25,9 +25,9 @@ export class AppServiceServer {
     return this.dataService.getApiApps(email);
   }
 
-  CreateApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
+  CreateApiApp(devEmail: string, appName: string, description: string, products: string[]): Promise<ApiApp> {
     return new Promise<ApiApp>((resolve, reject) => {
-      this.dataService.createApiApp(devEmail, appName, products).then((app: ApiApp) => {
+      this.dataService.createApiApp(devEmail, appName, description, products).then((app: ApiApp) => {
         resolve(app);
       });
     });

@@ -37,18 +37,10 @@
         appService.ShowDialog("Do you really want to delete this app?", "Delete", 0).then((result) => {
             if (result === "ok") {
                 if (appData) {
-                    // let index = appData.apps.indexOf(app);
-                    // if (index) {
-                    //     let newAppData = appData;
-                    //     newAppData?.apps.splice(index, 1);
-                    //     appService.apiApps = newAppData;
-                    //     appData = newAppData;
-                    // }                    
-
                     if (appService.currentUser)
                         appService.DeleteApp(appService.currentUser?.email, app.name);
 
-                    appService.ShowSnackbar("App has been deleted.")
+                    appService.ShowSnackbar("App has been deleted.");
                 }
             }
         });
@@ -119,7 +111,9 @@
                 </table>
             </div>
         </div>
-    
+        {#if !appData}
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        {/if}
     </div>
 
 </div>
@@ -187,6 +181,4 @@
         width: 90%;
         margin-left: 24px;
     }
-
-
 </style>
