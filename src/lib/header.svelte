@@ -54,10 +54,20 @@
         <div class="menuPanel">
           <div class="arrow" />
           <div class="menu">
+            <div class="menu_profile">
+              <img class="panel_profile_image" src={currentUser.photoUrl} alt="Profile"/>
+              <div class="profile_info">
+                <div class="profile_info_primary">{currentUser.userName}</div>
+                <div class="profile_info_secondary">{currentUser.email}</div>
+                <div class="profile_info_secondary profile_info_divide">{currentUser.providerId}</div>
+              </div>
+            </div>
             <div class="panel">
-              <button class="result" on:click={goToMyApps}>My apps</button>
-              <button class="result">Account</button>
+              
+              <button class="result" on:click|stopPropagation={()=> {}} style="width: 93%;">Account</button>
               <button class="result" on:click={signOut}>Sign Out</button>
+              <button class="result" on:click={goToMyApps}>My apps</button>
+              
             </div>
           </div>
         </div>
@@ -143,31 +153,69 @@
     position: relative;
     left: -4px;
     top: -1px;
-    max-height: 200px;
-    width: 140px;
-    overflow-y: auto;
+    height: 254px;
+    width: 300px;
+    overflow-y: hidden;
     border-radius: 3px;
     background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px 0px;
     border: 1px solid rgb(242, 242, 242);
     border-radius: 4px;
+    z-index: 0;
+  }
+
+  .menu_profile {
+    display: flex;
+  }
+
+  .profile_info {
+    margin-top: 32px;
+    margin-left: 18px;
+  }
+
+  .profile_info_primary {
+    font-size: 16px;
+  }
+
+  .profile_info_secondary {
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 2px;
+    margin-left: 2px;
+  }
+
+  .profile_info_divide {
+    margin-top: 16px;
+  }
+
+  .panel_profile_image {
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
   }
 
   .panel {
-    position: relative;
+    /* position: relative; */
     background: rgb(255, 255, 255);
-    width: 100%;
-    height: 100%;
+    /* height: 100%; */
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 30px;
     z-index: 2;
-    padding-top: 20px;
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
     /* padding-bottom: 20px; */
-    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /* font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif; */
   }
 
   .arrow {
     position: relative;
     top: -15px;
-    left: 100px;
+    left: 259px;
     z-index: 1;
     border: 1px solid rgb(242, 242, 242);
     box-shadow: rgba(0, 0, 0, 0.15) -1px -1px 1px -1px;
@@ -193,8 +241,19 @@
     font-weight: 200;
     background-color: transparent;
     border-width: 0px;
+    width:45%;
+    text-align: center;
+    margin: 4px;
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.66);
+    font-weight: 400;
+    background-color: #fdfdfd;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    font-size: 14px;
     /* border-bottom: 1px solid #dddddd; */
-    width: 100%;
+    /* width: 300px; */
+    border-radius: 5px;
   }
 
   .result:hover {

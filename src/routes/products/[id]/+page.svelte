@@ -1,8 +1,46 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+    import { appService } from "$lib/app-service";
 	import type { PageServerData } from "./$types";
   export let data: PageServerData;
 
   let selectedProductTab = "overview";
+
+  let newTab = $page.url.searchParams.get('tab')
+  if (newTab) selectedProductTab = newTab;
+
+  let appSubscriptions: string[] = [];
+
+  if (data.product) {
+    data.product.attrArray = [];
+    data.product.groupArray = [];
+    data.product.typeArray = data.product.type?.split(",");
+    if (data.product.attributes) {
+      for (let tagData of data.product.attributes){
+        if (tagData.name === "tags") {
+          let tags = tagData.value.split(", ");
+
+          for (let tag of tags) {
+            data.product.attrArray.push(tag);
+            let pieces = tag.split("/");
+            if (! data.product.attrArray.includes(pieces[0])) data.product.attrArray.push(pieces[0]);
+          }
+        }
+        else if (tagData.name === "groups") {
+          data.product.groupArray = tagData.value.split(", ");
+        }
+      }
+    }
+  }
+
+  if (appService.apiApps && appService.apiApps.apps) {
+    for (let app of appService.apiApps.apps) {
+      if (app.apiProducts && app.apiProducts.includes(data.product.name)) {
+        appSubscriptions.push(app.name);
+      }
+    }
+  }
 
   function back() {
     history.back();
@@ -10,6 +48,9 @@
 
   function setSelectedProductTag(tabName: string) {
     selectedProductTab = tabName;
+    const newUrl = new URL($page.url);
+    newUrl?.searchParams?.set('tab', tabName);
+    goto(newUrl, { replaceState: true });
   }
 </script>
 
@@ -40,16 +81,25 @@
 
     <div class="product_overview_buy">
       {#if data.product.type?.includes("api")}
-        <a href="/home" class="rounded_button_filled">Subscribe to API</a>
+        <a href="#" class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if data.product.type?.includes("ah")}
-        <a href="/home" class="rounded_button_filled">Analytics Hub</a>
+        <a href="#" class="rounded_button_filled">Analytics Hub</a>
       {/if}
       {#if data.product.type?.includes("sync")}
-        <a href="/home" class="rounded_button_filled">Enable data sync</a>
+        <a href="#" class="rounded_button_filled">Enable data sync</a>
       {/if}      
-      <a href="/home" class="rounded_button_outlined">Preview data</a>
+      <a href="#" class="rounded_button_outlined">Preview data</a>
     </div>
+
+    {#if appSubscriptions.length > 0}
+      <div class="product_overview_description">
+        Subscribed apps:
+        {#each appSubscriptions as sub, i}
+          <a class="sub_link" href={"/apps/api/" + sub}>{sub}</a>
+        {/each}
+      </div>
+    {/if}
 
   </div>
 
@@ -74,7 +124,7 @@
       </div>
     </div>
   {:else if selectedProductTab == "documentation"}
-    <div class="product_tab_content_inner">
+    <div>
       {#if data.product.specUrl}
         <rapi-doc
           spec-url={data.product.specUrl}
@@ -108,7 +158,6 @@
 
 <style>
   .product_header {
-    width: 100%;
     height: 36px;
     padding-top: 16px;
     padding-left: 42px;
@@ -125,9 +174,11 @@
   }
 
   .product_overview {
-    width: 100%;
     padding-left: 100px;
+    padding-top: 20px;
     display: flex;
+    position: absolute;
+    top: 100px;
   }
 
   .product_overview_icon {
@@ -141,30 +192,47 @@
 
   .product_overview_owner {
     font-size: 13px;
-    position: relative;
-    top: -10px;
-    left: 4px;
+    margin-left: 2px;
   }
 
   .product_overview_description {
-    position: relative;
-    top: 18px;
-    left: 4px;
+    margin-top: 10px;
+    margin-left: 2px;
     color: #666;
   }
 
   .product_overview_buy {
-    position: relative;
-    top: 70px;
-    left: 2px;
+    margin-top: 44px;
+    height: 54px;
+  }
+
+  .sub_link {
+    padding: 4px 10px;
+    margin-right: 8px;
+    border-radius: 44px;
+    /* padding: 12px;
+    padding-left: 24px;
+    padding-right: 24px; */
+    border-width: 0px;
+    font-size: 14px;
+    /* background-color: #e8def8; */
+    background-color: #f3f3f3;
+    cursor: pointer;
+    text-decoration: none;
+    color: #666;
+  }
+
+  .sub_link:hover {
+    /* box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 3px -1px, rgba(0, 0, 0, 0.14) 0px 6px 6px 0px, rgba(0, 0, 0, 0.12) 0px 1px 6px 0px; */
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px, rgba(0, 0, 0, 0.08) 0px 2px 2px 0px, rgba(0, 0, 0, 0.06) 0px 3px 1px -2px;
   }
 
   .product_tab_menu {
-    position: relative;
-    top: 160px;
-    left: 42px;
+    margin-top: 130px;
     width: 100%;
     display: flex;
+    position: absolute;
+    top: 270px;
   }
 
   .product_tab_menu_item {
@@ -185,19 +253,18 @@
 
   .product_tab_content {
     width: 100%;
-    height: 500px;
-    position: relative;
-    top: 160px;
     background-color: #fafafa;
     border-top: solid 2px rgba(242, 242, 242, 1);
+    position: absolute;
+    bottom: 0px;
+    top: 434px;
+    height: auto;
+    overflow-y: scroll;
   }
 
   .product_tab_content_inner {
-    display: flex;
-    position: relative;
-    top: 10px;
-    margin-left: 28px;
-    height: 500px;
+    padding-top: 20px;
+    padding-left: 40px;
   }
 
   .product_tab_content_text {

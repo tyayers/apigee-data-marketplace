@@ -99,6 +99,18 @@ export class AppService {
                 return response.json();
             }).then((data: ApiApps) => {
                 this.apiApps = data;
+                for (let app of this.apiApps.apps) {
+                  if (!app.apiProducts) app.apiProducts = [];
+                  if (app.credentials) {
+                    for (let cred of app.credentials) {
+                      if (cred.apiProducts) {
+                        for (let prod of cred.apiProducts) {
+                          if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                        }
+                      }
+                    }
+                  }
+                }
                 console.log(data);
                 const event = new Event('appsUpdated');
                 document.dispatchEvent(event);
