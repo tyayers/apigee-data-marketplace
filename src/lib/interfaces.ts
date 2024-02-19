@@ -18,6 +18,7 @@ export class Product {
   approvalType: string = "";
   imageUrl?: string;
   specUrl?: string;
+  ahUrl?: string;
   status?: string;
   access?: string;
   attributes?: KeyValue[] = [];

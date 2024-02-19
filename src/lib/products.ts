@@ -10,6 +10,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [
@@ -31,6 +32,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [
@@ -99,6 +101,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [
@@ -116,6 +119,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [
@@ -133,6 +137,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [
@@ -150,6 +155,7 @@ export let product_index: Products = {
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      ahUrl: "https://pantheon.corp.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=447047240005.us.stlouisfed.indicatorsmoneybankingandfinancensam",
       status: "active",
       access: "public",
       attributes: [

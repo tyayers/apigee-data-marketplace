@@ -17,6 +17,7 @@
   let catChecked: string[] = [];
   let typesChecked: string[] = [];
   let userGroups: string[] = [];
+  let searchText: string = "";
 
   if (currentUser) loadUserGroups(currentUser);
 
@@ -168,7 +169,7 @@
 
     <div class="banner_search">
       <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
-      <input class="banner_search_input" placeholder="Search for data proucts" />
+      <input class="banner_search_input" bind:value={searchText} placeholder="Search for data proucts" />
     </div>
   </div>
 </div>
@@ -211,10 +212,14 @@
     {#each Object.keys(catProducts) as catName}
       {#if catProducts[catName].length > 0}
         <div class="product_list_header">
-          <h3>{catName} products</h3>
+          {#if searchText === "" || catName.toLowerCase().includes(searchText)}
+            <h3>{catName} products</h3>
+          {/if}
         </div>
         {#each catProducts[catName] as prodName, i}
-          <ProductCard data={productsByName[prodName]} />
+          {#if searchText === "" || prodName.toLowerCase().includes(searchText)}
+            <ProductCard data={productsByName[prodName]} />
+          {/if}
         {/each}
       {/if}
     {/each}

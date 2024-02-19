@@ -24,8 +24,6 @@
 
             appData.apps.sort((a, b) => parseInt(a.createdAt) - parseInt(b.createdAt));
         }
-
-       
     }
 
     function open(appId: string) {

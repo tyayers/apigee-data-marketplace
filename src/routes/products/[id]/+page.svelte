@@ -13,6 +13,8 @@
   let appSubscriptions: string[] = [];
   let apiKey: string = "";
 
+  let previewDataOpen: boolean = false;
+
   if (data.product) {
     data.product.attrArray = [];
     data.product.groupArray = [];
@@ -83,15 +85,15 @@
 
     <div class="product_overview_buy">
       {#if data.product.type?.includes("api")}
-        <a href="#" class="rounded_button_filled">Subscribe to API</a>
+        <a href="/apps/api" class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if data.product.type?.includes("ah")}
-        <a href="#" class="rounded_button_filled">Analytics Hub</a>
+        <a href={data.product.ahUrl} target="_blank" class="rounded_button_filled">Analytics Hub</a>
       {/if}
       {#if data.product.type?.includes("sync")}
         <a href="#" class="rounded_button_filled">Enable data sync</a>
       {/if}      
-      <a href="#" class="rounded_button_outlined">Preview data</a>
+      <button class="rounded_button_outlined" on:click={()=>{previewDataOpen=!previewDataOpen}}>Preview data</button>
     </div>
 
     {#if appSubscriptions.length > 0}
@@ -104,8 +106,6 @@
     {/if}
 
   </div>
-
-
 
 </div>
 
@@ -157,6 +157,29 @@
     </div>
   {/if}
 </div>
+
+{#if previewDataOpen}
+  <div class="preview_data">
+    <table class="flat_table">
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Creation date</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>test</td>
+          <td>test</td>
+          <td>
+test
+          </td>
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+{/if}
 
 <style>
   .product_header {
@@ -276,5 +299,14 @@
 
   .blue_text {
     --blue: #3367d6;
+  }
+
+  .preview_data {
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background-color: white;
   }
 </style>
