@@ -9,7 +9,7 @@ export let product_index: Products = {
       description: "Our ESG data product offers a detailed view of companies' environmental, social, and governance performance.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -30,7 +30,7 @@ export let product_index: Products = {
       description: "Get in-depth index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -47,7 +47,7 @@ export let product_index: Products = {
       description: "Get in-depth STOXX index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -64,7 +64,7 @@ export let product_index: Products = {
       description: "Get in-depth DAX index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -81,7 +81,7 @@ export let product_index: Products = {
       description: "Get in-depth pre-IPO listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -98,7 +98,7 @@ export let product_index: Products = {
       description: "Get in-depth pre-IPO listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -115,7 +115,7 @@ export let product_index: Products = {
       description: "Get in-depth public offering listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -132,7 +132,7 @@ export let product_index: Products = {
       description: "Get in-depth public trading location data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [
@@ -149,7 +149,7 @@ export let product_index: Products = {
       description: "Get in-depth public trading location data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "https://lh3.googleusercontent.com/BIBxLqAC64K5tHvh9frdpClAcsYx-rUgxNvqBua81T0anU-wTV9PFyYWiQ9xAvbwx3Lfxegx-8Uw-vXOlxOc=w80-h64",
-      specUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
       attributes: [

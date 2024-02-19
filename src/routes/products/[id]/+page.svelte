@@ -11,6 +11,7 @@
   if (newTab) selectedProductTab = newTab;
 
   let appSubscriptions: string[] = [];
+  let apiKey: string = "";
 
   if (data.product) {
     data.product.attrArray = [];
@@ -38,6 +39,7 @@
     for (let app of appService.apiApps.apps) {
       if (app.apiProducts && app.apiProducts.includes(data.product.name)) {
         appSubscriptions.push(app.name);
+        if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
       }
     }
   }
@@ -133,9 +135,9 @@
           bg-color = "#fafafa"
           nav-bg-color = '#f3f3f3'
           primary-color = "#3367d6"
-          api-key-name = 'x-api-key'
-          api-key-location = 'header'
-          api-key-value = {"fdsfsdjkfjsdlj"}
+          api-key-name = 'apikey'
+          api-key-location = 'query'
+          api-key-value = {apiKey}
           allow-authentication ='true'
           allow-server-selection = 'false'
           allow-api-list-style-selection ='false'
