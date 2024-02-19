@@ -2,7 +2,6 @@ import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Develo
 import { ApigeeService } from "apigee-x-module";
 import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential } from "./interfaces";
 import { product_index } from "./products";
-import { resolveConfig } from "vite";
 
 export class GoogleCloudDataService {
 

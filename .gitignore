@@ -1,3 +1,4 @@
+*.dev.sh
 build
 .svelte-kit
 

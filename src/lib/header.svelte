@@ -20,11 +20,24 @@
 
   function signOut() {
     appService.SignOut();
+
+    //First, we initialize our event
+    const event = new Event('cancelEvent');
+    // Next, we dispatch the event.
+    document.dispatchEvent(event);
+
     goto("/");
   }
 
   function goToMyApps() {
     goto("/apps");
+
+    setTimeout(() => {
+      //First, we initialize our event
+      const event = new Event('cancelEvent');
+      // Next, we dispatch the event.
+      document.dispatchEvent(event);
+    }, 50)
   }
 
 </script>
@@ -51,20 +64,21 @@
       </button>
 
       {#if menuVisible}
-        <div class="menuPanel">
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div class="menuPanel" on:click|stopPropagation={() => {}}>
           <div class="arrow" />
           <div class="menu">
             <div class="menu_profile">
               <img class="panel_profile_image" src={currentUser.photoUrl} alt="Profile"/>
               <div class="profile_info">
                 <div class="profile_info_primary">{currentUser.userName}</div>
-                <div class="profile_info_secondary">{currentUser.email}</div>
+                <div class="profile_info_secondary" title={currentUser.email}>{currentUser.email}</div>
                 <div class="profile_info_secondary profile_info_divide">{currentUser.providerId}</div>
               </div>
             </div>
             <div class="panel">
               
-              <button class="result" on:click|stopPropagation={()=> {}} style="width: 93%;">Account</button>
+              <button class="result" style="width: 97%;">Account</button>
               <button class="result" on:click={signOut}>Sign Out</button>
               <button class="result" on:click={goToMyApps}>My apps</button>
               
@@ -146,22 +160,27 @@
   .menuPanel {
     position: absolute;
     top: 50px;
+    margin-top: 8px;
     right: 10px;
-  }
-
-  .menu {
-    position: relative;
-    left: -4px;
-    top: -1px;
-    height: 254px;
-    width: 300px;
-    overflow-y: hidden;
-    border-radius: 3px;
     background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px 0px;
     border: 1px solid rgb(242, 242, 242);
-    border-radius: 4px;
-    z-index: 0;
+  }
+
+  .menu {
+    /* position: relative;
+    left: -4px;
+    top: -1px; */
+    height: 222px;
+    width: 300px;
+    overflow-y: hidden;
+    background-color: rgb(255, 255, 255);
+    /* box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px 0px;
+    border: 1px solid rgb(242, 242, 242);
+    border-radius: 4px; */
+    z-index: 2;
+    position: relative;
+    top: -15px;
   }
 
   .menu_profile {
@@ -182,6 +201,9 @@
     font-weight: normal;
     margin-top: 2px;
     margin-left: 2px;
+    width: 145px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 
   .profile_info_divide {
@@ -202,7 +224,7 @@
     /* height: 100%; */
     padding-left: 10px;
     padding-right: 10px;
-    margin-top: 30px;
+    margin-top: 18px;
     z-index: 2;
     padding-top: 10px;
     display: flex;
@@ -214,9 +236,8 @@
 
   .arrow {
     position: relative;
-    top: -15px;
+    top: -29px;
     left: 259px;
-    z-index: 1;
     border: 1px solid rgb(242, 242, 242);
     box-shadow: rgba(0, 0, 0, 0.15) -1px -1px 1px -1px;
     transform: rotate(45deg) translate(16px, 16px);
@@ -226,12 +247,14 @@
     display: block;
     content: "";
     pointer-events: none;
+    z-index: 1;
+    /* border: 1px solid red; */
   }
   
   .result {
     display: block;
-    padding-top: 5px;
-    padding-bottom: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     padding-left: 10px;
     color: black;
     /* border-bottom: 1px dashed rgb(242, 242, 242); */
@@ -241,7 +264,7 @@
     font-weight: 200;
     background-color: transparent;
     border-width: 0px;
-    width:45%;
+    width:47%;
     text-align: center;
     margin: 4px;
     border-color: rgba(0, 0, 0, 0.12);
