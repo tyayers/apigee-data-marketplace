@@ -13,21 +13,17 @@
 
 	onMount(() => {
     document.addEventListener("appsUpdated", () => {
-      if (appService.apiApps?.apps)
-        appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
+      if (appService.apiApps?.app)
+        appData = appService.apiApps?.app.find((item) => item.name === data.appName);
 
       setProductChecks();
     });
 
-    if (!appData) appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
+    if (!appData) appData = appService.apiApps?.app.find((item) => item.name === data.appName);
     setProductChecks();
-    console.log(appData);
 	});
 
   function setProductChecks() {
-
-    console.log(appData);
-
     for (let product of data.products.products) {
       apiProductChecks[product.name] = false;
     }
@@ -88,8 +84,8 @@
       appService.AddAppKey(appService.currentUser?.email, appData).then((result) => {
 
         if (appService.apiApps && appData) {
-          let index = appService.apiApps.apps.indexOf(appData);
-          appService.apiApps.apps[index] = result;
+          let index = appService.apiApps.app.indexOf(appData);
+          appService.apiApps.app[index] = result;
         }
 
         appData = result;
@@ -102,7 +98,6 @@
 
   function deleteKey(key: ApiAppCredential) {
     appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
-      console.log("result from dialog: " + result);
       if (result === "ok") {
         if (appService.currentUser && appData) {
           appService.DeleteAppKey(appService.currentUser?.email, appData?.name, key.consumerKey);
@@ -292,7 +287,7 @@
 
     .apps_left_panel {
         width: 320px;
-        height: 90vh;
+        height: calc(100vh - 59px);
         border-right: solid 2px rgba(242, 242, 242, 1);
     }
 
@@ -320,6 +315,8 @@
 
     .apps_right_panel {
         width: 100%;
+        /* height: calc(100vh - 57px);
+        overflow-y: auto; */
     }
 
     .right_panel_header {
@@ -339,6 +336,9 @@
 
     .right_panel_content {
         width: 100%;
+        
+        height: calc(100vh - 57px);
+        overflow-y: auto;
     }
 
     .right_content {

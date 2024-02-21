@@ -257,13 +257,15 @@ button {
   width: 100%;
   border-collapse: collapse; 
   margin: 25px 0;
+  color: #555;
+
+  font-size: 13px;
   /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
 }
 
 .flat_table thead {
   background-color: var(--secondary-color);
   height: 34px;
-  font-size: 14px;
   
 }
 

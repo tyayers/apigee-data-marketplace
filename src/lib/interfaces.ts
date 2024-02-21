@@ -4,6 +4,7 @@ export class AppUser {
   photoUrl = "";
   providerId = "";
   developerData?: Developer;
+  status = "";
 }
 
 export class Products {
@@ -18,7 +19,9 @@ export class Product {
   approvalType: string = "";
   imageUrl?: string;
   specUrl?: string;
-  ahUrl?: string;
+  hubUrl?: string;
+  hubMarketplaceId? = "";
+  hubListingId? = "";
   status?: string;
   access?: string;
   attributes?: KeyValue[] = [];
@@ -74,7 +77,7 @@ export class ApiAppCredentialProduct {
 }
 
 export class ApiApps {
-  apps: ApiApp[] = [];
+  app: ApiApp[] = [];
 }
 
 export interface KeyValue {
@@ -86,4 +89,11 @@ export interface Error {
   code: string;
   message: string;
   status: string;
+}
+
+export class AHSubscription {
+  product: string = "";
+  listingId: string = "";
+  marketplaceId: string = "";
+  createdOn: string = "";
 }

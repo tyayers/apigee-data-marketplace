@@ -1,5 +1,33 @@
 <script lang="ts">
+    import { appService } from "$lib/app-service";
+    import type { AHSubscription, AppUser } from "$lib/interfaces";
+    import { onMount } from "svelte";
 
+    let currentUser: AppUser | undefined = appService.currentUser;
+    let hubSubscriptions: AHSubscription[] = [];
+
+    onMount(() => {
+        document.addEventListener("userUpdated", () => {
+            currentUser = appService?.currentUser;
+            getAHSubscriptions();            
+        });
+
+        if (currentUser) getAHSubscriptions();
+	});
+
+    function getAHSubscriptions() {
+        fetch("/api/bigquery?email=" + currentUser?.email, {
+            method: 'GET',
+            headers: {
+            'content-type': 'application/json',
+            },
+        }).then((response) => {
+            return response.json();
+        }).then((data: AHSubscription[]) => {
+            console.log(data);
+            hubSubscriptions = data;
+        });
+    }
 </script>
 
 <div class="apps">
@@ -7,7 +35,7 @@
     <div class="apps_left_panel">
         <div class="apps_left_panel_header">
             <svg class="apps_left_panel_logo" width="36px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M17 9.008l-3.363-3.363-1.883 1.883 1.48 1.48-1.48 1.48 1.883 1.882L17 9.008zM8.992 1l3.363 3.363-1.883 1.883-1.48-1.48-1.48 1.48L5.63 4.363 8.992 1zm.016 16l-3.363-3.363 1.883-1.883 1.48 1.48 1.48-1.48 1.882 1.883L9.008 17zM1 8.992l3.363 3.363 1.883-1.883-1.48-1.48 1.48-1.48L4.363 5.63 1 8.992zM9.008 7.32l1.688 1.688-1.688 1.688-1.69-1.688 1.69-1.69z" fill-rule="evenodd"></path></svg>
-            <span class="apps_left_panel_title">My apps</span>
+            <span class="apps_left_panel_title">My subscriptions</span>
         </div>
         <div class="apps_left_panel_menu">
             <a href="/apps/api" class="side_menu_button">
@@ -29,7 +57,7 @@
 
         <div class="right_panel_content">
             <div class="right_panel_header">
-                <span>Analytics Hub subscriptions</span><a href="/apps/api/new" class="text_button right_panel_header_button">+ Create subscription</a>
+                <span>Analytics Hub subscriptions</span><a href="/apps/bigquery/new" class="text_button right_panel_header_button">+ Create subscription</a>
             </div>
 
             <div class="panel_table_content">
@@ -42,16 +70,17 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {#if hubSubscriptions}
+                            {#each hubSubscriptions as sub}
+                                <tr>
+                                    <th>{sub.product}</th>
+                                    <th>{sub.createdOn}</th>
+                                    <th>{sub.marketplaceId}</th>
+                                </tr>
+                            {/each}
+                        {/if}
                         <tr>
-                            <td>fds</td>
-                            <td>fds</td>
-                            <td>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
-                                </button>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
-                            </td>
+
                         </tr>
                     </tbody>
                 </table>

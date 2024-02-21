@@ -1,4 +1,4 @@
-import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential } from "./interfaces";
+import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential, AHSubscription } from "./interfaces";
 import { GoogleCloudDataService } from "./data-service.gcp";
 
 export class AppServiceServer {
@@ -19,8 +19,6 @@ export class AppServiceServer {
   CreateDeveloper(email: string, firstName: string, lastName: string, userName: string): Promise<Developer> {
     return new Promise<Developer>((resolve, reject) => {
       this.dataService.createDeveloper(email, firstName, lastName, userName).then((result) => {
-        console.log("Create developer result: ");
-        console.log(result);
         resolve(result);
       }).catch((error) => {
         console.log("Create developer error: ");
@@ -80,6 +78,15 @@ export class AppServiceServer {
       });
     });
   }
+
+  createHubSubscription(project: string, datasetId: string, marketplaceId: string, listingId: string): Promise<AHSubscription> {
+    return new Promise<AHSubscription>((resolve, reject) => {
+      this.dataService.createHubSubscription(project, datasetId, marketplaceId, listingId).then((subscription: AHSubscription) => {
+        resolve(subscription);
+      });
+    });
+  }
+
 
 }
 

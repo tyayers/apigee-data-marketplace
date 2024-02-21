@@ -15,7 +15,8 @@ import {
 import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { AppUser, Developer, ApiApps, ApiApp } from "./interfaces";
+import { AppUser, Developer, ApiApps, ApiApp, Products, AHSubscription } from "./interfaces";
+import { product_index } from "./products";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
@@ -30,7 +31,10 @@ export class AppService {
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
   currentUser: AppUser | undefined = undefined;
+  firebaseUser: User | undefined = undefined;
   apiApps: ApiApps | undefined = undefined;
+  reloadFlag: boolean = false;
+  products: Products = product_index;
 
   constructor() {
     if (browser) {
@@ -48,6 +52,7 @@ export class AppService {
           // Goto signed-out landing page
           goto("/");
         } else {
+          this.firebaseUser = u;
           this.currentUser = new AppUser();
           if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
           if (u?.photoURL) 
@@ -65,57 +70,113 @@ export class AppService {
           if (u.providerData && u.providerData.length > 0)
             this.currentUser.providerId = u.providerData[0].providerId;
 
-          // Create developer if they don't exist
-          fetch("/api/developers?email=" + appService.currentUser?.email + "&username=" + appService.currentUser?.userName, {
-              method: 'POST',
-              headers: {
+          // Use AppIntegration to create developer
+          fetch("/api/developers?email=" + this.currentUser?.email + "&username=" + this.currentUser?.userName, {
+            method: 'POST',
+            body: JSON.stringify({
+              email: this.currentUser?.email,
+              username: this.currentUser?.userName,
+            }),
+            headers: {
                 'content-type': 'application/json',
-              },
-          }).then((result) => {
-            // Get developer data
-            fetch("/api/developers?email=" + appService.currentUser?.email, {
-              method: 'GET',
-              headers: {
-                'content-type': 'application/json',
-              },
-            }).then((response) => {
+            },
+          }).then((response) => {
               return response.json();
-            }).then((data: Developer) => {
-              if (this.currentUser) this.currentUser.developerData = data;
-
-              //First, we initialize our event
+          }).then((data: any) => {
+            if (data.outputParameters.developerData) {
+              if (this.currentUser) this.currentUser.developerData = data.outputParameters.developerData;
+              if (this.currentUser)this.currentUser.status = data.outputParameters.developerData.status;
               const event = new Event('userUpdated');
-              // Next, we dispatch the event.
               document.dispatchEvent(event);
-            });
 
-            // Get developer app data
-            fetch("/api/apiapps?email=" + appService.currentUser?.email, {
-              method: 'GET',
-              headers: {
-                  'content-type': 'application/json',
-              },
-            }).then((response) => {
-                return response.json();
-            }).then((data: ApiApps) => {
+              // Get developer app data
+              fetch("/api/apiapps?email=" + this.currentUser?.email, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                },
+              }).then((response) => {
+                  return response.json();
+              }).then((data: any) => {
                 this.apiApps = data;
-                for (let app of this.apiApps.apps) {
-                  if (!app.apiProducts) app.apiProducts = [];
-                  if (app.credentials) {
-                    for (let cred of app.credentials) {
-                      if (cred.apiProducts) {
-                        for (let prod of cred.apiProducts) {
-                          if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                if (this.apiApps && this.apiApps.app) {
+                  for (let app of this.apiApps.app) {
+                    if (!app.apiProducts) app.apiProducts = [];
+                    if (app.credentials) {
+                      for (let cred of app.credentials) {
+                        if (cred.apiProducts) {
+                          for (let prod of cred.apiProducts) {
+                            if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                          }
                         }
                       }
                     }
                   }
                 }
-                console.log(data);
                 const event = new Event('appsUpdated');
-                document.dispatchEvent(event);
-            });
-          });
+                document.dispatchEvent(event);              
+              });
+
+            }
+            else {
+              // Developer is not yet registered, send to wait page...
+              goto("/user/approval");
+              if (this.currentUser)this.currentUser.status = "approval";
+              const event = new Event('userUpdated');
+              document.dispatchEvent(event);
+            }
+          });          
+
+          // Create developer if they don't exist
+          // fetch("/api/developers?email=" + appService.currentUser?.email + "&username=" + appService.currentUser?.userName, {
+          //     method: 'POST',
+          //     headers: {
+          //       'content-type': 'application/json',
+          //     },
+          // }).then((result) => {
+          //   // Get developer data
+          //   fetch("/api/developers?email=" + appService.currentUser?.email, {
+          //     method: 'GET',
+          //     headers: {
+          //       'content-type': 'application/json',
+          //     },
+          //   }).then((response) => {
+          //     return response.json();
+          //   }).then((data: Developer) => {
+          //     console.log(data);
+          //     if (this.currentUser) this.currentUser.developerData = data;
+
+          //     const event = new Event('userUpdated');
+          //     document.dispatchEvent(event);
+          //   });
+
+          //   // Get developer app data
+          //   fetch("/api/apiapps?email=" + appService.currentUser?.email, {
+          //     method: 'GET',
+          //     headers: {
+          //         'content-type': 'application/json',
+          //     },
+          //   }).then((response) => {
+          //       return response.json();
+          //   }).then((data: ApiApps) => {
+          //       this.apiApps = data;
+          //       for (let app of this.apiApps.apps) {
+          //         if (!app.apiProducts) app.apiProducts = [];
+          //         if (app.credentials) {
+          //           for (let cred of app.credentials) {
+          //             if (cred.apiProducts) {
+          //               for (let prod of cred.apiProducts) {
+          //                 if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+          //               }
+          //             }
+          //           }
+          //         }
+          //       }
+          //       console.log(data);
+          //       const event = new Event('appsUpdated');
+          //       document.dispatchEvent(event);
+          //   });
+          // });
 
           if (window.location.pathname.endsWith("/")) {
             goto("/home");
@@ -176,6 +237,20 @@ export class AppService {
     signOut(auth);
   }
 
+  GetIdToken(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      if (this.firebaseUser) {
+        this.firebaseUser
+          .getIdToken(/* forceRefresh */ true)
+          .then(function (idToken) {
+            resolve(idToken);
+          });
+      } else {
+        resolve("");
+      }
+    });
+  }
+
   ShowSnackbar(message: string) {
     var x = document.getElementById("snackbar");
     if (x) {
@@ -212,10 +287,10 @@ export class AppService {
     }).then((response) => {
         return response.json();
     }).then((data: ApiApp) => {
-      let index = this.apiApps?.apps.indexOf(data);
+      let index = this.apiApps?.app.indexOf(data);
       if (index) {
           let newAppData = this.apiApps;
-          newAppData?.apps.splice(index, 1);
+          newAppData?.app.splice(index, 1);
           this.apiApps = newAppData;
       }   
       const event = new Event('appsUpdated');
@@ -233,7 +308,6 @@ export class AppService {
     }).then((response) => {
         return response.json();
     }).then((data: ApiApps) => {
-      console.log(data);
     });
   }
 
@@ -248,8 +322,6 @@ export class AppService {
       }).then((response) => {
           return response.json();
       }).then((data: ApiApp) => {
-        console.log("AddAppkey result:")
-        console.log(data);
         resolve(data);
       });
     });
@@ -264,7 +336,41 @@ export class AppService {
     }).then((response) => {
         return response.json();
     }).then((data: ApiApps) => {
-        console.log(data);
+    });    
+  }
+
+  GetDeveloper(email: string): Promise<Developer> {
+    return new Promise<Developer>((resolve, reject) => {
+      fetch("/api/developers?email=" + email, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+        },
+      }).then((response) => {
+          return response.json();
+      }).then((data: Developer) => {
+          resolve(data);
+      }).catch((error) => {
+        reject(error);
+      });        
+    });
+  }
+
+  CreateHubSubscription(project: string, dataset: string, product: string): Promise<AHSubscription> {
+    return new Promise<AHSubscription>((resolve, reject) => {
+      const productData = this.products.products.find(productItem => productItem.name === product);
+      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+      }).then((response) => {
+          return response.json();
+      }).then((data: AHSubscription) => {
+          resolve(data);
+      }).catch((error) => {
+        reject(error);
+      });        
     });    
   }
 }

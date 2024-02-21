@@ -79,8 +79,8 @@
             <div class="panel">
               
               <button class="result" style="width: 97%;">Account</button>
-              <button class="result" on:click={signOut}>Sign Out</button>
-              <button class="result" on:click={goToMyApps}>My apps</button>
+              <button class="result" on:click={signOut}>Sign out</button>
+              <button class="result" on:click={goToMyApps}>My subscriptions</button>
               
             </div>
           </div>

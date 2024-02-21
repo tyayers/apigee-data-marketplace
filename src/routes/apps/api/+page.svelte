@@ -16,13 +16,13 @@
 	});
 
     function updateApps() {
-        if (appData && appData.apps) {
-            for (let app of appData?.apps) {
+        if (appData && appData.app) {
+            for (let app of appData?.app) {
                 var d = new Date(parseInt(app.createdAt));
                 app.createdAtDate = d.toLocaleString();
             }
 
-            appData.apps.sort((a, b) => parseInt(a.createdAt) - parseInt(b.createdAt));
+            appData.app.sort((a, b) => parseInt(a.createdAt) - parseInt(b.createdAt));
         }
     }
 
@@ -50,7 +50,7 @@
     <div class="apps_left_panel">
         <div class="apps_left_panel_header">
             <svg class="apps_left_panel_logo" width="36px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M17 9.008l-3.363-3.363-1.883 1.883 1.48 1.48-1.48 1.48 1.883 1.882L17 9.008zM8.992 1l3.363 3.363-1.883 1.883-1.48-1.48-1.48 1.48L5.63 4.363 8.992 1zm.016 16l-3.363-3.363 1.883-1.883 1.48 1.48 1.48-1.48 1.882 1.883L9.008 17zM1 8.992l3.363 3.363 1.883-1.883-1.48-1.48 1.48-1.48L4.363 5.63 1 8.992zM9.008 7.32l1.688 1.688-1.688 1.688-1.69-1.688 1.69-1.69z" fill-rule="evenodd"></path></svg>
-            <span class="apps_left_panel_title">My apps</span>
+            <span class="apps_left_panel_title">My subscriptions</span>
         </div>
         <div class="apps_left_panel_menu">
             <a href="/apps/api" class="side_menu_button side_menu_button_selected">
@@ -85,8 +85,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {#if appData && appData.apps}
-                            {#each appData.apps as app, i}
+                        {#if appData && appData.app}
+                            {#each appData.app as app, i}
                                 <tr on:click={() => open(app.name)}>
                                         <td>{app.name}</td>
                                         {#if app.createdAtDate}

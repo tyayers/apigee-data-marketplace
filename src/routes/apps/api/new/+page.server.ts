@@ -25,7 +25,6 @@ export const actions = {
     let products: string[] = [];
 
     for (const key of formKeys) {
-      console.log(key);
       if (key === "email") {
         email = data.get(key)?.toString() || "";
       } else if (key === "name") {
@@ -39,8 +38,6 @@ export const actions = {
         }
       }
     }
-
-    console.log(email + " " + name);
     
     if (email && name) {
 		  appService.CreateApiApp(email.toString(), name.toString(), description.toString(), products);

@@ -29,6 +29,11 @@
         refreshProductList();
       }
     });
+
+    if (appService.reloadFlag) {
+      appService.reloadFlag = false;
+      location.reload();
+    }
   });
 
   if (data.products) {
@@ -159,7 +164,7 @@
   }
 </script>
 
-{#if currentUser}
+{#if currentUser && currentUser.developerData}
 <div class="banner">
   <div class="banner_title">
     Welcome to the Data Marketplace

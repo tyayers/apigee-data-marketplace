@@ -1,4 +1,48 @@
 <script lang="ts">
+    import { appService } from "$lib/app-service";
+    import type { AppUser } from "$lib/interfaces";
+    import { onMount } from "svelte";
+
+
+    let currentUser: AppUser | undefined = appService.currentUser;
+    let signedUrls: {product: string, url: string}[] = [];
+
+	onMount(() => {
+        document.addEventListener("userUpdated", () => {
+            currentUser = appService?.currentUser;
+            getSignedUrls();            
+        });
+
+        if (currentUser) getSignedUrls();
+	});
+
+    function getSignedUrls() {
+        fetch("/api/storage?email=" + currentUser?.email, {
+            method: 'GET',
+            headers: {
+            'content-type': 'application/json',
+            },
+        }).then((response) => {
+            return response.json();
+        }).then((data: any) => {
+            console.log(data);
+            signedUrls = data;
+        });
+    }
+
+    function addSignedUrl() {
+        fetch("/api/storage?email=" + currentUser?.email + "&product=ESH%20Analytics", {
+            method: 'POST',
+            headers: {
+            'content-type': 'application/json',
+            },
+        }).then((response) => {
+            return response.json();
+        }).then((data: any) => {
+            console.log(data);
+            signedUrls = data;
+        });
+    }
 
 </script>
 
@@ -29,30 +73,37 @@
 
         <div class="right_panel_content">
             <div class="right_panel_header">
-                <span>Bucket syncs</span><a href="/apps/api/new" class="text_button right_panel_header_button">+ Create sync</a>
+                <span>Bucket syncs</span><button on:click|stopPropagation={addSignedUrl} class="text_button right_panel_header_button">+ Create sync</button>
             </div>
 
             <div class="panel_table_content">
                 <table class="panel_table">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Product</th>
                             <th>Creation date</th>
+                            <th>Valid until</th>
+                            <th style="max-width: 200px">Signed URL</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>fds</td>
-                            <td>fds</td>
-                            <td>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
-                                </button>
-                                <button>
-                                    <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>                                    </button>
-                            </td>
-                        </tr>
+                        {#each signedUrls as url}
+                            <tr>
+                                <td>{url.product}</td>
+                                <td>Feb 20, 2024 09:00:00</td>
+                                <td>Feb 21, 2024 08:59:00</td>
+                                <td><a href={url.url} target="_blank">{url.url.slice(0, 100) + "..."}</a></td>
+                                <td>
+                                    <button>
+                                        <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>
+                                    </button>
+                                    <button>
+                                        <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        {/each}
                     </tbody>
                 </table>
             </div>
@@ -132,6 +183,7 @@
         width: 100%;
         border-collapse: collapse; 
         margin: 25px 0;
+        font-size: 13px;
         /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
     }
 

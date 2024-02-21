@@ -26,9 +26,6 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 		error(400, 'email and appid are required');
 	}
 
-	console.log("Start add key for app:");
-	console.log(app);
-
 	let appData = await appService.AddApiAppKey(email, app);
 
 	return json(appData);
@@ -55,8 +52,6 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 	if (!email || !params.id) {
 		error(400, 'email and appid are required');
 	}
-
-	console.log("deleting app " + params.id + " from email " + email);
 
 	let appData = await appService.DeleteApiApp(email, params.id);
 

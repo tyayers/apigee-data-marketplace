@@ -1,12 +1,16 @@
 import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential } from "./interfaces";
+import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential, AHSubscription } from "./interfaces";
 import { product_index } from "./products";
+import { GoogleAuth } from "google-auth-library";
 
 export class GoogleCloudDataService {
 
   apigeeService: ApiManagementInterface = new ApigeeService();
-
+  auth = new GoogleAuth({
+    scopes: 'https://www.googleapis.com/auth/cloud-platform'
+  });
+  
   constructor() {
 
   }
@@ -45,39 +49,127 @@ export class GoogleCloudDataService {
 
   public getDeveloper(email: string): Promise<Developer> {
     return new Promise((resolve, reject) => {
-      this.apigeeService.getDeveloper(email).then((developer) => {
-        resolve(developer as Developer);
-      }).catch((err) => {
-        reject(err);
+
+      this.auth.getAccessToken().then((token) => {
+        // Calling Applint GetOrCreateUserFlow
+        fetch("https://integrations.googleapis.com/v1/projects/apigee-test38/locations/europe-west1/integrations/-:execute", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            "trigger_id": "api_trigger/MarketplaceGetDeveloper_API1",
+            "inputParameters": {
+              "email": {
+                "stringValue": email
+              },
+              "project": {
+                "stringValue": "apigee-test38"
+              }
+            }
+          }),
+        }).then((response) => {
+          return response.json();
+        }).then((data: any) => {
+          if (data.outputParameters && data.outputParameters.developerData) {
+            resolve(data.outputParameters.developerData);
+          }
+          else {
+            reject("Developer not found!");
+          }
+        });        
       });
+
+      // this.apigeeService.getDeveloper(email).then((developer) => {
+      //   resolve(developer as Developer);
+      // }).catch((err) => {
+      //   reject(err);
+      // });
     });
   }
 
   public createDeveloper(email: string, firstName: string, lastName: string, userName: string): Promise<Developer> {
     return new Promise<Developer>((resolve, reject) => {
-      let devData: ApigeeDeveloper = {
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        attributes: []
-      }
-  
-      this.apigeeService.createDeveloper(devData).then((result) => {
-        resolve(result as Developer);
-      }).catch((error) => {
-        reject(error);
+      this.auth.getAccessToken().then((token) => {
+        // Calling Applint GetOrCreateUserFlow
+        fetch("https://integrations.googleapis.com/v1/projects/apigee-test38/locations/europe-west1/integrations/-:execute", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            "trigger_id": "api_trigger/MarketplaceGetOrCreateDeveloper_API1",
+            "inputParameters": {
+              "request": {
+                "jsonValue": "{'project': 'apigee-test38',	'email':  '" + email + "', 'firstName': '" + firstName + "', 'lastName': '" + lastName + "', 'userName': '" + userName + "'}"
+              }
+            }
+          }),
+        }).then((response) => {
+          return response.json();
+        }).then((data: any) => {
+          resolve(data);
+        });        
       });
+
+
+      // let devData: ApigeeDeveloper = {
+      //   email: email,
+      //   firstName: firstName,
+      //   lastName: lastName,
+      //   userName: userName,
+      //   attributes: []
+      // }
+  
+      // this.apigeeService.createDeveloper(devData).then((result) => {
+      //   resolve(result as Developer);
+      // }).catch((error) => {
+      //   reject(error);
+      // });
     });
   }
 
   public getApiApps(email: string): Promise<ApiApps> {
     return new Promise((resolve, reject) => {
-      this.apigeeService.getApps(email).then((apps) => {
-        resolve(apps as ApiApps);
-      }).catch((err) => {
-        reject(err);
+
+      this.auth.getAccessToken().then((token) => {
+        // Calling Applint GetOrCreateUserFlow
+        fetch("https://integrations.googleapis.com/v1/projects/apigee-test38/locations/europe-west1/integrations/-:execute", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            "trigger_id": "api_trigger/MarketplaceGetApps_API_1",
+            "inputParameters": {
+                "project": {
+                  "stringValue": "apigee-test38"
+                },
+                "email": {
+                  "stringValue": email
+                }
+            }
+          }),
+        }).then((response) => {
+          return response.json();
+        }).then((data: any) => {
+          if (data.outputParameters.appsData) {
+            resolve(data.outputParameters.appsData);
+          }
+          else {
+            reject("No apps were found.");
+          }
+        });        
       });
+
+      // this.apigeeService.getApps(email).then((apps) => {
+      //   resolve(apps as ApiApps);
+      // }).catch((err) => {
+      //   reject(err);
+      // });
     });
   }
 
@@ -169,6 +261,47 @@ export class GoogleCloudDataService {
         resolve(key as ApiAppCredential);
       }).catch((err) => {
         reject(err);
+      });
+    });
+  }
+
+  public createHubSubscription(project: string, datasetId: string, marketplaceId: string, listingId: string): Promise<AHSubscription> {
+    return new Promise((resolve, reject) => {
+
+      this.auth.getAccessToken().then((token) => {
+        // Calling Applint GetOrCreateUserFlow
+        fetch("https://integrations.googleapis.com/v1/projects/apigee-test38/locations/europe-west1/integrations/-:execute", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            "trigger_id": "api_trigger/MarketplaceAnalyticsHubSubscription_API_1",
+            "inputParameters": {
+                "project": {
+                  "stringValue": "apigee-test38"
+                },
+                "destinationProject": {
+                  "stringValue": project
+                },
+                "dataExchangeId": {
+                  "stringValue": marketplaceId
+                },
+                "listingId": {
+                  "stringValue": listingId
+                },
+                "datasetId": {
+                  "stringValue": datasetId
+                }
+            }
+          }),
+        }).then((response) => {
+          return response.json();
+        }).then((data: any) => {
+          console.log(data);
+          resolve(data);
+        });        
       });
     });
   }
