@@ -4,7 +4,7 @@
     import { onMount } from "svelte";
 
     let currentUser: AppUser | undefined = appService.currentUser;
-    let hubSubscriptions: AHSubscription[] = [];
+    let hubSubscriptions: AHSubscription[] | undefined = undefined;
 
     onMount(() => {
         document.addEventListener("userUpdated", () => {
@@ -48,7 +48,7 @@
             </a>
             <a href="/apps/buckets" class="side_menu_button">
                 <svg class="side_menu_button_logo" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.027 11h6.978c.55 0 .995.443.995 1v1c0 .553-.456 1-.995 1H7.027v1.758L2 12.378 7.027 9v2zM11 4H3.995C3.455 4 3 4.447 3 5v1c0 .557.446 1 .995 1H11v1.79l5.027-3.396L11 2v2z" fill-rule="evenodd"></path></svg>
-                <span class="side_menu_button_name">Bucket syncs</span>
+                <span class="side_menu_button_name">Data syncs</span>
             </a>
         </div>
     </div>
@@ -61,32 +61,42 @@
             </div>
 
             <div class="panel_table_content">
-                <table class="panel_table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Creation date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#if hubSubscriptions}
-                            {#each hubSubscriptions as sub}
-                                <tr>
-                                    <th>{sub.product}</th>
-                                    <th>{sub.createdOn}</th>
-                                    <th>{sub.marketplaceId}</th>
-                                </tr>
-                            {/each}
-                        {/if}
-                        <tr>
-
-                        </tr>
-                    </tbody>
-                </table>
+                {#if hubSubscriptions}
+                    <table class="flat_table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Creation date</th>
+                                <th>Project</th>
+                                <th>Dataset</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#if hubSubscriptions}
+                                {#each hubSubscriptions as sub}
+                                    <tr>
+                                        <td>{sub.product}</td>
+                                        <td>{sub.createdAt}</td>
+                                        <td>{sub.project}</td>
+                                        <td>{sub.dataset}</td>
+                                        <td>
+                                            {#if sub.status === "Inactive"}
+                                                <span style="color: red; font-weight: bold;" title="Your subscription could be automatically created, please register manually at the Analytics Hub product page.">{sub.status}</span>
+                                            {:else}
+                                                <span style="color: green; font-weight: bold;">{sub.status}</span>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/each}
+                            {/if}
+                        </tbody>
+                    </table>
+                {:else}
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                {/if}
             </div>
         </div>
-    
     </div>
 
 </div>
@@ -153,40 +163,5 @@
     .panel_table_content {
         width: 90%;
         margin-left: 24px;
-    }
-
-    .panel_table {
-        margin-top: 44px;
-       
-        width: 100%;
-        border-collapse: collapse; 
-        margin: 25px 0;
-        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
-    }
-
-    .panel_table thead {
-        background-color: #ececec;
-        height: 34px;
-        font-size: 14px;
-        
-    }
-
-    .panel_table thead tr th {
-        text-align: left;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 12px;
-    }
-
-    .panel_table tbody tr:hover {
-        height: 30px;
-        cursor: pointer;
-        border-bottom: solid 1px #d1d1d1;
-        background-color: #ececec;
-    }
-
-    .panel_table tbody tr td {
-        height: 30px;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 14px;
     }
 </style>

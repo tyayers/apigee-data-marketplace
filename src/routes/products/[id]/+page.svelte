@@ -95,10 +95,10 @@
         <a href="/apps/api" class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if data.product.type?.includes("ah")}
-        <a href={data.product.ahUrl} target="_blank" class="rounded_button_filled">Subscribe on Analytics Hub</a>
+        <a href={"/apps/bigquery/new?product=" + data.product.name} class="rounded_button_filled">Subscribe on Analytics Hub</a>
       {/if}
       {#if data.product.type?.includes("sync")}
-        <a href="/apps/buckets" class="rounded_button_filled">Enable data sync</a>
+        <a href={"/apps/buckets/new?product=" + data.product.name} class="rounded_button_filled">Enable data sync</a>
       {/if}      
       <button class="rounded_button_outlined" on:click|stopPropagation={()=>{previewDataOpen=!previewDataOpen}}>Preview data</button>
     </div>

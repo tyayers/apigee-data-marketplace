@@ -160,7 +160,7 @@
   <div class="apps_left_panel">
       <div class="apps_left_panel_header">
           <svg class="apps_left_panel_logo" width="36px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M17 9.008l-3.363-3.363-1.883 1.883 1.48 1.48-1.48 1.48 1.883 1.882L17 9.008zM8.992 1l3.363 3.363-1.883 1.883-1.48-1.48-1.48 1.48L5.63 4.363 8.992 1zm.016 16l-3.363-3.363 1.883-1.883 1.48 1.48 1.48-1.48 1.882 1.883L9.008 17zM1 8.992l3.363 3.363 1.883-1.883-1.48-1.48 1.48-1.48L4.363 5.63 1 8.992zM9.008 7.32l1.688 1.688-1.688 1.688-1.69-1.688 1.69-1.69z" fill-rule="evenodd"></path></svg>
-          <span class="apps_left_panel_title">My apps</span>
+          <span class="apps_left_panel_title">My subscriptions</span>
       </div>
       <div class="apps_left_panel_menu">
           <a href="/apps/api" class="side_menu_button side_menu_button_selected">
@@ -173,7 +173,7 @@
           </a>
           <a href="/apps/buckets" class="side_menu_button">
               <svg class="side_menu_button_logo" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.027 11h6.978c.55 0 .995.443.995 1v1c0 .553-.456 1-.995 1H7.027v1.758L2 12.378 7.027 9v2zM11 4H3.995C3.455 4 3 4.447 3 5v1c0 .557.446 1 .995 1H11v1.79l5.027-3.396L11 2v2z" fill-rule="evenodd"></path></svg>
-              <span class="side_menu_button_name">Bucket syncs</span>
+              <span class="side_menu_button_name">Data syncs</span>
           </a>
       </div>
   </div>

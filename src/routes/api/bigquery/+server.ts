@@ -30,7 +30,8 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   const dataset = url.searchParams.get('dataset') ?? '';
   const listingId = url.searchParams.get('listingId') ?? '';
   const marketplaceId = url.searchParams.get('marketplaceId') ?? '';
-  const createdOn = url.searchParams.get('createdOn') ?? '';
+  const createdAt = url.searchParams.get('createdAt') ?? '';
+  const status: string = "Inactive";
 
   var createResult = await appService.createHubSubscription(project, dataset, marketplaceId, listingId);
 
@@ -46,16 +47,21 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     }
   }
 
+  var newSubscription: AHSubscription = {
+    product: product,
+    listingId: listingId,
+    marketplaceId: marketplaceId,
+    createdAt: createdAt,
+    project: project,
+    dataset: dataset,
+    status: status
+  };
+
   if (myData) {
-    myData.subscriptions.push({
-      product: product,
-      listingId: listingId,
-      marketplaceId: marketplaceId,
-      createdOn: createdOn
-    });
+    myData.subscriptions.push(newSubscription);
 
     await document.set(myData);
   }
 
-	return json(myData.subscriptions);
+	return json(newSubscription);
 }

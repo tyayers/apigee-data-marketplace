@@ -63,7 +63,7 @@
             </a>
             <a href="/apps/buckets" class="side_menu_button">
                 <svg class="side_menu_button_logo" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.027 11h6.978c.55 0 .995.443.995 1v1c0 .553-.456 1-.995 1H7.027v1.758L2 12.378 7.027 9v2zM11 4H3.995C3.455 4 3 4.447 3 5v1c0 .557.446 1 .995 1H11v1.79l5.027-3.396L11 2v2z" fill-rule="evenodd"></path></svg>
-                <span class="side_menu_button_name">Bucket syncs</span>
+                <span class="side_menu_button_name">Data syncs</span>
             </a>
         </div>
     </div>
@@ -81,6 +81,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Creation date</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -94,6 +95,9 @@
                                         {:else}
                                             <td></td>
                                         {/if}
+                                        <td>
+                                            <span style="color: green; font-weight: bold;">Active</span>
+                                        </td>
                                         <td>
                                             <button>
                                                 <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z" fill-rule="evenodd"></path></svg>

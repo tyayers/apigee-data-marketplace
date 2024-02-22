@@ -95,5 +95,15 @@ export class AHSubscription {
   product: string = "";
   listingId: string = "";
   marketplaceId: string = "";
-  createdOn: string = "";
+  project: string = "";
+  dataset: string = "";
+  createdAt: string = "";
+  status?: string = "Inactive";
+}
+
+export class BucketSubscription {
+  product: string = "";
+  url: string = "";
+  createdAt: string = "";
+  status: string = "";
 }
