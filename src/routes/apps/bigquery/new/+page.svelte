@@ -86,8 +86,8 @@
               </div>
 
               <div class="input_field_panel">
-                <input class="input_field" type="text" name="description" id="description" bind:value={datasetName} autocomplete="off" title="none" />
-                <label for="description" class='input_field_placeholder'>
+                <input class="input_field" type="text" name="dataset" id="dataset" required bind:value={datasetName} autocomplete="off" title="none" />
+                <label for="dataset" class='input_field_placeholder'>
                   Dataset name
                 </label>
               </div>
