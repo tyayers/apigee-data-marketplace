@@ -79,7 +79,7 @@ export let product_index: Products = {
     },
     {
       name: "Market Structure",
-      type: "api,sync",
+      type: "api",
       displayName: "Market Structure",
       description: "Get in-depth pre-IPO listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",

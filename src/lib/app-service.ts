@@ -54,6 +54,7 @@ export class AppService {
         } else {
           this.firebaseUser = u;
           this.currentUser = new AppUser();
+
           if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
           if (u?.photoURL) 
             this.currentUser.photoUrl = u.photoURL;
@@ -126,57 +127,6 @@ export class AppService {
               document.dispatchEvent(event);
             }
           });          
-
-          // Create developer if they don't exist
-          // fetch("/api/developers?email=" + appService.currentUser?.email + "&username=" + appService.currentUser?.userName, {
-          //     method: 'POST',
-          //     headers: {
-          //       'content-type': 'application/json',
-          //     },
-          // }).then((result) => {
-          //   // Get developer data
-          //   fetch("/api/developers?email=" + appService.currentUser?.email, {
-          //     method: 'GET',
-          //     headers: {
-          //       'content-type': 'application/json',
-          //     },
-          //   }).then((response) => {
-          //     return response.json();
-          //   }).then((data: Developer) => {
-          //     console.log(data);
-          //     if (this.currentUser) this.currentUser.developerData = data;
-
-          //     const event = new Event('userUpdated');
-          //     document.dispatchEvent(event);
-          //   });
-
-          //   // Get developer app data
-          //   fetch("/api/apiapps?email=" + appService.currentUser?.email, {
-          //     method: 'GET',
-          //     headers: {
-          //         'content-type': 'application/json',
-          //     },
-          //   }).then((response) => {
-          //       return response.json();
-          //   }).then((data: ApiApps) => {
-          //       this.apiApps = data;
-          //       for (let app of this.apiApps.apps) {
-          //         if (!app.apiProducts) app.apiProducts = [];
-          //         if (app.credentials) {
-          //           for (let cred of app.credentials) {
-          //             if (cred.apiProducts) {
-          //               for (let prod of cred.apiProducts) {
-          //                 if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
-          //               }
-          //             }
-          //           }
-          //         }
-          //       }
-          //       console.log(data);
-          //       const event = new Event('appsUpdated');
-          //       document.dispatchEvent(event);
-          //   });
-          // });
 
           if (window.location.pathname.endsWith("/")) {
             goto("/home");

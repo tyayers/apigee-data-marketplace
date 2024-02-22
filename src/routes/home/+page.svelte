@@ -82,6 +82,11 @@
         }
       }
     }
+
+    // TODO remove later, workaround to set group
+    if (newUser.email.endsWith("gmail.com")) {
+      userGroups.push("Internal");
+    }
   }
 
   function onTypeChange(e: any) {

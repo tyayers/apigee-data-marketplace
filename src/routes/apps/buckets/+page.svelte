@@ -78,7 +78,7 @@
             </div>
 
             <div class="panel_table_content">
-                <table class="panel_table">
+                <table class="flat_tables">
                     <thead>
                         <tr>
                             <th>Product</th>
@@ -175,41 +175,5 @@
     .panel_table_content {
         width: 90%;
         margin-left: 24px;
-    }
-
-    .panel_table {
-        margin-top: 44px;
-       
-        width: 100%;
-        border-collapse: collapse; 
-        margin: 25px 0;
-        font-size: 13px;
-        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
-    }
-
-    .panel_table thead {
-        background-color: #ececec;
-        height: 34px;
-        font-size: 14px;
-        
-    }
-
-    .panel_table thead tr th {
-        text-align: left;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 12px;
-    }
-
-    .panel_table tbody tr:hover {
-        height: 30px;
-        cursor: pointer;
-        border-bottom: solid 1px #d1d1d1;
-        background-color: #ececec;
-    }
-
-    .panel_table tbody tr td {
-        height: 30px;
-        border-bottom: solid 1px #d1d1d1;
-        padding-left: 14px;
     }
 </style>

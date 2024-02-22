@@ -92,7 +92,7 @@
 
     <div class="product_overview_buy">
       {#if data.product.type?.includes("api")}
-        <a href="/apps/api" class="rounded_button_filled">Subscribe to API</a>
+        <a href={"/apps/api/new?product=" + data.product.name} class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if data.product.type?.includes("ah")}
         <a href={"/apps/bigquery/new?product=" + data.product.name} class="rounded_button_filled">Subscribe on Analytics Hub</a>

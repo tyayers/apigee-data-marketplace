@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto, invalidate } from "$app/navigation";
+    import { page } from "$app/stores";
   import { appService } from "$lib/app-service";
   import type { PageData } from "./$types";
 
@@ -7,6 +8,10 @@
   
   let name: string = "";
   let description: string = "";
+  let product_input: string = "";
+
+  var urlProduct = $page.url.searchParams.get('product');
+  if (urlProduct) product_input = urlProduct;
 
   function back() {
     history.back();
@@ -78,7 +83,11 @@
                 <h4>Product subscriptions</h4>
                 {#each data.products as product}
                 <div class="product_list_line">
-                  <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
+                  {#if product.name === product_input}
+                    <input id={product.name} name={product.name} checked type="checkbox" /><label for={product.name}>{product.name}</label>
+                  {:else}
+                    <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
+                  {/if}
                 </div>
                 {/each}
               </div>
