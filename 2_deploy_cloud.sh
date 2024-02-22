@@ -1,3 +1,5 @@
+# Load environment variables
+source 1_env.dev.sh
 
 # Create artifact registry, if needed
 gcloud artifacts repositories create docker-registry --repository-format=docker \

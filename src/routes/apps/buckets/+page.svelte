@@ -78,34 +78,38 @@
             </div>
 
             <div class="panel_table_content">
-                <table class="flat_tables">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Creation date</th>
-                            <th style="max-width: 200px">Signed URL</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#if bucketSubscriptions}
-                            {#each bucketSubscriptions as sub}
-                                <tr>
-                                    <td>{sub.product}</td>
-                                    <td>{sub.createdAt}</td>
-                                    <td><a href={sub.url} target="_blank">{sub.url.slice(0, 100) + "..."}</a></td>
-                                    <td>
-                                        {#if sub.status === "Invalid"}
-                                            <span style="color: red; font-weight: bold;">{sub.status}</span>
-                                        {:else}
-                                            <span style="color: green; font-weight: bold;">{sub.status}</span>
-                                        {/if}
-                                    </td>
-                                </tr>
-                            {/each}
-                        {/if}
-                    </tbody>
-                </table>
+                {#if bucketSubscriptions}
+                    <table class="flat_table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Creation date</th>
+                                <th style="max-width: 200px">Signed URL</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#if bucketSubscriptions}
+                                {#each bucketSubscriptions as sub}
+                                    <tr>
+                                        <td>{sub.product}</td>
+                                        <td>{sub.createdAt}</td>
+                                        <td><a href={sub.url} target="_blank">{sub.url.slice(0, 100) + "..."}</a></td>
+                                        <td>
+                                            {#if sub.status === "Invalid"}
+                                                <span style="color: red; font-weight: bold;">{sub.status}</span>
+                                            {:else}
+                                                <span style="color: green; font-weight: bold;">{sub.status}</span>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/each}
+                            {/if}
+                        </tbody>
+                    </table>
+                {:else}
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                {/if}
             </div>
         </div>
     

@@ -20,6 +20,12 @@
     document.addEventListener("cancelEvent", () => {
       previewDataOpen = false;
     });
+
+    document.addEventListener("appsUpdated", () => {
+      refreshApps();
+    });
+
+    refreshApps();
   });
 
   if (data.product) {
@@ -44,12 +50,17 @@
     }
   }
 
-  if (appService.apiApps && appService.apiApps.app) {
-    for (let app of appService.apiApps.app) {
-      if (app.apiProducts && app.apiProducts.includes(data.product.name)) {
-        appSubscriptions.push(app.name);
-        if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
+  function refreshApps() {
+    if (appService.apiApps && appService.apiApps.app) {
+      var newAppSubscriptions = appSubscriptions;
+      for (let app of appService.apiApps.app) {
+        if (app.apiProducts && app.apiProducts.includes(data.product.name)) {
+          newAppSubscriptions.push(app.name);
+          if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
+        }
       }
+
+      appSubscriptions = newAppSubscriptions;
     }
   }
 
@@ -212,9 +223,13 @@
   <div class="preview_data">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
-      <h3 style="position: relative; top: -4px;">Preview data</h3>
+      <div style="display: flex;">
+        <h3 style="position: relative; top: -4px;">Preview data</h3>
+        <button class="rounded_button_outlined" style="margin-left: 19px; height: 39px; font-size: 12px">Download CSV</button>
+      </div>
+
       <div style="position: absolute; right: 10px; top: 24px;">
-        <button class="rounded_button_outlined" style="position: relative; top: -2px;">Download CSV</button>
+        
         <button on:click={() => { previewDataOpen=false }} class="text_button">Close</button>
       </div>
       <table class="flat_table" style="font-size: 12px;">
@@ -1750,6 +1765,7 @@
     display: flex;
     position: absolute;
     top: 100px;
+    width: 100%;
   }
 
   .product_overview_icon {
