@@ -1,6 +1,8 @@
 # Load environment variables
 source 1_env.dev.sh
 
+SECONDS=0
+
 # Create artifact registry, if needed
 gcloud artifacts repositories create docker-registry --repository-format=docker \
 --location="$REGION" --description="Docker registry"    
@@ -13,3 +15,6 @@ gcloud builds submit --config=cloudbuild.yaml \
 gcloud run deploy $NAME --image "$REGION-docker.pkg.dev/$PROJECT/docker-registry/$NAME" \
     --platform managed --region $REGION --allow-unauthenticated --min-instances=1 \
     --set-env-vars ORIGIN="$CLOUD_RUN_URL"
+
+duration=$SECONDS
+echo "Total deployment finished in $((duration / 60)) minutes and $((duration % 60)) seconds."

@@ -50,6 +50,25 @@
       <span class="header_left_panel1_name">Data Marketplace</span>
     </a>
 
+    <div class="header_tabs">
+      <div class="header_tab_button header_tab_button_selected">
+        Catalog
+      </div>
+      <div class="header_tab_button">
+        Our mission
+      </div>
+      <div class="header_tab_button">
+        Pricing
+      </div>
+      <div class="header_tab_button">
+        Products
+      </div>
+      <div class="header_tab_button">
+        Privacy
+      </div>
+    </div>
+
+
   </span>
 
   <span class="header_right_panel1">
@@ -124,9 +143,13 @@
     margin-top: 12px;
     margin-left: 24px;
     cursor: pointer;
+    display: flex;
   }
 
   .header_left_panel1_name {
+    font-family: "Open Sans", sans-serif;;
+    color: rgb(95, 99, 104);
+    font-weight: 400;
     position: relative;
     top: -12px;
     left: 4px;
@@ -134,6 +157,31 @@
 
   .leader_left_panel1_logo {
     width: 36px;
+  }
+
+  .header_tabs {
+    display: flex;
+    width: 60vw;
+    height: 70%;
+    position: relative;
+    top: 6px;
+    margin: auto;
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;;
+    color: rgb(95, 99, 104);
+    margin-bottom: 28px;
+    margin-left: 38px;
+  }
+
+  .header_tab_button {
+    font-size: 16px;
+    font-weight: 380;
+    color: #777;
+    margin-right: 26px;
+    padding-bottom: 14px;
+    /* position: relative;
+    top: 11px; */
+    cursor: pointer;
   }
 
   .header_right_panel1 {

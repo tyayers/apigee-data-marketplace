@@ -55,6 +55,10 @@ export class AppService {
           this.firebaseUser = u;
           this.currentUser = new AppUser();
 
+          this.GetIdToken().then((idToken) => {
+            console.log(idToken);
+          });
+
           if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
           if (u?.photoURL) 
             this.currentUser.photoUrl = u.photoURL;
