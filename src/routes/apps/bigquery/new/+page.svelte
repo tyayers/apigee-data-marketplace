@@ -4,6 +4,7 @@
   import { equalTo } from "firebase/database";
   import type { PageData } from "./$types";
   import { page } from '$app/stores'
+  import { onMount } from "svelte";
 
   export let data: PageData;
   
@@ -11,12 +12,28 @@
   let datasetName: string = "";
   let product: string = "";
   let hubUrl: string = "";
+  let accessToken: string = "";
   
+  console.log($page.url);
+
   var urlProduct = $page.url.searchParams.get('product');
   if (urlProduct) product = urlProduct;
 
+  onMount(() => {
+    if ($page.url.hash) {
+      let urlHash: string = $page.url.hash;
+      var values = getParameters(urlHash);
+      if (values["product"]) product = values["product"];
+      if (values["access_token"]) accessToken = values["access_token"];
+    }
+  });
+
+  function subscribeGoogle() {
+    window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=779705321594-0npc2bffujp0kggoo6bcl8l5g81vqnt8.apps.googleusercontent.com&redirect_uri=" + $page.url.origin + $page.url.pathname + "&response_type=token&scope=https://www.googleapis.com/auth/bigquery&state=product=Index%20Research";
+  }
+
   function submit() {
-    appService.CreateHubSubscription(project, datasetName, product, (new Date()).toLocaleString()).then((result) => {
+    appService.CreateHubSubscription(project, datasetName, product, (new Date()).toLocaleString(), accessToken).then((result) => {
       goto("/apps/bigquery");
       // if(result.status === "Inactive") {
       //   appService.ShowDialog("There was a problem connecting this product to your Google Cloud project. Please visit the Analytics Hub link above to register manually.", "OK", 0).then((answer) => {
@@ -28,6 +45,27 @@
 
   function back() {
     history.back();
+  }
+
+  function getParameters(hash: string): { [key: string]: string } {
+    let resultValues: { [key: string]: string } = {};
+
+    hash = hash.substring(1);
+    let hashValues = hash.split("&");
+    for (let hashValue of hashValues) {
+      let innerValues = hashValue.split("=");
+      if (innerValues.length == 2) {
+        if (innerValues[0] === "state") {
+          let newInnerValues = innerValues[1].split("%3D");
+          if (newInnerValues.length == 2)
+            resultValues[newInnerValues[0]] = newInnerValues[1].replace("%20", " ");
+        }
+        else
+          resultValues[innerValues[0]] = innerValues[1];
+      }
+    }
+
+    return resultValues;
   }
 </script>
 
@@ -71,17 +109,46 @@
           <div class="right_content">
             
             <div class="right_content_tip">
-              You can enter your Google Cloud project and dataset here to create the subscription. Alternatively,
+              You can enter let Data Marketplace create your subscription here. Alternatively,
               you can you can subscribe at the <a href="https://console.cloud.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=apigee-test38.eu.marketplace_18dccea19ab.trading_data_18dccebea66" style="color: var(--primary-color)" target="_blank">Analytics Hub product page<svg class="right_content_tip_learnmore" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M13.85 5H14V4h-4v1h2.15l-5.36 5.364.848.848L13 5.85V8h1V4h-1v.15l.15-.15.85.85-.15.15zM8 4H4.995A1 1 0 004 4.995v8.01a1 1 0 00.995.995h8.01a1 1 0 00.995-.995V10h-1v3H5V5h3V4z"></path></svg></a>
-
             </div>
             <br />
+            <div>
+              <div class="right_content_tip">
+                To start click here to authorize Data Marketplace to create your subscription with Google Cloud.
+                <br /><br />
+                <button on:click={subscribeGoogle} class="rounded_button_outlined">
+                  <svg width="25" height="25" class="sobti"
+                  ><g fill="none" fill-rule="evenodd"
+                    ><path
+                      d="M20.66 12.7c0-.61-.05-1.19-.15-1.74H12.5v3.28h4.58a3.91 3.91 0 0 1-1.7 2.57v2.13h2.74a8.27 8.27 0 0 0 2.54-6.24z"
+                      fill="#4285F4"
+                    /><path
+                      d="M12.5 21a8.1 8.1 0 0 0 5.63-2.06l-2.75-2.13a5.1 5.1 0 0 1-2.88.8 5.06 5.06 0 0 1-4.76-3.5H4.9v2.2A8.5 8.5 0 0 0 12.5 21z"
+                      fill="#34A853"
+                    /><path
+                      d="M7.74 14.12a5.11 5.11 0 0 1 0-3.23v-2.2H4.9A8.49 8.49 0 0 0 4 12.5c0 1.37.33 2.67.9 3.82l2.84-2.2z"
+                      fill="#FBBC05"
+                    /><path
+                      d="M12.5 7.38a4.6 4.6 0 0 1 3.25 1.27l2.44-2.44A8.17 8.17 0 0 0 12.5 4a8.5 8.5 0 0 0-7.6 4.68l2.84 2.2a5.06 5.06 0 0 1 4.76-3.5z"
+                      fill="#EA4335"
+                    /></g
+                  ></svg>
+                  <span style="position: relative; top: -7px">Authorize through Google</span></button>
+
+              </div>
+            </div>
+            <br />
+            <br />
+            <div class="right_content_tip">
+              Now you can enter your Google Cloud project Id and a dataset name that will be created for the Analytics Hub subscription.
+            </div>
             <form>
               <div class="input_field_panel">
                 <!-- svelte-ignore a11y-autofocus -->
-                <input class="input_field" type="text" name="name" id="name" required bind:value={project} autocomplete="off" autofocus title="none" />
+                <input class="input_field" type="text" name="name" id="name" required bind:value={project} autocomplete="off" title="none" />
                 <label for="name" class='input_field_placeholder'>
-                  Google Cloud Project
+                  Google Cloud project
                 </label>
               </div>
 
@@ -91,16 +158,23 @@
                   Dataset name
                 </label>
               </div>
+              <br />
+              <br />
+              <div class="right_content_tip">
+                This is the Data Product that you are subscribing to. You can subscribe to a product in multiple projects and in multiple datasets.
+              </div>
 
               <div class="product_list">
-                <h4>Product subscriptions</h4>
-                <select name="hubListing" id="hubListing" bind:value={product}>
+                <h4>Product subscription</h4>
+                <div class="select_dropdown">
+                  <select name="hubListing" id="hubListing" bind:value={product}>
                     {#each appService.products.products as product}
                       {#if product.hubUrl}
                         <option value={product.name}>{product.name}</option>
                       {/if}
                     {/each}
-                </select>
+                  </select>
+                </div>
               </div>
 
               <div class="controls">

@@ -50,30 +50,16 @@
       <span class="header_left_panel1_name">Data Marketplace</span>
     </a>
 
-    <div class="header_tabs">
-      <div class="header_tab_button header_tab_button_selected">
-        Catalog
-      </div>
-      <div class="header_tab_button">
-        Our mission
-      </div>
-      <div class="header_tab_button">
-        Pricing
-      </div>
-      <div class="header_tab_button">
-        Products
-      </div>
-      <div class="header_tab_button">
-        Privacy
-      </div>
-    </div>
-
-
   </span>
 
   <span class="header_right_panel1">
     
     {#if currentUser}
+
+      <button style="position: relative; top: -4px; left: -8px;" class="back_button">
+        <svg width="100%" height="100%" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"><path fill="#333" d="M18 17v-6c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v6H4v2h16v-2h-2zm-2 0H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zm-4 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path></svg>
+      </button>
+
       <button
         on:click|stopPropagation={() => { menuVisible = !menuVisible; }}
         on:keydown|stopPropagation={() => { menuVisible = !menuVisible; }}
@@ -136,7 +122,7 @@
 
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
   }
 
   .header_left_panel1 {
@@ -159,35 +145,9 @@
     width: 36px;
   }
 
-  .header_tabs {
-    display: flex;
-    width: 60vw;
-    height: 70%;
-    position: relative;
-    top: 6px;
-    margin: auto;
-    font-size: 16px;
-    font-family: "Open Sans", sans-serif;;
-    color: rgb(95, 99, 104);
-    margin-bottom: 28px;
-    margin-left: 38px;
-  }
-
-  .header_tab_button {
-    font-size: 16px;
-    font-weight: 380;
-    color: #777;
-    margin-right: 26px;
-    padding-bottom: 14px;
-    /* position: relative;
-    top: 11px; */
-    cursor: pointer;
-  }
-
   .header_right_panel1 {
     margin-top: 7px;
     margin-right: 24px;
-    
   }
 
   .profile_button {

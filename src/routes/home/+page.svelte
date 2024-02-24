@@ -169,6 +169,27 @@
   }
 </script>
 
+<div class="header_tabs">
+  <div class="header_tabs_box">
+    <div class="header_tab_button header_tab_button_selected">
+      Catalog
+    </div>
+    <div class="header_tab_button">
+      Our mission
+    </div>
+    <div class="header_tab_button">
+      Pricing
+    </div>
+    <div class="header_tab_button">
+      Partners
+    </div>
+    <div class="header_tab_button">
+      Privacy
+    </div>
+  </div>
+
+</div>
+
 {#if currentUser && currentUser.developerData}
 <div class="banner">
   <div class="banner_title">
@@ -242,6 +263,45 @@
 {/if}
 
 <style>
+
+.header_tabs {
+    display: flex;
+    width: 100%;
+    height: 43px;
+    margin: auto;
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;
+    color: rgb(95, 99, 104);
+    position: sticky;
+    top: 59px;
+    background: white;
+    z-index: 1;
+    border-bottom: solid 1px rgba(242, 242, 242, 1);
+  }
+
+  .header_tabs_box {
+    margin-left: 254px;
+    margin-top: 8px;
+    width: 100%;
+    display: flex;
+  }
+
+  .header_tab_button {
+    font-size: 16px;
+    font-weight: 380;
+    color: #777;
+    margin-right: 26px;
+    /* position: relative;
+    top: 11px; */
+    cursor: pointer;
+    height: 100%;
+  }
+
+  .header_tab_button_selected {
+    border-bottom: 2px solid #4285F4;
+    font-weight: 570;
+  }
+
   .banner {
     background-image: url('https://www.gstatic.com/pantheon/images/marketplace/cameo_banner-1x.png');
     background-size: cover;

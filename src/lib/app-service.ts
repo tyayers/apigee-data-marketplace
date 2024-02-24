@@ -310,10 +310,10 @@ export class AppService {
     });
   }
 
-  CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string): Promise<AHSubscription> {
+  CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string, accessToken: string): Promise<AHSubscription> {
     return new Promise<AHSubscription>((resolve, reject) => {
       const productData = this.products.products.find(productItem => productItem.name === product);
-      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt, {
+      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt + "&accessToken=" + accessToken, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',

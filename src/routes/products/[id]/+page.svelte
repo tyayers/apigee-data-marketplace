@@ -224,8 +224,8 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
       <div style="display: flex;">
-        <h3 style="position: relative; top: -4px;">Preview data</h3>
-        <button class="rounded_button_outlined" style="margin-left: 19px; height: 39px; font-size: 12px">Download CSV</button>
+        <h3 style="position: relative; top: -4px; left: 6px;">Preview data</h3>
+        <button class="rounded_button_outlined" style="margin-left: 26px; height: 39px; font-size: 12px">Download CSV</button>
       </div>
 
       <div style="position: absolute; right: 10px; top: 24px;">
@@ -1767,7 +1767,7 @@
     display: flex;
     position: absolute;
     top: 100px;
-    width: 100%;
+    width: calc(100% - 100px);
   }
 
   .product_overview_icon {
@@ -1799,13 +1799,8 @@
     padding: 4px 0px;
     margin-right: 8px;
     border-radius: 44px;
-    /* padding: 12px;
-    padding-left: 24px;
-    padding-right: 24px; */
     border-width: 0px;
     font-size: 16px;
-    /* background-color: #e8def8; */
-    /* background-color: #f3f3f3; */
     cursor: pointer;
     text-decoration: none;
     color: #666;
@@ -1877,7 +1872,7 @@
 
   .preview_data_content {
     position: absolute;
-    top: 108px;
+    top: 70px;
     left: 86px;
     right: 100px;
     bottom: 50px;

@@ -78,6 +78,10 @@
 
   padding: 0px;
   margin: 0px;
+  position: sticky;
+  top: 59px;
+  background: white;
+  z-index: 3;
 }
 
 .header_tabs {
@@ -99,6 +103,7 @@
   position: relative;
   top: 11px;
   cursor: pointer;
+  font-family: "Open Sans", sans-serif;
 }
 
 .header_tab_button_selected {
