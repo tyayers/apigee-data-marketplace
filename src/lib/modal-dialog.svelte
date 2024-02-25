@@ -82,8 +82,8 @@
   }
 
   .modal_message {
-    margin-top: 60px;
-
+    margin-top: 40px;
+    color: var(--selected-gray-color);
   }
 
   .modal_controls {

@@ -35,6 +35,7 @@ export class AppService {
   apiApps: ApiApps | undefined = undefined;
   reloadFlag: boolean = false;
   products: Products = product_index;
+  googleAccessToken: string = "";
 
   constructor() {
     if (browser) {
@@ -310,10 +311,10 @@ export class AppService {
     });
   }
 
-  CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string, accessToken: string): Promise<AHSubscription> {
+  CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string): Promise<AHSubscription> {
     return new Promise<AHSubscription>((resolve, reject) => {
       const productData = this.products.products.find(productItem => productItem.name === product);
-      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt + "&accessToken=" + accessToken, {
+      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -321,13 +322,24 @@ export class AppService {
       }).then((response) => {
           return response.json();
       }).then((data: AHSubscription) => {
-          console.log("AH SUB RESULT: ");
-          console.log(data);
           resolve(data);
       }).catch((error) => {
         reject(error);
-      });        
-    });    
+      });
+    });
+  }
+
+  DeleteHubSubscription(project: string, dataset: string) {
+    fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset, {
+      method: 'DELETE',
+      headers: {
+          'content-type': 'application/json',
+      },
+    }).then((response) => {
+    
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 }
 

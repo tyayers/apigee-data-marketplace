@@ -5,6 +5,7 @@
   import type { PageData } from "./$types";
   import { page } from '$app/stores'
   import { onMount } from "svelte";
+    import type { Product } from "$lib/interfaces";
 
   export let data: PageData;
   
@@ -12,7 +13,8 @@
   let datasetName: string = "";
   let product: string = "";
   let hubUrl: string = "";
-  let accessToken: string = "";
+  //let accessToken: string = "";
+  let productData: Product | undefined = undefined;
   
   console.log($page.url);
 
@@ -24,7 +26,7 @@
       let urlHash: string = $page.url.hash;
       var values = getParameters(urlHash);
       if (values["product"]) product = values["product"];
-      if (values["access_token"]) accessToken = values["access_token"];
+      if (values["access_token"]) appService.googleAccessToken = values["access_token"];
     }
   });
 
@@ -33,18 +35,45 @@
   }
 
   function submit() {
-    appService.CreateHubSubscription(project, datasetName, product, (new Date()).toLocaleString(), accessToken).then((result) => {
-      goto("/apps/bigquery");
-      // if(result.status === "Inactive") {
-      //   appService.ShowDialog("There was a problem connecting this product to your Google Cloud project. Please visit the Analytics Hub link above to register manually.", "OK", 0).then((answer) => {
-          
-      //   })
-      // }
+    productData = appService.products.products.find(productItem => productItem.name === product);
+
+    fetch("https://analyticshub.googleapis.com/v1beta1/projects/apigee-test38/locations/eu/dataExchanges/" + productData?.hubMarketplaceId + "/listings/" + productData?.hubListingId + ":subscribe", {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + appService.googleAccessToken
+      },
+      body: JSON.stringify({
+        "destinationDataset": {
+          "datasetReference": {
+            "projectId": project,
+            "datasetId": datasetName
+          },
+          "location": "eu"
+        }
+      })
+    }).then((response) => {
+      if (response.ok && response.status === 200) {
+        // Subscription was successfully created.
+        appService.CreateHubSubscription(project, datasetName, product, (new Date()).toLocaleString()).then((result) => {
+          goto("/apps/bigquery");
+          // if(result.status === "Inactive") {
+          //   appService.ShowDialog("There was a problem connecting this product to your Google Cloud project. Please visit the Analytics Hub link above to register manually.", "OK", 0).then((answer) => {
+              
+          //   })
+          // }
+        });
+      }
+      else if (response.status === 409) {
+        appService.ShowDialog("The dataset already exists, so no new subscription could be created.", "OK", 0);
+      }
+    }).catch((error) => {
+      console.error(error);
     });
   }
 
   function back() {
-    history.back();
+    goto("/apps/bigquery")
   }
 
   function getParameters(hash: string): { [key: string]: string } {
@@ -117,7 +146,7 @@
               <div class="right_content_tip">
                 To start click here to authorize Data Marketplace to create your subscription with Google Cloud.
                 <br /><br />
-                <button on:click={subscribeGoogle} class="rounded_button_outlined">
+                <button on:click={subscribeGoogle} class="rounded_button_outlined" disabled={appService.googleAccessToken != ""} >
                   <svg width="25" height="25" class="sobti"
                   ><g fill="none" fill-rule="evenodd"
                     ><path
@@ -134,8 +163,11 @@
                       fill="#EA4335"
                     /></g
                   ></svg>
-                  <span style="position: relative; top: -7px">Authorize through Google</span></button>
-
+                  <span style="position: relative; top: -7px">Authorize through Google</span>
+                </button>
+                {#if appService.googleAccessToken}
+                  <span title="Authorization set."><svg style="height: 34px; width: 34px; position: relative; top: 12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" ><circle cx="32" cy="32" r="30" fill="#fff"/><path d="M32,2C15.431,2,2,15.432,2,32c0,16.568,13.432,30,30,30c16.568,0,30-13.432,30-30C62,15.432,48.568,2,32,2z M25.025,50  l-0.02-0.02L24.988,50L11,35.6l7.029-7.164l6.977,7.184l21-21.619L53,21.199L25.025,50z" fill="#43a047"/></svg></span>
+                {/if}
               </div>
             </div>
             <br />
@@ -169,7 +201,7 @@
                 <div class="select_dropdown">
                   <select name="hubListing" id="hubListing" bind:value={product}>
                     {#each appService.products.products as product}
-                      {#if product.hubUrl}
+                      {#if product.type?.includes("ah")}
                         <option value={product.name}>{product.name}</option>
                       {/if}
                     {/each}

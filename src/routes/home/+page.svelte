@@ -289,7 +289,7 @@
   .header_tab_button {
     font-size: 16px;
     font-weight: 380;
-    color: #777;
+    color: var(--unselected-gray-color);
     margin-right: 26px;
     /* position: relative;
     top: 11px; */
@@ -299,7 +299,8 @@
 
   .header_tab_button_selected {
     border-bottom: 2px solid #4285F4;
-    font-weight: 570;
+    font-weight: 400;
+    color: var(--selected-gray-color);
   }
 
   .banner {

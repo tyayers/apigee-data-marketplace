@@ -15,6 +15,8 @@ a {
   --primary-color-dark: #6595fc;
   --secondary-color: #f1f1f1;
   --blue: #3367d6;
+  --selected-gray-color: rgb(32, 33, 36);
+  --unselected-gray-color: rgb(95, 99, 104);
 }
 
 /* Buttons */
@@ -81,6 +83,12 @@ button {
 
 .rounded_button_outlined:active {
   color: black;
+}
+
+.rounded_button_outlined:disabled {
+  background-color: #f4f4f4;
+  color: #bababa;
+  cursor:auto;
 }
 
 .text_button {

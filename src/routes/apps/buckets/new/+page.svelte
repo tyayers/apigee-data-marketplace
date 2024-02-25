@@ -88,13 +88,15 @@
 
               <div class="product_list">
                 <h4>Product subscriptions</h4>
-                <select name="hubListing" id="hubListing" bind:value={product}>
-                    {#each appService.products.products as product}
-                      {#if product.type?.includes("sync")}
-                        <option value={product.name}>{product.name}</option>
-                      {/if}
-                    {/each}
-                </select>
+                <div class="select_dropdown">
+                  <select name="product" id="product" bind:value={product}>
+                      {#each appService.products.products as product}
+                        {#if product.type?.includes("sync")}
+                          <option value={product.name}>{product.name}</option>
+                        {/if}
+                      {/each}
+                  </select>
+                </div>
               </div>
 
               <div class="controls">

@@ -238,7 +238,13 @@
                                       <tr>
                                           <td>{cred.consumerKey}</td>
                                           <td>*************************</td>
-                                          <td>{cred.status}</td>
+                                          <td>
+                                            {#if cred.status === "approved"}
+                                              <span style="color: green; font-weight: bold;">Active</span>
+                                            {:else}
+                                                <span style="color: red; font-weight: bold;">Revoked</span>
+                                            {/if}
+                                          </td>
                                           <td>
                                             <button type="button" on:click|stopPropagation={() => deleteKey(cred)}>
                                               <svg width="18px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z" fill-rule="evenodd"></path></svg>
