@@ -40,6 +40,15 @@
     }, 50)
   }
 
+  function goToAccount() {
+    goto("/user/account");
+
+    //First, we initialize our event
+    const event = new Event('cancelEvent');
+    // Next, we dispatch the event.
+    document.dispatchEvent(event);
+  }
+
 </script>
 
 <div class="header">
@@ -83,7 +92,7 @@
             </div>
             <div class="panel">
               
-              <button class="result" style="width: 97%;">Account</button>
+              <button class="result" on:click={goToAccount} style="width: 97%;">Account</button>
               <button class="result" on:click={signOut}>Sign out</button>
               <button class="result" on:click={goToMyApps}>My subscriptions</button>
               
@@ -108,7 +117,7 @@
     justify-content: space-between;
     align-items: flex-start;
 
-    height: 57px;
+    height: var(--header-height);
     background-color: rgba(255, 255, 255, 1);
     width: 100vw;
     border-bottom: solid 3px rgba(242, 242, 242, 1);

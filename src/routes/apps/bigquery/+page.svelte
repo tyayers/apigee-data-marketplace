@@ -52,14 +52,14 @@
     }
 </script>
 
-<div class="apps">
+<div class="left_menu_page">
 
-    <div class="apps_left_panel">
-        <div class="apps_left_panel_header">
-            <svg class="apps_left_panel_logo" width="36px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M17 9.008l-3.363-3.363-1.883 1.883 1.48 1.48-1.48 1.48 1.883 1.882L17 9.008zM8.992 1l3.363 3.363-1.883 1.883-1.48-1.48-1.48 1.48L5.63 4.363 8.992 1zm.016 16l-3.363-3.363 1.883-1.883 1.48 1.48 1.48-1.48 1.882 1.883L9.008 17zM1 8.992l3.363 3.363 1.883-1.883-1.48-1.48 1.48-1.48L4.363 5.63 1 8.992zM9.008 7.32l1.688 1.688-1.688 1.688-1.69-1.688 1.69-1.69z" fill-rule="evenodd"></path></svg>
-            <span class="apps_left_panel_title">My subscriptions</span>
+    <div class="left_menu_page_left">
+        <div class="left_menu_page_left_header">
+            <svg class="left_menu_page_left_icon" width="36px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M17 9.008l-3.363-3.363-1.883 1.883 1.48 1.48-1.48 1.48 1.883 1.882L17 9.008zM8.992 1l3.363 3.363-1.883 1.883-1.48-1.48-1.48 1.48L5.63 4.363 8.992 1zm.016 16l-3.363-3.363 1.883-1.883 1.48 1.48 1.48-1.48 1.882 1.883L9.008 17zM1 8.992l3.363 3.363 1.883-1.883-1.48-1.48 1.48-1.48L4.363 5.63 1 8.992zM9.008 7.32l1.688 1.688-1.688 1.688-1.69-1.688 1.69-1.69z" fill-rule="evenodd"></path></svg>
+            <span class="left_menu_page_left_title">My subscriptions</span>
         </div>
-        <div class="apps_left_panel_menu">
+        <div class="left_menu_page_left_list">
             <a href="/apps/api" class="side_menu_button">
                 <svg class="side_menu_button_logo" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M9.874 10H12v2h3v-2h1V8H9.874A4.002 4.002 0 0 0 2 9a4 4 0 0 0 7.874 1zM6 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill-rule="evenodd"></path></svg>
                 <span class="side_menu_button_name">Credentials</span>
@@ -75,14 +75,14 @@
         </div>
     </div>
 
-    <div class="apps_right_panel">
+    <div class="left_menu_page_right">
 
-        <div class="right_panel_content">
-            <div class="right_panel_header">
+        <div>
+            <div class="left_menu_page_right_header">
                 <span>Analytics Hub subscriptions</span><a href="/apps/bigquery/new" class="text_button right_panel_header_button">+ Create subscription</a>
             </div>
 
-            <div class="panel_table_content">
+            <div class="left_menu_page_right_content">
                 {#if hubSubscriptions}
                     <table class="flat_table">
                         <thead>
@@ -134,60 +134,6 @@
 </div>
 
 <style>
-    .apps {
-        width: 100%;
-        display: flex;
-    }
-
-    .apps_left_panel {
-        width: 320px;
-        height: 90vh;
-        border-right: solid 2px rgba(242, 242, 242, 1);
-    }
-
-    .apps_left_panel_header {
-        height: 45px;
-        border-bottom: solid 2px rgba(242, 242, 242, 1);
-    }
-
-    .apps_left_panel_logo {
-        position: relative;
-        top: 4px;
-        left: 22px;
-    }
-
-    .apps_left_panel_title {
-        position: relative;
-        top: -8px;
-        left: 30px;
-        font-size: 18px;
-    }
-
-    .apps_left_panel_menu {
-        margin-top: 6px;
-    }
-
-    .apps_right_panel {
-        width: 100%;
-    }
-
-    .right_panel_header {
-        display: flex;
-        align-items: center;
-        height: 45px;
-        border-bottom: solid 2px rgba(242, 242, 242, 1);
-    }
-
-    .right_panel_header_button {
-        margin-left: 34px;
-    }
-
-    .right_panel_header span {
-        text-align: center;
-        padding-left: 24px;
-        font-size: 18px;
-    }
-
     .right_panel_content {
         width: 100%;
     }

@@ -1,6 +1,6 @@
 import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import type { ApiApp, ApiApps, Product, Products, Developer, ApiAppCredential, AHSubscription } from "./interfaces";
+import { type ApiApp, type ApiApps, type Product, type Products, type Developer, type ApiAppCredential, type AHSubscription, UsageData } from "./interfaces";
 import { product_index } from "./products";
 import { GoogleAuth } from "google-auth-library";
 
@@ -299,10 +299,52 @@ export class GoogleCloudDataService {
         }).then((response) => {
           return response.json();
         }).then((data: any) => {
-          console.log(data);
           resolve(data);
         });        
       });
     });
+  }
+
+  public getUsageData(): Promise<UsageData> {
+    return new Promise<UsageData>((resolve, reject) => {
+      this.auth.getAccessToken().then((token) => {
+        fetch("https://apigee.googleapis.com/v1/organizations/apigee-test38/environments/eval/stats/developer_app?select=sum(message_count)&timeRange=02/01/2024+00:00~02/29/2024+23:59&timeUnit=month", {
+          headers: {
+            "Authorization": "Bearer " + token
+          }          
+        }).then((response) => {
+          return response.json();
+        }).then((data: UsageData) => {
+          resolve(data);
+        }).catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+      });
+    })
+  }
+
+  public createApigeeSubscription(email: string, product: string): Promise<any> {
+    return new Promise<UsageData>((resolve, reject) => {
+      this.auth.getAccessToken().then((token) => {
+        fetch("https://apigee.googleapis.com/v1/organizations/apigee-test38/developers/" + email + "/subscriptions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            "apiproduct": product
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((data: any) => {
+          resolve(data);
+        }).catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+      });
+    })
   }
 }

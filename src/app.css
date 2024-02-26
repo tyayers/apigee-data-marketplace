@@ -17,6 +17,8 @@ a {
   --blue: #3367d6;
   --selected-gray-color: rgb(32, 33, 36);
   --unselected-gray-color: rgb(95, 99, 104);
+  --header-height: 57px;
+  --left-menu-width: 320px;
 }
 
 /* Buttons */
@@ -122,50 +124,8 @@ button {
   background-color: #eee;
 }
 
-/* Side Menu Buttons */
-
-.side_menu_button {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  height: 44px;
-  /* width: 100%; */
-}
-
-.side_menu_button:hover {
-  cursor: pointer;
-  background-color: rgb(230, 230, 230);
-  color: black;
-}
-
-.side_menu_button_selected {
-  background-color: rgba(161, 194, 250, 0.16);
-  color: #3367d6;
-  border-left: solid 4px #3367d6;
-}
-
-.side_menu_button_logo {
-  position: relative;
-  left: 22px;
-  fill: #333;
-}
-
-.side_menu_button_logo_selected {
-  fill: #3367d6;
-  left: 18px;
-}
-
-.side_menu_button_name {
-  position: relative;
-  left: 38px;
-  height: auto;
-}
-
-.side_menu_button_name_selected {
-  left: 34px;
-}
-
 /* Input Field */
+
 .input_field_panel {
   --padding: 8px;
   --focus-color: rgb(61, 87, 255);
@@ -380,4 +340,115 @@ button {
   100% {
       transform: rotate(360deg);
   }
+}
+
+/* Left Menu Layout */
+
+.left_menu_page {
+  width: 100%;
+}
+
+.left_menu_page_left {
+  position: absolute;
+  top: calc(var(--header-height) + 1px);
+  height: calc(100vh - var(--header-height) - 1px);
+  overflow: scroll;
+  width: var(--left-menu-width);
+  border-right: solid 2px rgba(242, 242, 242, 1);
+}
+
+.left_menu_page_left_header {
+  height: 45px;
+  border-bottom: solid 2px rgba(242, 242, 242, 1);
+}
+
+.left_menu_page_left_icon {
+  position: relative;
+  top: 4px;
+  left: 22px;
+}
+
+.left_menu_page_left_title {
+  position: relative;
+  top: -8px;
+  left: 30px;
+  font-size: 18px;
+}
+
+.left_menu_page_left_list {
+  margin-top: 6px;
+}
+
+.left_menu_page_right {
+  position: absolute;
+  top: calc(var(--header-height) - 1px);
+  left: var(--left-menu-width);
+  height: calc(100vh - var(--header-height));
+  overflow: scroll;
+  /* width: 100%; */
+  width: calc(100vw - var(--left-menu-width));
+}
+
+.left_menu_page_right_header {
+  display: flex;
+  align-items: center;
+  height: 45px;
+  border-bottom: solid 2px rgba(242, 242, 242, 1);
+}
+
+.left_menu_page_right_header_button {
+  margin-left: 34px;
+}
+
+.left_menu_page_right_header span {
+  text-align: center;
+  padding-left: 24px;
+  font-size: 18px;
+}
+
+.left_menu_page_right_content {
+  width: 90%;
+  margin-left: 24px;
+  margin-top: 14px;
+}
+
+.side_menu_button {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  height: 44px;
+  /* width: 100%; */
+}
+
+.side_menu_button:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+  color: black;
+}
+
+.side_menu_button_selected {
+  background-color: rgba(161, 194, 250, 0.16);
+  color: #3367d6;
+  border-left: solid 4px #3367d6;
+}
+
+.side_menu_button_logo {
+  position: relative;
+  left: 30px;
+  fill: #333;
+}
+
+.side_menu_button_logo_selected {
+  fill: #3367d6;
+  left: 27px;
+}
+
+.side_menu_button_name {
+  position: relative;
+  left: 50px;
+  height: auto;
+}
+
+.side_menu_button_name_selected {
+  left: 47px;
 }

@@ -184,27 +184,21 @@
         <table class="flat_table" style="max-width: 900px; color: #555;">
           <thead>
               <tr>
-                  <th>Tier</th>
+                  <th>Level</th>
                   <th>Price</th>
                   <th>Range</th>
               </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Starter</td>
-              <td>Free</td>
-              <td>20 API calls or file downloads per month</td>
-            </tr>
-            <tr>
-              <td>Basic</td>
-              <td>0.20€ per 100 API calls or file downloads</td>
-              <td>21 - 5000 API calls or file downloads per month</td>
-            </tr>
-            <tr>
-              <td>Premium</td>
-              <td>0.10€ per 100 API calls or file downloads</td>
-              <td>	&gt; 5000 API calls or file downloads per month</td>
-            </tr>
+            {#if data.product.pricing}
+              {#each data.product.pricing as price_tier}
+                <tr>
+                  <td>{price_tier.tier}</td>
+                  <td>{price_tier.price}</td>
+                  <td>{price_tier.range}</td>
+                </tr>
+              {/each}
+            {/if}
           </tbody>
         </table>
       </div>

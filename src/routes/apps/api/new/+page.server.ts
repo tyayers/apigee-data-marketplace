@@ -40,7 +40,11 @@ export const actions = {
     }
     
     if (email && name) {
-		  appService.CreateApiApp(email.toString(), name.toString(), description.toString(), products);
+		  await appService.CreateApiApp(email.toString(), name.toString(), description.toString(), products);
+      // Now create Apigee subscription for monetization
+      for (let product of products)
+        await appService.dataService.createApigeeSubscription(email, product);
+
       redirect(303, "/apps/api");
     }
     else {

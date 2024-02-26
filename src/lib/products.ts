@@ -12,6 +12,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -36,6 +43,18 @@ export let product_index: Products = {
       hubListingId: "trading_data_18dccebea66",      
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Initial fee",
+          "price": "$1,000",
+          "range": "Start of subscription"
+        },
+        {
+          "tier": "Monthly fee",
+          "price": "$1,000 per month",
+          "range": "0 - 5000 calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -53,6 +72,23 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        },
+        {
+          "tier": "Basic",
+          "price": "$0.20 per 100 API calls or file downloads",
+          "range": "21 - 5000 API calls or file downloads per month"
+        },
+        {
+          "tier": "Premium",
+          "price": "$0.10 per 100 API calls or file downloads",
+          "range": "> 5000 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -70,6 +106,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -87,6 +130,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -104,6 +154,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -121,6 +178,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -138,6 +202,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",
@@ -155,6 +226,13 @@ export let product_index: Products = {
       specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
       status: "active",
       access: "public",
+      pricing: [
+        {
+          "tier": "Starter",
+          "price": "Free",
+          "range": "20 API calls or file downloads per month"
+        }
+      ],
       attributes: [
         {
           name: "tags",

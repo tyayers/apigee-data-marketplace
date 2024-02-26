@@ -24,6 +24,7 @@ export class Product {
   hubListingId? = "";
   status?: string;
   access?: string;
+  pricing?: {tier: string, price: string, range: string}[] = [];
   attributes?: KeyValue[] = [];
   // New properties
   attrArray?: string[] = [];
@@ -106,4 +107,18 @@ export class BucketSubscription {
   url: string = "";
   createdAt: string = "";
   status: string = "";
+}
+
+export class UsageData {
+  environments: UsageDataEnvironment[] = [];
+}
+
+export class UsageDataEnvironment {
+  name: string = "";
+  dimensions: UsageDataDimension[] = [];
+}
+
+export class UsageDataDimension {
+  name: string = "";
+  metrics: {name: string, values: {value: string, timesteamp: number}[]}[] = [];
 }

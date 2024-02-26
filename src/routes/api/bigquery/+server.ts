@@ -64,6 +64,9 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     await document.set(myData);
   }
 
+  // Now create Apigee subscription for monetization
+  await appService.dataService.createApigeeSubscription(email, product);
+
 	return json(newSubscription);
 }
 
