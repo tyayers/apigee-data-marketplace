@@ -170,94 +170,95 @@
 </script>
 
 <div class="header_tabs">
-  <div class="header_tabs_box">
-    <div class="header_tab_button header_tab_button_selected">
-      Catalog
-    </div>
-    <div class="header_tab_button">
-      Our mission
-    </div>
-    <div class="header_tab_button">
-      Pricing
-    </div>
-    <div class="header_tab_button">
-      Partners
-    </div>
-    <div class="header_tab_button">
-      Privacy
-    </div>
-  </div>
+</div>
 
+<div class="header_tabs_box">
+  <div class="header_tab_button header_tab_button_selected">
+    Catalog
+  </div>
+  <div class="header_tab_button">
+    Our mission
+  </div>
+  <div class="header_tab_button">
+    Pricing
+  </div>
+  <div class="header_tab_button">
+    Partners
+  </div>
+  <div class="header_tab_button">
+    Privacy
+  </div>
 </div>
 
 {#if currentUser && currentUser.developerData}
-<div class="banner">
-  <div class="banner_title">
-    Welcome to the Data Marketplace
-    <div class="banner_subtitle">
-      The Data Marketplace has all data products, links, and a smart search experience.
-    </div>
+<div class="home_content">
+  <div class="banner">
+    <div class="banner_title">
+      Welcome to the Data Marketplace
+      <div class="banner_subtitle">
+        The Data Marketplace has all data products, links, and a smart search experience.
+      </div>
 
-    <div class="banner_search">
-      <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
-      <input class="banner_search_input" bind:value={searchText} placeholder="Search for data proucts" />
+      <div class="banner_search">
+        <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
+        <input class="banner_search_input" bind:value={searchText} placeholder="Search for data proucts" />
+      </div>
     </div>
   </div>
-</div>
 
-<div class="product_showcase">
-  
-  <div class="product_filter">
-    <div class="product_filter_box">
-      <div class="product_filter_search">
-        <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
-        <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
-      </div>
-      <div class="product_filter_header">
-        <h4>Type</h4>
-      </div>
-      <div class="product_filter_checkbox">
-        <input type="checkbox" id="api" name="api" on:change={onTypeChange} /><label for="api">API</label>
-      </div>
-      <div class="product_filter_checkbox">
-        <input type="checkbox" id="ah" name="ah" on:change={onTypeChange}/><label for="ah">Analytics Hub</label>
-      </div>
-      <div class="product_filter_checkbox">
-        <input type="checkbox" id="sync" name="sync" on:change={onTypeChange}/><label for="sync">Data sync</label>
-      </div>
-      {#each Object.keys(categories) as cat}
-        <div class="product_filter_header">
-          <h4>{cat}</h4>
+  <div class="product_showcase">
+    
+    <div class="product_filter">
+      <div class="product_filter_box">
+        <div class="product_filter_search">
+          <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
+          <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
         </div>
-        {#each categories[cat] as subcat}
-          {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
-            <div class="product_filter_checkbox">
-              <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
-            </div>
-          {/if}
+        <div class="product_filter_header">
+          <h4>Type</h4>
+        </div>
+        <div class="product_filter_checkbox">
+          <input type="checkbox" id="api" name="api" on:change={onTypeChange} /><label for="api">API</label>
+        </div>
+        <div class="product_filter_checkbox">
+          <input type="checkbox" id="ah" name="ah" on:change={onTypeChange}/><label for="ah">Analytics Hub</label>
+        </div>
+        <div class="product_filter_checkbox">
+          <input type="checkbox" id="sync" name="sync" on:change={onTypeChange}/><label for="sync">Data sync</label>
+        </div>
+        {#each Object.keys(categories) as cat}
+          <div class="product_filter_header">
+            <h4>{cat}</h4>
+          </div>
+          {#each categories[cat] as subcat}
+            {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
+              <div class="product_filter_checkbox">
+                <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
+              </div>
+            {/if}
+          {/each}
         {/each}
+      </div>
+    </div>
+    <div class="product_list">
+      {#each Object.keys(catProducts) as catName}
+        {#if catProducts[catName].length > 0}
+          <div class="product_list_header">
+            {#if searchText === "" || catName.toLowerCase().includes(searchText)}
+              <h3>{catName} products</h3>
+            {/if}
+          </div>
+          {#each catProducts[catName] as prodName, i}
+            {#if searchText === "" || prodName.toLowerCase().includes(searchText)}
+              <ProductCard data={productsByName[prodName]} />
+            {/if}
+          {/each}
+        {/if}
       {/each}
     </div>
-  </div>
-  <div class="product_list">
-    {#each Object.keys(catProducts) as catName}
-      {#if catProducts[catName].length > 0}
-        <div class="product_list_header">
-          {#if searchText === "" || catName.toLowerCase().includes(searchText)}
-            <h3>{catName} products</h3>
-          {/if}
-        </div>
-        {#each catProducts[catName] as prodName, i}
-          {#if searchText === "" || prodName.toLowerCase().includes(searchText)}
-            <ProductCard data={productsByName[prodName]} />
-          {/if}
-        {/each}
-      {/if}
-    {/each}
-  </div>
 
+  </div>
 </div>
-
 {:else}
 <div class="ring_lower lds-ring"><div></div><div></div><div></div><div></div></div>
 {/if}
@@ -267,40 +268,51 @@
 .header_tabs {
     display: flex;
     width: 100%;
-    height: 43px;
     margin: auto;
     font-size: 16px;
     font-family: "Open Sans", sans-serif;
     color: rgb(95, 99, 104);
-    position: sticky;
-    top: 59px;
+    position: absolute;
+    top: 58px;
+    height: 50px;
     background: white;
     z-index: 1;
-    border-bottom: solid 1px rgba(242, 242, 242, 1);
+    /* border-bottom: solid 1px rgba(242, 242, 242, 1); */
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
   }
 
   .header_tabs_box {
+    font-family: "Open Sans", sans-serif;
     margin-left: 254px;
-    margin-top: 8px;
-    width: 100%;
+    margin-right: 200px;
+    /* margin-top: 8px; */
     display: flex;
+    background-color: rgb(255, 255, 255, .5);
+    z-index: 3;
+    position: sticky;
+    top: 6px;
   }
 
   .header_tab_button {
     font-size: 16px;
     font-weight: 380;
     color: var(--unselected-gray-color);
-    margin-right: 26px;
-    /* position: relative;
-    top: 11px; */
+    margin: 0px 16px 0px 8px;
+    padding: 0px 8px 0px 8px;
     cursor: pointer;
-    height: 100%;
+    height: 96%;
+    line-height: 49px;
   }
 
   .header_tab_button_selected {
     border-bottom: 2px solid #4285F4;
-    font-weight: 400;
+    font-weight: 550;
     color: var(--selected-gray-color);
+  }
+
+  .home_content {
+    /* position: absolute; */
+    top: 112px;
   }
 
   .banner {
@@ -422,25 +434,6 @@
   .product_filter_search_icon {
     margin-left: 9px;
     margin-top: 9px;
-  }
-
-  .tag {
-    padding: 4px 12px 4px 8px;
-    border-radius: 24px;
-    font-weight: bold;
-    color: white;
-  }
-
-  .tag_api {
-    background-color: rgb(85, 153, 85);
-  }
-
-  .tag_ah {
-    background-color: rgb(240, 74, 74);
-  }
-
-  .tag_sync {
-    background-color: orange;
   }
 
   .ring_lower div {

@@ -54,8 +54,8 @@
 <div class="header">
   <span class="header_left_panel1">
     <a href="/home">
-      <svg class="leader_left_panel1_logo" fill="none" fill-rule="evenodd" height="36px" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M5.803 16l1.98-1.98-2.69-2.692a4.41 4.41 0 0 1 6.235-6.235l2.692 2.69L16 5.803l-2.692-2.69A7.164 7.164 0 0 0 8.21 1 7.218 7.218 0 0 0 1 8.21a7.17 7.17 0 0 0 2.112 5.1L5.802 16zm20.394 0l-1.98 1.98 2.69 2.692a4.41 4.41 0 0 1-6.235 6.236l-2.69-2.693L16 26.195l2.692 2.693A7.162 7.162 0 0 0 23.79 31c1.926 0 3.736-.75 5.098-2.112A7.162 7.162 0 0 0 31 23.79a7.16 7.16 0 0 0-2.112-5.098L26.198 16z" fill="#757575"></path><path d="M11.328 26.908a4.41 4.41 0 0 1-6.236-6.236l2.692-2.69 6.235 6.234-2.7 2.692zm9.345-21.815a4.41 4.41 0 0 1 6.234 6.235l-2.69 2.692-6.236-6.236 2.7-2.69zM16 20.778a4.778 4.778 0 0 1-.002-9.555h.004A4.778 4.778 0 0 1 16 20.777zM26.197 16l2.69-2.692A7.162 7.162 0 0 0 31 8.21C31 4.235 27.765 1 23.79 1a7.17 7.17 0 0 0-5.1 2.112L16 5.804 5.803 16l-2.69 2.692A7.16 7.16 0 0 0 1 23.79c0 1.926.75 3.736 2.112 5.098A7.16 7.16 0 0 0 8.21 31a7.17 7.17 0 0 0 5.1-2.112L16 26.196 26.197 16z" fill="#434343"></path><path d="M1 1h30v30H1z"></path></svg>
-      <!-- <img class="leader_left_panel1_logo" src="https://www.gstatic.com/apigee-edge/navbar/apigee-icon-blue.svg" alt="Data Marketplace" /> -->
+      <!-- <svg class="leader_left_panel1_logo" fill="none" fill-rule="evenodd" height="36px" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M5.803 16l1.98-1.98-2.69-2.692a4.41 4.41 0 0 1 6.235-6.235l2.692 2.69L16 5.803l-2.692-2.69A7.164 7.164 0 0 0 8.21 1 7.218 7.218 0 0 0 1 8.21a7.17 7.17 0 0 0 2.112 5.1L5.802 16zm20.394 0l-1.98 1.98 2.69 2.692a4.41 4.41 0 0 1-6.235 6.236l-2.69-2.693L16 26.195l2.692 2.693A7.162 7.162 0 0 0 23.79 31c1.926 0 3.736-.75 5.098-2.112A7.162 7.162 0 0 0 31 23.79a7.16 7.16 0 0 0-2.112-5.098L26.198 16z" fill="#757575"></path><path d="M11.328 26.908a4.41 4.41 0 0 1-6.236-6.236l2.692-2.69 6.235 6.234-2.7 2.692zm9.345-21.815a4.41 4.41 0 0 1 6.234 6.235l-2.69 2.692-6.236-6.236 2.7-2.69zM16 20.778a4.778 4.778 0 0 1-.002-9.555h.004A4.778 4.778 0 0 1 16 20.777zM26.197 16l2.69-2.692A7.162 7.162 0 0 0 31 8.21C31 4.235 27.765 1 23.79 1a7.17 7.17 0 0 0-5.1 2.112L16 5.804 5.803 16l-2.69 2.692A7.16 7.16 0 0 0 1 23.79c0 1.926.75 3.736 2.112 5.098A7.16 7.16 0 0 0 8.21 31a7.17 7.17 0 0 0 5.1-2.112L16 26.196 26.197 16z" fill="#434343"></path><path d="M1 1h30v30H1z"></path></svg> -->
+      <img class="leader_left_panel1_logo" src="https://www.gstatic.com/apigee-edge/navbar/apigee-icon-blue.svg" alt="Data Marketplace" />
       <span class="header_left_panel1_name">Data Marketplace</span>
     </a>
 
@@ -65,7 +65,7 @@
     
     {#if currentUser}
 
-      <button style="position: relative; top: -4px; left: -16px;" class="back_button">
+      <button style="position: relative; top: -4px; left: -10px;" class="back_button">
         <svg width="100%" height="100%" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"><path fill="#333" d="M18 17v-6c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v6H4v2h16v-2h-2zm-2 0H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zm-4 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path></svg>
       </button>
 
@@ -120,7 +120,7 @@
     height: var(--header-height);
     background-color: rgba(255, 255, 255, 1);
     width: 100vw;
-    border-bottom: solid 3px rgba(242, 242, 242, 1);
+    border-bottom: solid 1px rgba(222, 222, 222, 1);
 
     font-weight: 560;
     color: #333;
@@ -144,7 +144,7 @@
   .header_left_panel1_name {
     font-family: "Open Sans", sans-serif;;
     color: rgb(95, 99, 104);
-    font-weight: 400;
+    font-weight: 550;
     position: relative;
     top: -12px;
     left: 4px;
