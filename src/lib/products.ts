@@ -9,7 +9,7 @@ export let product_index: Products = {
       description: "Our ESG data product offers a detailed view of companies' environmental, social, and governance performance.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/esg-analytics.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -37,7 +37,7 @@ export let product_index: Products = {
       description: "Get in-depth index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/index-research.yaml",
       hubUrl: "https://console.cloud.google.com/bigquery/analytics-hub/exchanges;cameo=analyticshub;pageName=listing-detail;pageResource=apigee-test38.eu.marketplace_18dccea19ab.trading_data_18dccebea66",
       hubMarketplaceId: "marketplace_18dccea19ab",
       hubListingId: "trading_data_18dccebea66",      
@@ -69,7 +69,7 @@ export let product_index: Products = {
       description: "Get in-depth STOXX index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stoxx-indexes.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -103,7 +103,7 @@ export let product_index: Products = {
       description: "Get in-depth DAX index data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/dax-indexes.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -127,7 +127,7 @@ export let product_index: Products = {
       description: "Get in-depth pre-IPO listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/trading-data.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -151,7 +151,7 @@ export let product_index: Products = {
       description: "Get in-depth pre-IPO listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/trading-data.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -175,7 +175,7 @@ export let product_index: Products = {
       description: "Get in-depth public offering listing data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/trading-data.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -199,7 +199,7 @@ export let product_index: Products = {
       description: "Get in-depth public trading location data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/trading-data.yaml",
       status: "active",
       access: "public",
       pricing: [
@@ -223,7 +223,7 @@ export let product_index: Products = {
       description: "Get in-depth public trading location data and analysis for smarter investment strategies.",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/stock-transactions.yaml",
+      specUrl: "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/trading-data.yaml",
       status: "active",
       access: "public",
       pricing: [

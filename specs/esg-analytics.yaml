@@ -35,7 +35,6 @@ paths:
         schema:
           type: integer
         description: The next page token to return (returned in previous page result).
-        example: 2
       responses:
         '200':
           description: 'Success'
@@ -155,3 +154,4 @@ components:
       type: integer
       format: int32
       description: The next_page_token number.
+      example: 2
