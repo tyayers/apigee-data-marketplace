@@ -16,7 +16,7 @@ paths:
         schema:
           type: string
         description: A filter for the data query.
-        example: Symbol='ESMO'
+        example: Symbol='ESM0'
       - in: query
         name: orderBy
         schema:
