@@ -154,5 +154,4 @@ components:
     next_page_token: 
       type: integer
       format: int32
-      description: The next_page_token number. 
-      example: 2
+      description: The next_page_token number.

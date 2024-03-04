@@ -1,3 +1,5 @@
+*.zip
+
 *.dev.sh
 build
 .svelte-kit

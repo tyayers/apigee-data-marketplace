@@ -284,7 +284,7 @@
   .header_tabs_box {
     font-family: "Open Sans", sans-serif;
     margin-left: 254px;
-    margin-right: 200px;
+    margin-right: 300px;
     /* margin-top: 8px; */
     display: flex;
     background-color: rgb(255, 255, 255, .5);
