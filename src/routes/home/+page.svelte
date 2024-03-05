@@ -5,6 +5,7 @@
   import type { AppUser, Product } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import { appService } from '$lib/app-service';
+    import { goto } from '$app/navigation';
 
   export let data: PageServerData;
 
@@ -33,6 +34,11 @@
     if (appService.reloadFlag) {
       appService.reloadFlag = false;
       location.reload();
+    }
+
+    if (!appService.currentUser && appService.currentUserLoaded) {
+      // This means no user is signed in, go to landing page
+      goto("/");
     }
   });
 
@@ -176,18 +182,18 @@
   <div class="header_tab_button header_tab_button_selected">
     Catalog
   </div>
-  <div class="header_tab_button">
+  <a href="/mission" class="header_tab_button">
     Our mission
-  </div>
-  <div class="header_tab_button">
+  </a>
+  <a href="/pricing" class="header_tab_button">
     Pricing
-  </div>
-  <div class="header_tab_button">
+  </a>
+  <a href="/partners" class="header_tab_button">
     Partners
-  </div>
-  <div class="header_tab_button">
+  </a>
+  <a href="/privacy" class="header_tab_button">
     Privacy
-  </div>
+  </a>
 </div>
 
 {#if currentUser && currentUser.developerData}
@@ -264,51 +270,6 @@
 {/if}
 
 <style>
-
-.header_tabs {
-    display: flex;
-    width: 100%;
-    margin: auto;
-    font-size: 16px;
-    font-family: "Open Sans", sans-serif;
-    color: rgb(95, 99, 104);
-    position: absolute;
-    top: 58px;
-    height: 50px;
-    background: white;
-    z-index: 1;
-    /* border-bottom: solid 1px rgba(242, 242, 242, 1); */
-    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
-  }
-
-  .header_tabs_box {
-    font-family: "Open Sans", sans-serif;
-    margin-left: 254px;
-    margin-right: 300px;
-    /* margin-top: 8px; */
-    display: flex;
-    background-color: rgb(255, 255, 255, .5);
-    z-index: 3;
-    position: sticky;
-    top: 6px;
-  }
-
-  .header_tab_button {
-    font-size: 16px;
-    font-weight: 380;
-    color: var(--unselected-gray-color);
-    margin: 0px 16px 0px 8px;
-    padding: 0px 8px 0px 8px;
-    cursor: pointer;
-    height: 96%;
-    line-height: 49px;
-  }
-
-  .header_tab_button_selected {
-    border-bottom: 2px solid #4285F4;
-    font-weight: 550;
-    color: var(--selected-gray-color);
-  }
 
   .home_content {
     /* position: absolute; */

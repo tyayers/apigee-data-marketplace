@@ -31,6 +31,7 @@ export class AppService {
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
   currentUser: AppUser | undefined = undefined;
+  currentUserLoaded: boolean = false;
   firebaseUser: User | undefined = undefined;
   apiApps: ApiApps | undefined = undefined;
   reloadFlag: boolean = false;
@@ -43,7 +44,7 @@ export class AppService {
         // if u is undefined, means we don't know user state
         // if u is null, means user is signed out
         // if u is an object, means user is signed in
-
+        this.currentUserLoaded = true;
         if (!u) {
           this.currentUser = undefined;
           //First, we initialize our event

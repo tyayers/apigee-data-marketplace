@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
+  import { goto } from "$app/navigation";
 	import { appService } from "$lib/app-service";
   import Header from "../../lib/header.svelte";
 
@@ -29,7 +29,7 @@
 <div class="sc" on:keydown={() => {}} on:click={cancel}>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
-    <h2>Welcome to Data Marketplace.</h2>
+    <h2>Welcome to Data Marketplace</h2>
     <div class="so">
       <div class="sign_in_option">
         <button class="sob" on:click={signInWithGoogle}>
@@ -113,8 +113,8 @@
     box-shadow: rgb(0 0 0 / 15%) 0px 2px 10px;
     border-radius: 4px;
     display: block;
-    max-height: 695px;
-    height: 100%;
+    /* max-height: 695px;
+    height: 100%; */
     flex-direction: row;
 
     margin: 0;

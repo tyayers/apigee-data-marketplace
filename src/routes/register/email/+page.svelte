@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
 	import { appService } from "$lib/app-service";
   import Header from "$lib/header.svelte";
     import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -37,7 +36,7 @@
 <div class="sc" on:keydown={() => {}} on:click={cancel}>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
-    <h2>Register with your email account.</h2>
+    <h2>Register with your email address</h2>
     <div class="so" on:keydown={submit}>
 
       <div class="input_field_panel">
@@ -89,7 +88,7 @@
   }
 
   .sp {
-    width: 500px;
+    width: 450px;
     text-align: center;
     flex-direction: column;
     align-items: center;
@@ -106,8 +105,8 @@
     box-shadow: rgb(0 0 0 / 15%) 0px 2px 10px;
     border-radius: 4px;
     display: block;
-    max-height: 695px;
-    height: 100%;
+    /* max-height: 695px;
+    height: 100%; */
     flex-direction: row;
 
     margin: 0;

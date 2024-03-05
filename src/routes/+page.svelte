@@ -1,25 +1,100 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
  
+  let selectedTab: string = "overview";
+  let lastKnownScrollPosition = 0;
+
+	onMount(() => {
+    document.addEventListener("scroll", (event) => {
+      let scrollDown = true;
+      if (lastKnownScrollPosition > window.scrollY) scrollDown = false;
+
+      if (scrollDown) {
+        if (isInViewport("privacy"))
+          selectedTab = "privacy";
+        else if (isInViewport("partners"))
+          selectedTab = "partners";
+        else if (isInViewport("pricing"))
+          selectedTab = "pricing";
+        else if (isInViewport("mission"))
+          selectedTab = "mission";
+        else if (isInViewport("overview"))
+          selectedTab = "overview";
+      }
+      else {
+        if (isInViewport("overview"))
+          selectedTab = "overview";
+        else if (isInViewport("mission"))
+          selectedTab = "mission";
+        else if (isInViewport("pricing"))
+          selectedTab = "pricing";
+        else if (isInViewport("partners"))
+          selectedTab = "partners";
+        else if (isInViewport("privacy"))
+          selectedTab = "privacy";
+      }
+
+      lastKnownScrollPosition = window.scrollY;
+    });
+  });
+
+  function scrollToDiv(div: string) {
+    selectedTab = div;
+    const element = document.querySelector('#' + div);
+    element?.scrollIntoView({
+      behavior: 'smooth', // smooth scroll
+      block: 'center' // the upper border of the element will be aligned at the top of the visible part of the window of the scrollable area.
+    })
+    // if (element) {
+    //   const rect = element.getBoundingClientRect() // get rects(width, height, top, etc)
+    //   const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+    //   window.scroll({
+    //     top: rect.top + rect.height / 2 - viewHeight / 2,
+    //     behavior: 'smooth'
+    //   });
+    // }
+  }
+
+  function isInViewport(elementId: string): boolean {
+    const element = document.querySelector('#' + elementId);
+    if (element) {
+      var rect = element.getBoundingClientRect();
+      var html = document.documentElement;
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || html.clientHeight) &&
+        rect.right <= (window.innerWidth || html.clientWidth)
+      );
+    }
+    else 
+      return false;
+  }
+
 </script>
 
-<div class="header">
-  <div class="header_tabs">
-    <div class="header_tab_button header_tab_button_selected">
-      Overview
-    </div>
-    <div class="header_tab_button">
-      Our mission
-    </div>
-    <div class="header_tab_button">
-      Pricing
-    </div>
-    <div class="header_tab_button">
-      Products
-    </div>
-    <div class="header_tab_button">
-      Privacy
-    </div>
-  </div>
+
+<div class="header_tabs">
+</div>
+
+<div class="header_tabs_box">
+  <button on:click={() => {scrollToDiv("overview");}} class:header_tab_button_selected={selectedTab === "overview"} class="header_tab_button">
+    Overview
+  </button>
+  <button on:click={() => {scrollToDiv("mission");}} class:header_tab_button_selected={selectedTab === "mission"} class="header_tab_button">
+    Our mission
+  </button>
+  <button on:click={() => {scrollToDiv("pricing");}} class:header_tab_button_selected={selectedTab === "pricing"} class="header_tab_button">
+    Pricing
+  </button>
+  <button on:click={() => {scrollToDiv("partners");}} class:header_tab_button_selected={selectedTab === "partners"} class="header_tab_button">
+    Partners
+  </button>
+  <button on:click={() => {scrollToDiv("privacy");}} class:header_tab_button_selected={selectedTab === "privacy"} class="header_tab_button">
+    Privacy
+  </button>
 </div>
 
 <div class="background_left">
@@ -30,7 +105,7 @@
 </div>
 
 <div class="landing_main_panel">
-    <div class="landing_heading">
+    <div id="overview" class="landing_heading">
         Let's achieve more with financial data
     </div>
     <div class="landing_content">
@@ -52,73 +127,65 @@
           <div class="landing_content_half">
             <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1540646794357-6cbbd6f3501e?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
           </div>
-          <div class="landing_content_half_text">
+          <div id="mission" class="landing_content_half_text">
             Data Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
           </div>
       </div>
     </div>
+    <div class="landing_content_white">
+      <div class="landing_sub_heading">
+        Transparent & simple pricing for first, second and third-party data
+      </div>
+      <div class="landing_content_divided">
+        <div id="pricing" class="landing_content_half_text">
+          Our data marketplace puts simplicity at the forefront. Pricing structures are clear and concise, with no hidden fees or complicated calculations.  You'll find tiered subscription options based on your needs, or the ability to pay-as-you-go for individual datasets.
+        </div>
+        <div class="landing_content_half">
+          <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+        </div>
+      </div>
+    </div>
+    <div class="landing_content_gray">
+      <div class="landing_sub_heading">
+        Verified & curated data from a network of high-quality partners
+      </div>
+      <div class="landing_content_divided">
+          <div class="landing_content_half">
+            <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1540646794357-6cbbd6f3501e?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+          </div>
+          <div id="partners" class="landing_content_half_text">
+            Data Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
+          </div>
+      </div>
+    </div>
+
+    <div class="landing_content_white">
+      <div class="landing_sub_heading">
+        Security & privacy built-in
+      </div>
+      <div class="landing_content_divided">
+        <div id="privacy" class="landing_content_half_text">
+          Our data marketplace puts simplicity at the forefront. Pricing structures are clear and concise, with no hidden fees or complicated calculations.  You'll find tiered subscription options based on your needs, or the ability to pay-as-you-go for individual datasets.
+        </div>
+        <div class="landing_content_half">
+          <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+        </div>
+      </div>
+    </div>
+
+    <div class="footer"></div>
 </div>
 
 <style>
 
-.header {
-  /* display: flex;
-  flex-flow: row wrap;
-  justify-content: left;
-  align-items: center; */
-  
-  height: 57px;
-  background-color: rgba(255, 255, 255, 1);
-  width: 100%;
-  border-bottom: solid 3px rgba(242, 242, 242, 1);
-
-  font-weight: 560;
-  color: #333;
-  font-size: 20px;
-
-  padding: 0px;
-  margin: 0px;
-  position: sticky;
-  top: 59px;
-  background: white;
-  z-index: 3;
-}
-
-.header_tabs {
-  display: flex;
-  width: 60vw;
-  height: 70%;
-  position: relative;
-  top: 7px;
-  margin: auto;
-}
-
-.header_tab_button {
-  font-size: 16px;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 500;
-  color: #777;
-  margin-right: 50px;
-  padding-bottom: 14px;
-  position: relative;
-  top: 11px;
-  cursor: pointer;
-  font-family: "Open Sans", sans-serif;
-}
-
-.header_tab_button_selected {
-  border-bottom: 2px solid #4285F4;
-  font-weight: 570;
-}
-
 .background_left {
   position: absolute;
-  top: 119px;
+  top: 107px;
 }
 
 .background_right {
   position: absolute;
-  top: 119px;
+  top: 108px;
   right: 0px;
 }
 
@@ -186,8 +253,16 @@
   background-color: rgb(248, 249, 250);
   margin-top: 74px;
   min-height: 400px;
-  margin-bottom: 400px;
+  /* margin-bottom: 400px; */
   padding-bottom: 110px;
+}
+
+.landing_content_white {
+  background-color: rgb(255, 255, 255);
+  /* margin-top: 74px; */
+  min-height: 400px;
+  /* margin-bottom: 400px; */
+  /* padding-bottom: 110px; */
 }
 
 .landing_sub_heading {
@@ -196,5 +271,11 @@
   width: 50vw;
   font-size: 48px;
   font-style: normal;
+  padding-bottom: 22px;
+}
+
+.footer {
+  height: 200px;
+  width: 100%;
 }
 </style>
