@@ -17,6 +17,7 @@ a {
   --blue: #3367d6;
   --selected-gray-color: rgb(95, 99, 104);
   --unselected-gray-color: rgb(95, 99, 104);
+  --light-gray-color: rgb(193, 193, 193);
   --header-height: 57px;
   --left-menu-width: 320px;
 }
@@ -381,6 +382,7 @@ button {
   cursor: pointer;
   height: 96%;
   line-height: 49px;
+  white-space: nowrap;
 }
 
 .header_tab_button_selected {

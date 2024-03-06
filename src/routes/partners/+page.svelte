@@ -76,7 +76,7 @@
   margin: auto;
   margin-top: 75px;
   width: 60vw;
-  font-size: 72px;
+  font-size: 44px;
   font-style: normal;
 }
 
@@ -143,7 +143,7 @@
   margin: auto;
   padding-top: 124px;
   width: 50vw;
-  font-size: 48px;
+  font-size: 24px;
   font-style: normal;
   padding-bottom: 22px;
 }

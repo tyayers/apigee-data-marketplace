@@ -36,8 +36,8 @@
 </div>
 
   <div class="landing_content_white">
-    <div class="landing_sub_heading">
-      Exchanging data should be fast, easy and secure
+    <div class="landing_content">
+      Exchanging & sharing data should be fast, easy and secure. It should also be easy for anyone to publish or consume data, just like publishing any other type of digital content. Let's work together to make data sharing simple.
     </div>
     <div class="landing_content_divided">
         <div class="landing_content_half">
@@ -76,7 +76,7 @@
   margin: auto;
   margin-top: 75px;
   width: 60vw;
-  font-size: 72px;
+  font-size: 44px;
   font-style: normal;
 }
 
@@ -84,6 +84,7 @@
   width: 60vw;
   margin: auto;
   display: flex;
+  margin-top: 24px;
 }
 
 .landing_content {
@@ -143,13 +144,9 @@
   margin: auto;
   padding-top: 124px;
   width: 50vw;
-  font-size: 48px;
+  font-size: 24px;
   font-style: normal;
   padding-bottom: 22px;
 }
 
-.footer {
-  height: 200px;
-  width: 100%;
-}
 </style>

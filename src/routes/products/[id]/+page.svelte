@@ -15,10 +15,12 @@
   let apiKey: string = "";
 
   let previewDataOpen: boolean = false;
+  let apiDocOpen: boolean = false;
 
   onMount(async () => {
     document.addEventListener("cancelEvent", () => {
       previewDataOpen = false;
+      apiDocOpen = false;
     });
 
     document.addEventListener("appsUpdated", () => {
@@ -168,6 +170,9 @@
   {:else if selectedProductTab == "documentation"}
     <div>
       {#if data.product.specUrl}
+        <button class="api_maximize_button" title="Maximize window" on:click|stopPropagation={()=>{apiDocOpen=!apiDocOpen}}>
+          <svg style="width: 34px; height: 34px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17 7H14M17 7V10M17 7L13.5 10.5M7 17H10M7 17V14M7 17L10.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7 7H10M7 7V10M7 7L10.5 10.5M17 17H14M17 17V14M17 17L13.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>        
+        </button>
         <rapi-doc
           spec-url={data.product.specUrl}
           show-header = 'false'
@@ -1756,6 +1761,45 @@
   </div>
 {/if}
 
+{#if apiDocOpen}
+  <div class="preview_data">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
+      <div style="display: flex;">
+        <h3 style="position: relative; top: -4px; left: 6px;">API Specification</h3>
+        <button class="rounded_button_outlined" style="margin-left: 26px; height: 39px; font-size: 12px">Download spec</button>
+      </div>
+
+      <div style="position: absolute; right: 10px; top: 24px;">
+        <button on:click={() => { apiDocOpen=false }} class="text_button">Close</button>
+      </div>
+      <div style="position: absolute; top: 70px; bottom: 10px; overflow: auto; width: 97%;">
+        <rapi-doc
+          spec-url={data.product.specUrl}
+          show-header = 'false'
+          show-info = 'true'
+          bg-color = "#fafafa"
+          nav-bg-color = '#f3f3f3'
+          primary-color = "#3367d6"
+          api-key-name = 'apikey'
+          api-key-location = 'query'
+          api-key-value = {apiKey}
+          allow-authentication ='true'
+          allow-server-selection = 'false'
+          allow-api-list-style-selection ='false'
+          allow-search = "false"
+          allow-advanced-search = "false"
+          theme = 'light'
+          render-style = "focused"
+          style = {{ textAlign: "left" }}
+          data-reveal-delay="200"
+          class="blue_text"
+        > </rapi-doc>
+      </div>
+    </div>
+  </div>
+{/if}
+
 <style>
   .product_header {
     height: 36px;
@@ -1895,5 +1939,12 @@
 
     /* border-radius: 44px; */
 
+  }
+
+  .api_maximize_button {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    right: 10px;
   }
 </style>
