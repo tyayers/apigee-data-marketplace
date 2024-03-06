@@ -1,11 +1,11 @@
 # Load environment variables
 source 1_env.dev.sh
-
+gcloud config set project $PROJECT
 SECONDS=0
 
 # Create artifact registry, if needed
 gcloud artifacts repositories create docker-registry --repository-format=docker \
---location="$REGION" --description="Docker registry"    
+--location="$REGION" --description="Docker registry" 2>/dev/null    
 
 # Submit build
 gcloud builds submit --config=cloudbuild.yaml \
