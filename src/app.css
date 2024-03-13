@@ -112,6 +112,7 @@ button {
 }
 
 /* Back Button */
+
 .back_button {
   border: 0px;
   border-radius: 100px;
@@ -123,6 +124,26 @@ button {
 .back_button:hover {
   cursor: pointer;
   background-color: #eee;
+}
+
+/* Form elements */
+
+.form_list {
+  margin-bottom: 24px;
+}
+
+.form_list_line {
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+.form_list_line label {
+  margin-left: 4px;
+}
+
+.form_controls {
+  margin-top: 24px;
+  margin-bottom: 34px;
 }
 
 /* Input Field */
@@ -188,6 +209,7 @@ button {
 }
 
 /* Drop Down */
+
 .select_dropdown,
 .select_dropdown * {
 	margin: 0;
@@ -500,4 +522,10 @@ button {
 
 .side_menu_button_name_selected {
   left: 47px;
+}
+
+.right_content {
+  width: 90%;
+  margin-left: 24px;
+  margin-top: 24px;
 }

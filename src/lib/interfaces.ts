@@ -109,6 +109,17 @@ export class BucketSubscription {
   status: string = "";
 }
 
+export class DataProduct {
+  name = "";
+  description = "";
+  createdAt = "";
+  dataSource = "";
+  query = "";
+  protocols = "";
+  groups = "";
+  status = "";
+}
+
 export class UsageData {
   environments: UsageDataEnvironment[] = [];
 }

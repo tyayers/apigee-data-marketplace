@@ -1766,7 +1766,7 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
       <div style="display: flex;">
-        <h3 style="position: relative; top: -4px; left: 6px;">API Specification</h3>
+        <h3 style="position: relative; top: -4px; left: 6px;">API Documentation</h3>
         <button class="rounded_button_outlined" style="margin-left: 26px; height: 39px; font-size: 12px">Download spec</button>
       </div>
 

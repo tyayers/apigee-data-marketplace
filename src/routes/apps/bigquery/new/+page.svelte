@@ -196,7 +196,7 @@
                 This is the Data Product that you are subscribing to. You can subscribe to a product in multiple projects and in multiple datasets.
               </div>
 
-              <div class="product_list">
+              <div class="form_list">
                 <h4>Product subscription</h4>
                 <div class="select_dropdown">
                   <select name="hubListing" id="hubListing" bind:value={product}>
@@ -209,7 +209,7 @@
                 </div>
               </div>
 
-              <div class="controls">
+              <div class="form_controls">
                 <button on:click={submit} type="button" class="rounded_button_filled">Create</button>
                 <button on:click={back} type="button" class="rounded_button_outlined">Cancel</button>
               </div>
@@ -224,68 +224,6 @@
 </div>
 
 <style>
-    .apps {
-        width: 100%;
-        display: flex;
-    }
-
-    .apps_left_panel {
-        width: 320px;
-        height: 90vh;
-        border-right: solid 2px rgba(242, 242, 242, 1);
-    }
-
-    .apps_left_panel_header {
-        height: 45px;
-        border-bottom: solid 2px rgba(242, 242, 242, 1);
-    }
-
-    .apps_left_panel_logo {
-        position: relative;
-        top: 4px;
-        left: 22px;
-    }
-
-    .apps_left_panel_title {
-        position: relative;
-        top: -8px;
-        left: 30px;
-        font-size: 18px;
-    }
-
-    .apps_left_panel_menu {
-        margin-top: 6px;
-    }
-
-    .apps_right_panel {
-        width: 100%;
-    }
-
-    .right_panel_header {
-        display: flex;
-        align-items: center;
-        border-bottom: solid 2px rgba(242, 242, 242, 1);
-        padding: 2px 12px;
-    }
-
-    .right_panel_header span {
-        text-align: center;
-        padding-left: 24px;
-        font-size: 18px;
-        padding: 8px 8px;
-        padding-bottom: 10px;
-    }
-
-    .right_panel_content {
-        width: 100%;
-    }
-
-    .right_content {
-        width: 90%;
-        margin-left: 24px;
-        margin-top: 24px;
-    }
-
     .right_content_tip {
       font-size: 14px;
       max-width: 550px;
@@ -300,22 +238,5 @@
       position: relative;
       top: 5px;
       left: -3px;
-    }
-
-    .product_list {
-      margin-top: 24px;
-    }
-
-    .product_list_line {
-      margin-bottom: 8px;
-      user-select: none;
-    }
-
-    .product_list_line label {
-      margin-left: 4px;
-    }
-
-    .controls {
-      margin-top: 34px;      
     }
 </style>

@@ -18,6 +18,15 @@
     });
   });
 
+  function goToPublish() {
+    goto("/user/account/products/new");
+
+    //First, we initialize our event
+    const event = new Event('cancelEvent');
+    // Next, we dispatch the event.
+    document.dispatchEvent(event);
+  }
+
   function signOut() {
     appService.SignOut();
 
@@ -37,7 +46,7 @@
       const event = new Event('cancelEvent');
       // Next, we dispatch the event.
       document.dispatchEvent(event);
-    }, 50)
+    }, 50);
   }
 
   function goToAccount() {
@@ -64,6 +73,8 @@
   <span class="header_right_panel1">
     
     {#if currentUser}
+
+      <button style="position: relative; top: -14px; left: -10px;" on:click={goToPublish} class="rounded_button_outlined">Publish data</button>
 
       <button style="position: relative; top: -4px; left: -10px;" class="back_button">
         <svg width="100%" height="100%" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"><path fill="#333" d="M18 17v-6c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v6H4v2h16v-2h-2zm-2 0H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zm-4 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path></svg>

@@ -79,10 +79,10 @@
                 </label>
               </div>
 
-              <div class="product_list">
+              <div class="form_list">
                 <h4>Product subscriptions</h4>
                 {#each data.products as product}
-                <div class="product_list_line">
+                <div class="form_list_line">
                   {#if product.name === product_input}
                     <input id={product.name} name={product.name} checked type="checkbox" /><label for={product.name}>{product.name}</label>
                   {:else}
@@ -92,7 +92,7 @@
                 {/each}
               </div>
 
-              <div class="controls">
+              <div class="form_controls">
                 <button type="submit" class="rounded_button_filled">Create</button>
                 <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
               </div>
@@ -108,12 +108,6 @@
 
 <style>
 
-    .right_content {
-        width: 90%;
-        margin-left: 24px;
-        margin-top: 24px;
-    }
-
     .right_content_tip {
       font-size: 14px;
       max-width: 550px;
@@ -128,22 +122,5 @@
       position: relative;
       top: 5px;
       left: -3px;
-    }
-
-    .product_list {
-      margin-top: 24px;
-    }
-
-    .product_list_line {
-      margin-bottom: 8px;
-      user-select: none;
-    }
-
-    .product_list_line label {
-      margin-left: 4px;
-    }
-
-    .controls {
-      margin-top: 34px;      
     }
 </style>
