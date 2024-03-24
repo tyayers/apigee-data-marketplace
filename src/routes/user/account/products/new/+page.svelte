@@ -99,7 +99,7 @@
             <div class="select_dropdown">
               <select name="source" id="source" bind:value={source}>
                 <option value="BigQuery">BigQuery</option>
-                <option value="AloyDB">AloyDB</option>
+                <option value="AlloyDB">AlloyDB</option>
                 <option value="CloudSpanner">Cloud Spanner</option>
                 <option value="Snowflake">Snowflake</option>
                 <option value="Databricks">Databricks</option>
