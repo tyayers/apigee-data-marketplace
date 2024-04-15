@@ -18,6 +18,9 @@ import { initializeApp } from "firebase/app";
 import { AppUser, Developer, ApiApps, ApiApp, Products, AHSubscription } from "./interfaces";
 import { product_index } from "./products_new";
 
+let appName: string = import.meta.env.VITE_SITE_NAME;
+if (!appName) appName = "Data Marketplace";
+
 export class AppService {
   googleProvider = new GoogleAuthProvider();
   SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
@@ -43,6 +46,8 @@ export class AppService {
     if (!this.siteName) this.siteName = "Data Marketplace";
 
     if (browser) {
+      document.title = appName;
+      
       this.auth.onAuthStateChanged((u: User | null) => {
         // if u is undefined, means we don't know user state
         // if u is null, means user is signed out

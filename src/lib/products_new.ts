@@ -9,7 +9,7 @@ export let product_index: Products = {
       description: "The Order Events async API alerts authorized users to all order data events..",
       approvalType: "automatic",
       imageUrl: "/data_icon.png",
-      specUrl: "http://127.0.0.1:5500/specs/Orders%20Event%20API.html",
+      specUrl: "/orders.html",
       status: "active",
       access: "public",
       pricing: [

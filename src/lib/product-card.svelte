@@ -21,11 +21,13 @@
   }
 
   function getTypeClass(type: string) {
-    let result = "tag tag_orange";
+    let result = "tag tag_blue";
     if (type === "api")
       result = "tag tag_green";
     else if (type === "ah")
       result = "tag tag_red";
+    else if (type === "event")
+      result = "tag tag_orange";
 
     return result;
   }
@@ -130,5 +132,9 @@
 
   .tag_orange {
     background-color: orange;
+  }
+
+  .tag_blue {
+    background-color: #3367d6;
   }
 </style>
