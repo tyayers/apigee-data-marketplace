@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+    import { resolveRoute } from "$app/paths";
     import type { Product } from "./interfaces";
 
   export let data: Product | undefined = undefined;
+  let types: string[] = [];
   let tags: { [key: string]: string } = {};
 
   if (data && data.attributes) {
@@ -11,13 +13,40 @@
     }
   }
 
+  if (data && data.type)
+    types = data.type.split(",");
+
   function OpenProduct() {
     goto("/products/" + data?.name);
+  }
+
+  function getTypeClass(type: string) {
+    let result = "tag tag_orange";
+    if (type === "api")
+      result = "tag tag_green";
+    else if (type === "ah")
+      result = "tag tag_red";
+
+    return result;
+  }
+
+  function getTypeName(type: string): string {
+    let result = type;
+
+    if (type === "ah")
+      result = "Analytics hub";
+    else if (type === "sync")
+      result = "Data sync";
+    else if (type === "api")
+      result = "API";
+    
+    return result.charAt(0).toUpperCase() + result.slice(1);
   }
 </script>
 
 {#if data}
   <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div class="product-box" on:click={OpenProduct}>
     <div>
       {#if data.imageUrl}
@@ -34,15 +63,9 @@
       {data.description}
     </div>
     <div class="tags_box">
-      {#if data.type?.includes("api")}
-      <span class="tag tag_api">API</span>
-      {/if}
-      {#if data.type?.includes("ah")}
-      <span class="tag tag_ah">Analytics Hub</span>
-      {/if}
-      {#if data.type?.includes("sync")}
-      <span class="tag tag_sync">Data sync</span>
-      {/if}
+      {#each types as type}
+        <span class={getTypeClass(type)}>{getTypeName(type)}</span>
+      {/each}
     </div>
   </div>
 {/if}
@@ -94,17 +117,18 @@
     font-size: 14px;
     font-weight: bold;
     color: white;
+    margin-right: 6px;
   }
 
-  .tag_api {
+  .tag_green {
     background-color: rgb(85, 153, 85);
   }
 
-  .tag_ah {
+  .tag_red {
     background-color: rgb(240, 74, 74);
   }
 
-  .tag_sync {
+  .tag_orange {
     background-color: orange;
   }
 </style>

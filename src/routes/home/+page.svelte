@@ -2,19 +2,19 @@
   import type { PageServerData } from './$types';
 
   import ProductCard from '$lib/product-card.svelte';
-  import type { AppUser, Product } from '$lib/interfaces';
+  import type { AppUser, Product, Products } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import { appService } from '$lib/app-service';
-    import { goto } from '$app/navigation';
-
-  export let data: PageServerData;
+  import { goto } from '$app/navigation';
 
   let currentUser: AppUser | undefined = appService.currentUser;
+  let products: Products = appService.products;
   let productsByName: {[key: string]: Product} = {};
   let catProducts: {[key: string]: string[]} = {};
   let catSubProducts: {[key: string]: string[]} = {};
   let category_filter: string = "";
   let categories: { [key: string]: string[] } = {};
+  let types: string[] = [];
   let catChecked: string[] = [];
   let typesChecked: string[] = [];
   let userGroups: string[] = [];
@@ -42,12 +42,18 @@
     }
   });
 
-  if (data.products) {
-    for (let prod of data.products.products) {
+  if (products) {
+    for (let prod of products.products) {
       productsByName[prod.name] = prod;
       prod.attrArray = [];
       prod.groupArray = [];
       prod.typeArray = prod.type?.split(",");
+      if (prod.typeArray && prod.typeArray.length > 0) {
+        for (let type of prod.typeArray) {
+          if (!types.includes(type)) types.push(type);
+        }
+      }
+
       if (prod.attributes) {
         for (let tagData of prod.attributes){
           if (tagData.name === "tags") {
@@ -173,6 +179,19 @@
 
     catProducts = tempCatProducts;
   }
+
+  function getTypeName(type: string): string {
+    let result = type;
+
+    if (type === "ah")
+      result = "Analytics hub";
+    else if (type === "sync")
+      result = "Data sync";
+    else if (type === "api")
+      result = "API";
+    
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  }
 </script>
 
 <div class="header_tabs">
@@ -199,15 +218,14 @@
 {#if currentUser && currentUser.developerData}
 <div class="home_content">
   <div class="banner">
-    <div class="banner_title">
-      Welcome to the Data Marketplace
+    <div class="banner_title">{"Welcome to " + appService.siteName}
       <div class="banner_subtitle">
-        The Data Marketplace has all data products, links, and a smart search experience.
+        {"The " + appService.siteName + " has all data products, APIs and service ecosystem access."}
       </div>
 
       <div class="banner_search">
         <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
-        <input class="banner_search_input" bind:value={searchText} placeholder="Search for data proucts" />
+        <input class="banner_search_input" bind:value={searchText} placeholder="Search for data & API proucts" />
       </div>
     </div>
   </div>
@@ -223,15 +241,11 @@
         <div class="product_filter_header">
           <h4>Type</h4>
         </div>
-        <div class="product_filter_checkbox">
-          <input type="checkbox" id="api" name="api" on:change={onTypeChange} /><label for="api">API</label>
-        </div>
-        <div class="product_filter_checkbox">
-          <input type="checkbox" id="ah" name="ah" on:change={onTypeChange}/><label for="ah">Analytics Hub</label>
-        </div>
-        <div class="product_filter_checkbox">
-          <input type="checkbox" id="sync" name="sync" on:change={onTypeChange}/><label for="sync">Data sync</label>
-        </div>
+        {#each types as type}
+          <div class="product_filter_checkbox">
+            <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{getTypeName(type)}</label>
+          </div>
+        {/each}
         {#each Object.keys(categories) as cat}
           <div class="product_filter_header">
             <h4>{cat}</h4>

@@ -16,12 +16,13 @@ import type { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import { AppUser, Developer, ApiApps, ApiApp, Products, AHSubscription } from "./interfaces";
-import { product_index } from "./products";
+import { product_index } from "./products_new";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
   SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
- 
+  siteName: string = import.meta.env.VITE_SITE_NAME;
+
   firebaseConfig = {
     apiKey: "AIzaSyC9rR3wblvxeWdARAV6juR2uw8dBCYfiZM",
     authDomain: "apigee-test38.firebaseapp.com",
@@ -39,6 +40,8 @@ export class AppService {
   googleAccessToken: string = "";
 
   constructor() {
+    if (!this.siteName) this.siteName = "Data Marketplace";
+
     if (browser) {
       this.auth.onAuthStateChanged((u: User | null) => {
         // if u is undefined, means we don't know user state

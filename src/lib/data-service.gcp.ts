@@ -1,7 +1,7 @@
 import type { ApiManagementInterface, ApiProducts, ApiProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
 import { type ApiApp, type ApiApps, type Product, type Products, type Developer, type ApiAppCredential, type AHSubscription, UsageData } from "./interfaces";
-import { product_index } from "./products";
+import { product_index } from "./products_new";
 import { GoogleAuth } from "google-auth-library";
 
 export class GoogleCloudDataService {

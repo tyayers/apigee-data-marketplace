@@ -104,7 +104,7 @@
     </div>
 
     <div class="product_overview_buy">
-      {#if data.product.type?.includes("api")}
+      {#if data.product.type?.includes("api") || data.product.type?.includes("event")}
         <a href={"/apps/api/new?product=" + data.product.name} class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if data.product.type?.includes("ah")}
@@ -169,7 +169,7 @@
     </div>
   {:else if selectedProductTab == "documentation"}
     <div>
-      {#if data.product.specUrl}
+      {#if data.product.type?.includes("api") && data.product.specUrl}
         <button class="api_maximize_button" title="Maximize window" on:click|stopPropagation={()=>{apiDocOpen=!apiDocOpen}}>
           <svg style="width: 34px; height: 34px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17 7H14M17 7V10M17 7L13.5 10.5M7 17H10M7 17V14M7 17L10.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7 7H10M7 7V10M7 7L10.5 10.5M17 17H14M17 17V14M17 17L13.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>        
         </button>
@@ -194,7 +194,10 @@
           data-reveal-delay="200"
           class="blue_text"
         > </rapi-doc>
+      {:else if data.product.type?.includes("event")}
+        <iframe style="width: 100%; height: 1000px; border: 0px;" src={data.product.specUrl}></iframe>
       {/if}
+
     </div>
   {:else if selectedProductTab == "pricing"}
     <div class="product_tab_content_inner">
@@ -239,6 +242,7 @@
 {#if previewDataOpen}
   <div class="preview_data">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
       <div style="display: flex;">
         <h3 style="position: relative; top: -4px; left: 6px;">Preview data</h3>
@@ -1764,6 +1768,7 @@
 {#if apiDocOpen}
   <div class="preview_data">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="preview_data_content" on:click|stopPropagation={()=>{}}>
       <div style="display: flex;">
         <h3 style="position: relative; top: -4px; left: 6px;">API Documentation</h3>
