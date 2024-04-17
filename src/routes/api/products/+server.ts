@@ -10,84 +10,38 @@ const firestore = new Firestore();
 
 export const GET: RequestHandler = async ({ url }) => {
 
-  const email = url.searchParams.get('email') ?? '';
-
-  const document = firestore.doc('data-marketplace-products/' + email);
+  const document = firestore.doc('data-marketplace/products');
   const doc = await document.get();
 
   if (doc.exists)
-	  return json(doc.data()?.subscriptions);
+	  return json(doc.data());
   else
-    return json([]);
+    return json({
+      definitions: {}
+    });
 };
 
 export const POST: RequestHandler = async({ params, url, request}) => {
-	const email = url.searchParams.get('email') ?? '';
-  const name = url.searchParams.get('name') ?? '';
-	const description = url.searchParams.get('description') ?? '';
-  const dataSource = url.searchParams.get('dataSource') ?? '';
-  const query = url.searchParams.get('query') ?? '';
 
-  const protocols = url.searchParams.get('protocols') ?? '';
-  const groups = url.searchParams.get('groups') ?? '';
-  const status: string = "Active";
+  let newProduct: DataProduct = await request.json();
 
-  const document = firestore.doc('data-marketplace-products/' + email);
+  const document = firestore.doc('data-marketplace/products');
   const doc = await document.get();
-  let myData: { subscriptions: DataProduct[] } = {
-    subscriptions: []
+  let productData: { definitions: { [key: string]: DataProduct} } = {
+    definitions: {}
   };
 
   if (doc.exists) {
-    myData = {
-      subscriptions: doc.data()?.subscriptions
-    }
+    let docData = doc.data();
+    if (docData)
+      productData.definitions = docData.definitions as { [key: string]: DataProduct };
   }
 
-  var newProduct: DataProduct = {
-    name: name,
-    description: description,
-    dataSource: dataSource,
-    query: query,
-    protocols: protocols,
-    groups: groups,
-    status: status
-  };
-
-  if (myData) {
-    myData.subscriptions.push(newProduct);
-
-    await document.set(myData);
+  if (productData) {
+    productData.definitions[newProduct.id] = newProduct;
+    console.log(productData);
+    await document.set(productData);
   }
 
 	return json(newProduct);
-}
-
-export const DELETE: RequestHandler = async({ params, url, request}) => {
-	const email = url.searchParams.get('email') ?? '';
-  const name = url.searchParams.get('name') ?? '';
-
-  const document = firestore.doc('data-marketplace-products/' + email);
-  const doc = await document.get();
-  let myData: { subscriptions: DataProduct[] } = {
-    subscriptions: []
-  };
-
-  if (doc.exists) {
-    myData = {
-      subscriptions: doc.data()?.subscriptions
-    }
-  }
-
-  let mySub: DataProduct | undefined = myData.subscriptions.find(sub => sub.name === name);
-  if (mySub) {
-    let index = myData.subscriptions.indexOf(mySub);
-    myData.subscriptions.splice(index, 1);
-  }
-
-  if (myData) {
-    await document.set(myData);
-  }
-
-	return json(mySub);
 }

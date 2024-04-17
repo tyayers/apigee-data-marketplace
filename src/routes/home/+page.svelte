@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageServerData } from './$types';
 
-  import ProductCard from '$lib/product-card.svelte';
+  import ProductCard from '$lib/components.product-card.svelte';
   import type { AppUser, Product, Products } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import { appService } from '$lib/app-service';

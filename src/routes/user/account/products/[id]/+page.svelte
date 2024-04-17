@@ -3,25 +3,29 @@
   import { appService } from '$lib/app-service';
   import { DataProduct } from '$lib/interfaces';
   import MenuLeftAccount from '$lib/components-menus-left/menus-left.account.svelte';
-  import { generateRandomString } from '$lib/utils';
+  import { onMount } from 'svelte';
+  import type { PageData } from './$types';
 
-  let name: string = "";
-  let description: string = "";
-  let source: string = "BigQuery";
-  let query: string = "";
-  let status: string = "Draft";
+  export let data: PageData;
+
+  let name: string = data.productData.productName;
+  let description: string = data.productData.productDescription;
+  let source: string = data.productData.source;
+  let query: string = data.productData.query;
+  let status: string = data.productData.status;
+  let id: string = data.productData.id;
 
   function submit() {
     let createdAt = new Date().toString();
     let email: string = "";
-    let id = generateRandomString(8);
+
     if (appService.currentUser) email = appService.currentUser.email;
 
     let newProduct: DataProduct = new DataProduct(id, email, name, description, status,
       source, query, createdAt, [], []);
 
-    fetch("/api/products", {
-      method: 'POST',
+    fetch("/api/products/" + id, {
+      method: 'PUT',
       body: JSON.stringify(newProduct),
       headers: {
         'content-type': 'application/json',
@@ -49,7 +53,7 @@
           <button class="back_button" on:click={back}>
             <svg data-icon-name="arrowBackIcon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill-rule="evenodd" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path></svg>
           </button>            
-          <span>Create product</span>
+          <span>Edit product</span>
       </div>
 
       <div class="right_content">
@@ -92,7 +96,7 @@
           </div>
 
           <div class="input_field_panel">
-            <textarea name="query" id="query" required class="input_field" bind:value={query} rows="10"></textarea>
+            <textarea name="query" id="query" required class="input_field" rows="10" bind:value={query}></textarea>
             <label for="query" class='input_field_placeholder'>
               Query
             </label>
@@ -138,7 +142,7 @@
           </div>
 
           <div class="form_controls">
-            <button type="button" on:click={submit} class="rounded_button_filled">Create</button>
+            <button type="button" on:click={submit} class="rounded_button_filled">Save</button>
             <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
           </div>
 

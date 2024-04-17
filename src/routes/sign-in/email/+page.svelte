@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { appService } from "$lib/app-service";
-  import Header from "$lib/header.svelte";
+  import Header from "$lib/components.header.svelte";
 
   let email: string = "";
   let password1: string = "";

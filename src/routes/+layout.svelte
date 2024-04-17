@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Header from "$lib/header.svelte";
-  import ModalDialog from "$lib/modal-dialog.svelte";
+  import Header from "$lib/components.header.svelte";
+  import ModalDialog from "$lib/components.modal.dialog.svelte";
   import { appService } from "$lib/app-service";
   import "../app.css"
   import { onMount } from "svelte";

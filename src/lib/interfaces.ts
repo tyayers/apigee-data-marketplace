@@ -110,14 +110,29 @@ export class BucketSubscription {
 }
 
 export class DataProduct {
-  name = "";
-  description = "";
-  createdAt = "";
-  dataSource = "";
-  query = "";
-  protocols = "";
-  groups = "";
-  status = "";
+  id: string;
+  ownerEmail: string;
+  productName: string;
+  productDescription: string;
+  status: string;
+  source: string;
+  query: string;
+  createdAt: string;
+  protocols: string[];
+  audiences: string[];
+
+  constructor(id: string, email: string, name: string, description: string, status: string, source: string, query: string, createdAt: string, protocols: string[], audiences: string[]) {
+    this.id = id;
+    this.ownerEmail = email;
+    this.productName = name;
+    this.productDescription = description;
+    this.status = status;
+    this.source = source;
+    this.query = query;
+    this.createdAt = createdAt;
+    this.protocols = protocols;
+    this.audiences = audiences;
+  }
 }
 
 export class UsageData {

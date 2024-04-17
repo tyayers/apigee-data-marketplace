@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { appService } from "$lib/app-service";
-  import Header from "$lib/header.svelte";
+  import Header from "$lib/components.header.svelte";
     import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
   let email: string = "";
