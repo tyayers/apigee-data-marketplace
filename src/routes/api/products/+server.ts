@@ -10,38 +10,52 @@ const firestore = new Firestore();
 
 export const GET: RequestHandler = async ({ url }) => {
 
-  const document = firestore.doc('data-marketplace/products');
-  const doc = await document.get();
+  let prodColRef = firestore.collection("data-marketplace/products/definitions");
+  let products = await prodColRef.listDocuments();
 
-  if (doc.exists)
-	  return json(doc.data());
-  else
-    return json({
-      definitions: {}
-    });
+  let results: DataProduct[] = [];
+  for (let doc of products.entries()) {
+    let docData = await doc[1].get()
+    results.push(docData.data() as DataProduct);
+  }
+
+  return json(results);
+
+  // const document = firestore.doc('data-marketplace/products');
+  // const doc = await document.get();
+
+  // if (doc.exists)
+	//   return json(doc.data());
+  // else
+  //   return json({
+  //     definitions: {}
+  //   });
 };
 
 export const POST: RequestHandler = async({ params, url, request}) => {
 
   let newProduct: DataProduct = await request.json();
 
-  const document = firestore.doc('data-marketplace/products');
-  const doc = await document.get();
-  let productData: { definitions: { [key: string]: DataProduct} } = {
-    definitions: {}
-  };
+  let newDoc = firestore.doc("data-marketplace/products/definitions/" + newProduct.id);
+  newDoc.set(newProduct);
 
-  if (doc.exists) {
-    let docData = doc.data();
-    if (docData)
-      productData.definitions = docData.definitions as { [key: string]: DataProduct };
-  }
+  // const document = firestore.doc('data-marketplace/products');
+  // const doc = await document.get();
+  // let productData: { definitions: { [key: string]: DataProduct} } = {
+  //   definitions: {}
+  // };
 
-  if (productData) {
-    productData.definitions[newProduct.id] = newProduct;
-    console.log(productData);
-    await document.set(productData);
-  }
+  // if (doc.exists) {
+  //   let docData = doc.data();
+  //   if (docData)
+  //     productData.definitions = docData.definitions as { [key: string]: DataProduct };
+  // }
+
+  // if (productData) {
+  //   productData.definitions[newProduct.id] = newProduct;
+  //   console.log(productData);
+  //   await document.set(productData);
+  // }
 
 	return json(newProduct);
 }

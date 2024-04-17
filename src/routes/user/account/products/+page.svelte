@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
 
   let currentUser: AppUser | undefined = appService.currentUser;
-  let products: {[key: string]: DataProduct} | undefined = undefined;
+  let products: DataProduct[] | undefined = undefined;
 
   onMount(() => {
     document.addEventListener("userUpdated", () => {
@@ -18,29 +18,40 @@
   });
 
   function getProducts() {
+    products = undefined;
     fetch("/api/products", {
       method: "GET",
       headers: {
         "content-type": "application/json",
       },
     })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data: { definitions: {[key: string] : DataProduct}}) => {
-        products = data.definitions;
-      });
+    .then((response) => {
+      return response.json();
+    })
+    .then((data: DataProduct[]) => {
+      products = data;
+      console.log(data);
+    });
   }
 
   function openProduct(product: string) {
     goto("/user/account/products/" + product);
   }
 
-  function deleteProduct(product: string) {}
+  function deleteProduct(product: string) {
+    fetch("/api/products/" + product, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+    .then((response) => {
+      getProducts();
+    });
+  }
 </script>
 
 <div class="left_menu_page">
-
   <MenuLeftAccount selectedName="products" />
 
   <div class="left_menu_page_right">
@@ -93,7 +104,7 @@
                     </button>
                     <button
                       on:click|stopPropagation={() =>
-                        deleteProduct(prod.productName)}
+                        deleteProduct(prod.id)}
                     >
                       <svg
                         width="18px"
