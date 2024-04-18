@@ -116,18 +116,20 @@ export class DataProduct {
   productDescription: string;
   status: string;
   source: string;
+  entity: string;
   query: string;
   createdAt: string;
   protocols: string[];
   audiences: string[];
 
-  constructor(id: string, email: string, name: string, description: string, status: string, source: string, query: string, createdAt: string, protocols: string[], audiences: string[]) {
+  constructor(id: string, email: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[]) {
     this.id = id;
     this.ownerEmail = email;
     this.productName = name;
     this.productDescription = description;
     this.status = status;
     this.source = source;
+    this.entity = entity;
     this.query = query;
     this.createdAt = createdAt;
     this.protocols = protocols;

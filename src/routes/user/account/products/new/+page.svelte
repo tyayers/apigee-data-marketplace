@@ -8,6 +8,7 @@
   let name: string = "";
   let description: string = "";
   let source: string = "BigQuery";
+  let entity: string = "";
   let query: string = "";
   let status: string = "Draft";
 
@@ -18,7 +19,7 @@
     if (appService.currentUser) email = appService.currentUser.email;
 
     let newProduct: DataProduct = new DataProduct(id, email, name, description, status,
-      source, query, createdAt, [], []);
+      source, entity, query, createdAt, [], []);
 
     fetch("/api/products", {
       method: 'POST',
@@ -77,16 +78,23 @@
             </label>
           </div>
 
+          <div class="input_field_panel">
+            <input class="input_field" required type="text" name="entity" id="entity" bind:value={entity} autocomplete="off" title="none" />
+            <label for="entity" class='input_field_placeholder'>
+              Entity name
+            </label>
+          </div>
+
           <div class="form_list">
             <h4>Data source</h4>
             <div class="select_dropdown">
               <select name="source" id="source" bind:value={source}>
                 <option value="BigQuery">BigQuery</option>
                 <option value="BigQuery">API</option>
-                <option value="AlloyDB">AlloyDB</option>
-                <option value="CloudSpanner">Cloud Spanner</option>
-                <option value="Snowflake">Snowflake</option>
-                <option value="Databricks">Databricks</option>
+                <option value="AlloyDB" disabled>AlloyDB</option>
+                <option value="CloudSpanner" disabled>Cloud Spanner</option>
+                <option value="Snowflake" disabled>Snowflake</option>
+                <option value="Databricks" disabled>Databricks</option>
               </select>
             </div>
           </div>
@@ -94,7 +102,7 @@
           <div class="input_field_panel">
             <textarea name="query" id="query" required class="input_field" bind:value={query} rows="10"></textarea>
             <label for="query" class='input_field_placeholder'>
-              Query
+              Query or table
             </label>
           </div>
 
@@ -104,13 +112,13 @@
               <input id="protocol_api" name="protocol_api" type="checkbox" /><label for="protocol_api">API</label>
             </div>
             <div class="form_list_line">
-              <input id="protocol_event" name="protocol_event" type="checkbox" /><label for="protocol_event">Event stream</label>
+              <input id="protocol_event" name="protocol_event" type="checkbox" disabled /><label for="protocol_event">Event stream</label>
             </div>
             <div class="form_list_line">
-              <input id="protocol_ah" name="protocol_ah" type="checkbox" /><label for="protocol_ah">Analytics Hub</label>
+              <input id="protocol_ah" name="protocol_ah" type="checkbox" disabled /><label for="protocol_ah">Analytics Hub</label>
             </div>              
             <div class="form_list_line">
-              <input id="protocol_sync" name="protocol_sync" type="checkbox" /><label for="protocol_sync">Data sync</label>
+              <input id="protocol_sync" name="protocol_sync" type="checkbox" disabled /><label for="protocol_sync">Data sync</label>
             </div>          
           </div>
 
