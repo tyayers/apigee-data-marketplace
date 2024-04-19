@@ -1,6 +1,5 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { appService } from '$lib/app-service.server';
 import { Storage, type GetSignedUrlConfig, Bucket } from '@google-cloud/storage'
 import { Firestore } from '@google-cloud/firestore';
 import type { BucketSubscription } from '$lib/interfaces';

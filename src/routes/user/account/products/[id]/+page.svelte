@@ -5,28 +5,17 @@
   import MenuLeftAccount from '$lib/components-menus-left/menus-left.account.svelte';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
+  import { protocols, audiences } from '$lib/utils';
 
   export let data: PageData;
 
-  let name: string = data.productData.productName;
-  let description: string = data.productData.productDescription;
-  let source: string = data.productData.source;
-  let query: string = data.productData.query;
-  let status: string = data.productData.status;
-  let id: string = data.productData.id;
-
   function submit() {
-    let createdAt = new Date().toString();
-    let email: string = "";
-
-    if (appService.currentUser) email = appService.currentUser.email;
-
-    let newProduct: DataProduct = new DataProduct(id, email, name, description, status,
-      source, query, createdAt, [], []);
-
-    fetch("/api/products/" + id, {
-      method: 'PUT',
-      body: JSON.stringify(newProduct),
+    
+    if (appService.currentUser) data.product.ownerEmail = appService.currentUser.email;
+    
+    fetch("/api/products", {
+      method: 'POST',
+      body: JSON.stringify(data.product),
       headers: {
         'content-type': 'application/json',
       },
@@ -41,6 +30,34 @@
 
   function back() {
     goto("/user/account/products");
+  }
+
+  function onProtocolChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+
+    if (e.target.checked) {
+      if (! data.product.protocols.includes(name))
+        data.product.protocols.push(name);
+    }
+    else {
+      let index = data.product.protocols.indexOf(name);
+      if (index >= 0)
+        data.product.protocols.splice(index, 1);
+    }
+  }
+
+  function onAudienceChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+
+    if (e.target.checked) {
+      if (! data.product.audiences.includes(name))
+        data.product.audiences.push(name);
+    }
+    else {
+      let index = data.product.audiences.indexOf(name);
+      if (index >= 0)
+        data.product.audiences.splice(index, 1);
+    }
   }
 </script>
 
@@ -68,75 +85,71 @@
 
           <div class="input_field_panel">
             <!-- svelte-ignore a11y-autofocus -->
-            <input class="input_field" type="text" name="name" id="name" required bind:value={name} autocomplete="off" autofocus title="none" />
+            <input class="input_field" type="text" name="name" id="name" required bind:value={data.product.productName} autocomplete="off" autofocus title="none" />
             <label for="name" class='input_field_placeholder'>
               Name
             </label>
           </div>
 
           <div class="input_field_panel">
-            <input class="input_field" required type="text" name="description" id="description" bind:value={description} autocomplete="off" title="none" />
+            <input class="input_field" required type="text" name="description" id="description" bind:value={data.product.productDescription} autocomplete="off" title="none" />
             <label for="description" class='input_field_placeholder'>
               Description
+            </label>
+          </div>
+
+          <div class="input_field_panel">
+            <input class="input_field" required type="text" name="entity" id="entity" bind:value={data.product.entity} autocomplete="off" title="none" />
+            <label for="entity" class='input_field_placeholder'>
+              Entity name
             </label>
           </div>
 
           <div class="form_list">
             <h4>Data source</h4>
             <div class="select_dropdown">
-              <select name="source" id="source" bind:value={source}>
-                <option value="BigQuery">BigQuery</option>
-                <option value="BigQuery">API</option>
-                <option value="AlloyDB">AlloyDB</option>
-                <option value="CloudSpanner">Cloud Spanner</option>
-                <option value="Snowflake">Snowflake</option>
-                <option value="Databricks">Databricks</option>
+              <select name="source" id="source" bind:value={data.product.source}>
+                <option value="bigquery">BigQuery</option>
+                <option value="api">API</option>
+                <option value="alloydb" disabled>AlloyDB</option>
+                <option value="cloudspanner" disabled>Cloud Spanner</option>
+                <option value="snowflake" disabled>Snowflake</option>
+                <option value="databricks" disabled>Databricks</option>
               </select>
             </div>
           </div>
 
           <div class="input_field_panel">
-            <textarea name="query" id="query" required class="input_field" rows="10" bind:value={query}></textarea>
+            <textarea name="query" id="query" required class="input_field" bind:value={data.product.query} rows="10"></textarea>
             <label for="query" class='input_field_placeholder'>
-              Query
+              Query or table
             </label>
           </div>
 
           <div class="form_list">
-            <h4>Protocols</h4>
-            <div class="form_list_line">
-              <input id="protocol_api" name="protocol_api" type="checkbox" /><label for="protocol_api">API</label>
-            </div>
-            <div class="form_list_line">
-              <input id="protocol_event" name="protocol_event" type="checkbox" /><label for="protocol_event">Event stream</label>
-            </div>
-            <div class="form_list_line">
-              <input id="protocol_ah" name="protocol_ah" type="checkbox" /><label for="protocol_ah">Analytics Hub</label>
-            </div>              
-            <div class="form_list_line">
-              <input id="protocol_sync" name="protocol_sync" type="checkbox" /><label for="protocol_sync">Data sync</label>
-            </div>          
+            <h4>Publish protocols</h4>
+            {#each protocols as protocol}
+              <div class="form_list_line">
+                <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={data.product.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
+              </div>
+            {/each}
           </div>
 
           <div class="form_list">
-            <h4>Audience</h4>
-            <div class="form_list_line">
-              <input id="target_internal" name="target_internal" type="checkbox" /><label for="target_internal">Internal</label>
-            </div>
-            <div class="form_list_line">
-              <input id="target_partners" name="target_partners" type="checkbox" /><label for="target_partners">Partners</label>
-            </div>              
-            <div class="form_list_line">
-              <input id="target_external" name="target_external" type="checkbox" /><label for="target_external">External</label>
-            </div>          
+            <h4>Audiences</h4>
+            {#each audiences as aud}
+              <div class="form_list_line">
+                <input id={aud.name} name={aud.name} disabled={!aud.active} checked={data.product.audiences.includes(aud.name)} on:change={onAudienceChange} type="checkbox" /><label for={aud.name}>{aud.displayName}</label>
+              </div>
+            {/each}      
           </div>
 
           <div class="form_list">
             <h4>Status</h4>
             <div class="select_dropdown">
-              <select name="status" id="status" bind:value={status}>
-                <option value="Draft">Draft</option>
-                <option value="Published">Published</option>
+              <select name="status" id="status" bind:value={data.product.status}>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
               </select>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { appService } from '$lib/app-service.server';
+import { appServerService } from '$lib/app-service.server';
 
 export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
@@ -8,6 +8,6 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	// });
 
 	return {
-		product: await appService.GetApiProduct(params.id)
+		product: await appServerService.dataService.getProduct(params.id)
 	};
 };

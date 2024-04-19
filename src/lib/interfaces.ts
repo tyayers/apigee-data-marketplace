@@ -137,6 +137,8 @@ export class DataProduct {
   }
 }
 
+export class DisplayOptions {name: string = ""; displayName: string = ""; active: boolean = false};
+
 export class UsageData {
   environments: UsageDataEnvironment[] = [];
 }

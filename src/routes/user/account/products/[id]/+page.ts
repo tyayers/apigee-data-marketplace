@@ -12,6 +12,6 @@ export const load: PageLoad = async ({ fetch, params }) => {
 	let productData = await response.json();
 
   return {
-    productData: productData,
+    product: productData,
   };
 };

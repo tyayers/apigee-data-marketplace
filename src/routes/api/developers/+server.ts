@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { appService } from '$lib/app-service.server';
+import { appServerService } from '$lib/app-service.server';
 
 export const POST: RequestHandler = async ({ url }) => {
 
@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	let devData = await appService.CreateDeveloper(email, firstName, lastName, userName);
+	let devData = await appServerService.dataService.createDeveloper(email, firstName, lastName, userName);
 	return json(devData);
 };
 
@@ -31,7 +31,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		error(400, 'Developer email is required');
 	}
 
-	let devData = await appService.GetDeveloper(email);
+	let devData = await appServerService.dataService.getDeveloper(email);
 
 	return json(devData);
 };

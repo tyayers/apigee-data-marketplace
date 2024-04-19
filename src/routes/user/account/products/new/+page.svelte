@@ -1,26 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import { appService } from '$lib/app-service';
-  import { DataProduct } from '$lib/interfaces';
+  import { DataProduct, DisplayOptions } from '$lib/interfaces';
   import MenuLeftAccount from '$lib/components-menus-left/menus-left.account.svelte';
-  import { generateRandomString } from '$lib/utils';
+  import { generateRandomString, protocols, audiences } from '$lib/utils';
 
-  let name: string = "";
-  let description: string = "";
-  let source: string = "BigQuery";
-  let entity: string = "";
-  let query: string = "";
-  let status: string = "Draft";
+  let newProduct: DataProduct = new DataProduct(generateRandomString(8), "", "", "", "draft", "bigquery", "", "", "", ["api"], ["internal"]);
 
   function submit() {
-    let createdAt = new Date().toString();
-    let email: string = "";
-    let id = generateRandomString(8);
-    if (appService.currentUser) email = appService.currentUser.email;
-
-    let newProduct: DataProduct = new DataProduct(id, email, name, description, status,
-      source, entity, query, createdAt, [], []);
-
+    newProduct.createdAt = new Date().toString();
+    if (appService.currentUser) newProduct.ownerEmail = appService.currentUser.email;
+    
     fetch("/api/products", {
       method: 'POST',
       body: JSON.stringify(newProduct),
@@ -38,6 +28,34 @@
 
   function back() {
     goto("/user/account/products");
+  }
+
+  function onProtocolChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+
+    if (e.target.checked) {
+      if (! newProduct.protocols.includes(name))
+        newProduct.protocols.push(name);
+    }
+    else {
+      let index = newProduct.protocols.indexOf(name);
+      if (index >= 0)
+        newProduct.protocols.splice(index, 1);
+    }
+  }
+
+  function onAudienceChange(e: any) {
+    let name: string = e.target.attributes[1]["nodeValue"];
+
+    if (e.target.checked) {
+      if (! newProduct.audiences.includes(name))
+        newProduct.audiences.push(name);
+    }
+    else {
+      let index = newProduct.audiences.indexOf(name);
+      if (index >= 0)
+        newProduct.audiences.splice(index, 1);
+    }
   }
 </script>
 
@@ -65,21 +83,21 @@
 
           <div class="input_field_panel">
             <!-- svelte-ignore a11y-autofocus -->
-            <input class="input_field" type="text" name="name" id="name" required bind:value={name} autocomplete="off" autofocus title="none" />
+            <input class="input_field" type="text" name="name" id="name" required bind:value={newProduct.productName} autocomplete="off" autofocus title="none" />
             <label for="name" class='input_field_placeholder'>
               Name
             </label>
           </div>
 
           <div class="input_field_panel">
-            <input class="input_field" required type="text" name="description" id="description" bind:value={description} autocomplete="off" title="none" />
+            <input class="input_field" required type="text" name="description" id="description" bind:value={newProduct.productDescription} autocomplete="off" title="none" />
             <label for="description" class='input_field_placeholder'>
               Description
             </label>
           </div>
 
           <div class="input_field_panel">
-            <input class="input_field" required type="text" name="entity" id="entity" bind:value={entity} autocomplete="off" title="none" />
+            <input class="input_field" required type="text" name="entity" id="entity" bind:value={newProduct.entity} autocomplete="off" title="none" />
             <label for="entity" class='input_field_placeholder'>
               Entity name
             </label>
@@ -88,59 +106,48 @@
           <div class="form_list">
             <h4>Data source</h4>
             <div class="select_dropdown">
-              <select name="source" id="source" bind:value={source}>
-                <option value="BigQuery">BigQuery</option>
-                <option value="BigQuery">API</option>
-                <option value="AlloyDB" disabled>AlloyDB</option>
-                <option value="CloudSpanner" disabled>Cloud Spanner</option>
-                <option value="Snowflake" disabled>Snowflake</option>
-                <option value="Databricks" disabled>Databricks</option>
+              <select name="source" id="source" bind:value={newProduct.source}>
+                <option value="bigquery">BigQuery</option>
+                <option value="api">API</option>
+                <option value="alloydb" disabled>AlloyDB</option>
+                <option value="cloudspanner" disabled>Cloud Spanner</option>
+                <option value="snowflake" disabled>Snowflake</option>
+                <option value="databricks" disabled>Databricks</option>
               </select>
             </div>
           </div>
 
           <div class="input_field_panel">
-            <textarea name="query" id="query" required class="input_field" bind:value={query} rows="10"></textarea>
+            <textarea name="query" id="query" required class="input_field" bind:value={newProduct.query} rows="10"></textarea>
             <label for="query" class='input_field_placeholder'>
               Query or table
             </label>
           </div>
 
           <div class="form_list">
-            <h4>Protocols</h4>
-            <div class="form_list_line">
-              <input id="protocol_api" name="protocol_api" type="checkbox" /><label for="protocol_api">API</label>
-            </div>
-            <div class="form_list_line">
-              <input id="protocol_event" name="protocol_event" type="checkbox" disabled /><label for="protocol_event">Event stream</label>
-            </div>
-            <div class="form_list_line">
-              <input id="protocol_ah" name="protocol_ah" type="checkbox" disabled /><label for="protocol_ah">Analytics Hub</label>
-            </div>              
-            <div class="form_list_line">
-              <input id="protocol_sync" name="protocol_sync" type="checkbox" disabled /><label for="protocol_sync">Data sync</label>
-            </div>          
+            <h4>Publish protocols</h4>
+            {#each protocols as protocol}
+              <div class="form_list_line">
+                <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={newProduct.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
+              </div>
+            {/each}
           </div>
 
           <div class="form_list">
-            <h4>Audience</h4>
-            <div class="form_list_line">
-              <input id="target_internal" name="target_internal" type="checkbox" /><label for="target_internal">Internal</label>
-            </div>
-            <div class="form_list_line">
-              <input id="target_partners" name="target_partners" type="checkbox" /><label for="target_partners">Partners</label>
-            </div>              
-            <div class="form_list_line">
-              <input id="target_external" name="target_external" type="checkbox" /><label for="target_external">External</label>
-            </div>          
+            <h4>Audiences</h4>
+            {#each audiences as aud}
+              <div class="form_list_line">
+                <input id={aud.name} name={aud.name} disabled={!aud.active} checked={newProduct.audiences.includes(aud.name)} on:change={onAudienceChange} type="checkbox" /><label for={aud.name}>{aud.displayName}</label>
+              </div>
+            {/each}      
           </div>
 
           <div class="form_list">
             <h4>Status</h4>
             <div class="select_dropdown">
-              <select name="status" id="status" bind:value={status}>
-                <option value="Draft">Draft</option>
-                <option value="Published">Published</option>
+              <select name="status" id="status" bind:value={newProduct.status}>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
               </select>
             </div>
           </div>
