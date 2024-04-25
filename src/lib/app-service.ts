@@ -40,7 +40,7 @@ export class AppService {
   apiApps: ApiApps | undefined = undefined;
   reloadFlag: boolean = false;
   products: Products = product_index;
-  googleAccessToken: string = "";
+  testMode: boolean = false;
 
   constructor() {
     if (!this.siteName) this.siteName = "Data Marketplace";
@@ -48,109 +48,123 @@ export class AppService {
     if (browser) {
       document.title = appName;
       
-      this.auth.onAuthStateChanged((u: User | null) => {
-        // if u is undefined, means we don't know user state
-        // if u is null, means user is signed out
-        // if u is an object, means user is signed in
-        this.currentUserLoaded = true;
-        if (!u) {
-          this.currentUser = undefined;
-          //First, we initialize our event
-          const event = new Event('userUpdated');
-          // Next, we dispatch the event.
-          document.dispatchEvent(event);
-          // Goto signed-out landing page
-          goto("/");
-        } else {
-          this.firebaseUser = u;
-          this.currentUser = new AppUser();
+      if (!this.testMode) {
+        this.auth.onAuthStateChanged((u: User | null) => {
+          // if u is undefined, means we don't know user state
+          // if u is null, means user is signed out
+          // if u is an object, means user is signed in
+          this.currentUserLoaded = true;
+          if (!u) {
+            this.currentUser = undefined;
+            //First, we initialize our event
+            const event = new Event('userUpdated');
+            // Next, we dispatch the event.
+            document.dispatchEvent(event);
+            // Goto signed-out landing page
+            goto("/");
+          } else {
+            this.firebaseUser = u;
+            this.currentUser = new AppUser();
 
-          this.GetIdToken().then((idToken) => {
-            console.log(idToken);
-          });
+            if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
+            if (u?.photoURL) 
+              this.currentUser.photoUrl = u.photoURL;
+            else
+              this.currentUser.photoUrl = "/avatar.png";
 
-          if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
-          if (u?.photoURL) 
-            this.currentUser.photoUrl = u.photoURL;
-          else
-            this.currentUser.photoUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+            if (u?.displayName) {
+              this.currentUser.userName = u.displayName;
+            }
+            else {
+              this.currentUser.userName = "New User";
+            }
 
-          if (u?.displayName) {
-            this.currentUser.userName = u.displayName;
-          }
-          else {
-            this.currentUser.userName = "New User";
-          }
+            if (u.providerData && u.providerData.length > 0)
+              this.currentUser.providerId = u.providerData[0].providerId;
 
-          if (u.providerData && u.providerData.length > 0)
-            this.currentUser.providerId = u.providerData[0].providerId;
+            // Use AppIntegration to create developer
+            fetch("/api/developers?email=" + this.currentUser?.email + "&username=" + this.currentUser?.userName, {
+              method: 'POST',
+              body: JSON.stringify({
+                email: this.currentUser?.email,
+                username: this.currentUser?.userName,
+              }),
+              headers: {
+                  'content-type': 'application/json',
+              },
+            }).then((response) => {
+                return response.json();
+            }).then((data: any) => {
+              if (data.outputParameters.developerData) {
+                if (this.currentUser) this.currentUser.developerData = data.outputParameters.developerData;
+                if (this.currentUser)this.currentUser.status = data.outputParameters.developerData.status;
+                const event = new Event('userUpdated');
+                document.dispatchEvent(event);
 
-          // Use AppIntegration to create developer
-          fetch("/api/developers?email=" + this.currentUser?.email + "&username=" + this.currentUser?.userName, {
-            method: 'POST',
-            body: JSON.stringify({
-              email: this.currentUser?.email,
-              username: this.currentUser?.userName,
-            }),
-            headers: {
-                'content-type': 'application/json',
-            },
-          }).then((response) => {
-              return response.json();
-          }).then((data: any) => {
-            if (data.outputParameters.developerData) {
-              if (this.currentUser) this.currentUser.developerData = data.outputParameters.developerData;
-              if (this.currentUser)this.currentUser.status = data.outputParameters.developerData.status;
-              const event = new Event('userUpdated');
-              document.dispatchEvent(event);
-
-              // Get developer app data
-              fetch("/api/apiapps?email=" + this.currentUser?.email, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                },
-              }).then((response) => {
-                  return response.json();
-              }).then((data: any) => {
-                this.apiApps = data;
-                if (this.apiApps && this.apiApps.app) {
-                  for (let app of this.apiApps.app) {
-                    if (!app.apiProducts) app.apiProducts = [];
-                    if (app.credentials) {
-                      for (let cred of app.credentials) {
-                        if (cred.apiProducts) {
-                          for (let prod of cred.apiProducts) {
-                            if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                // Get developer app data
+                fetch("/api/apiapps?email=" + this.currentUser?.email, {
+                  method: 'GET',
+                  headers: {
+                      'content-type': 'application/json',
+                  },
+                }).then((response) => {
+                    return response.json();
+                }).then((data: any) => {
+                  this.apiApps = data;
+                  if (this.apiApps && this.apiApps.app) {
+                    for (let app of this.apiApps.app) {
+                      if (!app.apiProducts) app.apiProducts = [];
+                      if (app.credentials) {
+                        for (let cred of app.credentials) {
+                          if (cred.apiProducts) {
+                            for (let prod of cred.apiProducts) {
+                              if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                            }
                           }
                         }
                       }
                     }
                   }
-                }
-                const event = new Event('appsUpdated');
-                document.dispatchEvent(event);              
-              });
+                  const event = new Event('appsUpdated');
+                  document.dispatchEvent(event);              
+                });
 
+              }
+              else {
+                // Developer is not yet registered, send to wait page...
+                goto("/user/approval");
+                if (this.currentUser)this.currentUser.status = "approval";
+                const event = new Event('userUpdated');
+                document.dispatchEvent(event);
+              }
+            });          
+
+            if (window.location.pathname.endsWith("/")) {
+              goto("/home");
             }
             else {
-              // Developer is not yet registered, send to wait page...
-              goto("/user/approval");
-              if (this.currentUser)this.currentUser.status = "approval";
               const event = new Event('userUpdated');
               document.dispatchEvent(event);
             }
-          });          
+          }
+        });
+      }
+      else {
+        this.currentUser = new AppUser();
+        this.currentUser.email = "test@example.com";
+        this.currentUser.userName = "testUser";
+        this.currentUser.photoUrl = "/avatar.png";
+        this.currentUser.providerId = "test";
+        this.currentUser.status = "approved";
 
-          if (window.location.pathname.endsWith("/")) {
-            goto("/home");
-          }
-          else {
-            const event = new Event('userUpdated');
-            document.dispatchEvent(event);
-          }
-        }
-      });
+        this.currentUser.developerData = new Developer();
+        this.currentUser.developerData.email = this.currentUser.email;
+
+        const event = new Event('userUpdated');
+        document.dispatchEvent(event);
+
+        goto("/home");
+      }
     }
   }
 
@@ -242,114 +256,98 @@ export class AppService {
     });
   }
 
-  DeleteApp(email: string, appName: string) {
-    fetch("/api/apiapps/" + appName + "?email=" + email, {
-      method: 'DELETE',
-      headers: {
-          'content-type': 'application/json',
-      },
-    }).then((response) => {
-        return response.json();
-    }).then((data: ApiApp) => {
-      let index = this.apiApps?.app.indexOf(data);
-      if (index) {
-          let newAppData = this.apiApps;
-          newAppData?.app.splice(index, 1);
-          this.apiApps = newAppData;
-      }   
-      const event = new Event('appsUpdated');
-      document.dispatchEvent(event);
-    });
-  }
+  // DeleteApp(email: string, appName: string) {
+  //   fetch("/api/apiapps/" + appName + "?email=" + email, {
+  //     method: 'DELETE',
+  //     headers: {
+  //         'content-type': 'application/json',
+  //     },
+  //   }).then((response) => {
+  //       return response.json();
+  //   }).then((data: ApiApp) => {
+  //     let index = this.apiApps?.app.indexOf(data);
+  //     if (index) {
+  //         let newAppData = this.apiApps;
+  //         newAppData?.app.splice(index, 1);
+  //         this.apiApps = newAppData;
+  //     }   
+  //     const event = new Event('appsUpdated');
+  //     document.dispatchEvent(event);
+  //   });
+  // }
 
-  UpdateApp(email: string, app: ApiApp) {
-    fetch("/api/apiapps/" + app.name + "?email=" + email, {
-      method: 'PUT',
-      body: JSON.stringify(app),
-      headers: {
-          'content-type': 'application/json',
-      },
-    }).then((response) => {
-        return response.json();
-    }).then((data: ApiApps) => {
-    });
-  }
+  // UpdateApp(email: string, app: ApiApp) {
+  //   fetch("/api/apiapps/" + app.name + "?email=" + email, {
+  //     method: 'PUT',
+  //     body: JSON.stringify(app),
+  //     headers: {
+  //         'content-type': 'application/json',
+  //     },
+  //   }).then((response) => {
+  //       return response.json();
+  //   }).then((data: ApiApps) => {
+  //   });
+  // }
 
-  AddAppKey(email: string, app: ApiApp): Promise<ApiApp> {
-    return new Promise<ApiApp>((resolve, reject) => {
-      fetch("/api/apiapps/" + app.name + "?email=" + email, {
-        method: 'POST',
-        body: JSON.stringify(app),
-        headers: {
-            'content-type': 'application/json',
-        },
-      }).then((response) => {
-          return response.json();
-      }).then((data: ApiApp) => {
-        resolve(data);
-      });
-    });
-  }
+  // DeleteAppKey(email: string, appName: string, keyId: string) {
+  //   fetch("/api/apiapps/" + appName + "/keys/" + keyId + "?email=" + email, {
+  //     method: 'DELETE',
+  //     headers: {
+  //         'content-type': 'application/json',
+  //     },
+  //   }).then((response) => {
+  //       return response.json();
+  //   }).then((data: ApiApps) => {
+  //   });    
+  // }
 
-  DeleteAppKey(email: string, appName: string, keyId: string) {
-    fetch("/api/apiapps/" + appName + "/keys/" + keyId + "?email=" + email, {
-      method: 'DELETE',
-      headers: {
-          'content-type': 'application/json',
-      },
-    }).then((response) => {
-        return response.json();
-    }).then((data: ApiApps) => {
-    });    
-  }
+  // GetDeveloper(email: string): Promise<Developer> {
+  //   return new Promise<Developer>((resolve, reject) => {
+  //     fetch("/api/developers?email=" + email, {
+  //       method: 'GET',
+  //       headers: {
+  //           'content-type': 'application/json',
+  //       },
+  //     }).then((response) => {
+  //         return response.json();
+  //     }).then((data: Developer) => {
+  //         resolve(data);
+  //     }).catch((error) => {
+  //       reject(error);
+  //     });        
+  //   });
+  // }
 
-  GetDeveloper(email: string): Promise<Developer> {
-    return new Promise<Developer>((resolve, reject) => {
-      fetch("/api/developers?email=" + email, {
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-        },
-      }).then((response) => {
-          return response.json();
-      }).then((data: Developer) => {
-          resolve(data);
-      }).catch((error) => {
-        reject(error);
-      });        
-    });
-  }
+  // CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string): Promise<AHSubscription> {
+  //   return new Promise<AHSubscription>((resolve, reject) => {
+  //     const productData = this.products.products.find(productItem => productItem.name === product);
+  //     fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt, {
+  //       method: 'POST',
+  //       headers: {
+  //           'content-type': 'application/json',
+  //       },
+  //     }).then((response) => {
+  //         return response.json();
+  //     }).then((data: AHSubscription) => {
+  //         resolve(data);
+  //     }).catch((error) => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
 
-  CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string): Promise<AHSubscription> {
-    return new Promise<AHSubscription>((resolve, reject) => {
-      const productData = this.products.products.find(productItem => productItem.name === product);
-      fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-        },
-      }).then((response) => {
-          return response.json();
-      }).then((data: AHSubscription) => {
-          resolve(data);
-      }).catch((error) => {
-        reject(error);
-      });
-    });
-  }
-
-  DeleteHubSubscription(project: string, dataset: string) {
-    fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset, {
-      method: 'DELETE',
-      headers: {
-          'content-type': 'application/json',
-      },
-    }).then((response) => {
+  // DeleteHubSubscription(project: string, dataset: string) {
+  //   fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset, {
+  //     method: 'DELETE',
+  //     headers: {
+  //         'content-type': 'application/json',
+  //     },
+  //   }).then((response) => {
     
-    }).catch((error) => {
-      console.error(error);
-    });
-  }
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  // }
 }
 
 export let appService: AppService = new AppService();

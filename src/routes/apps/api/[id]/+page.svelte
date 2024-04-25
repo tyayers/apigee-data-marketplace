@@ -81,14 +81,21 @@
 
       setDescription();
 
-      appService.AddAppKey(appService.currentUser?.email, appData).then((result) => {
-
+      fetch("/api/apiapps/" + appData.name + "?email=" + appService.currentUser.email, {
+        method: 'POST',
+        body: JSON.stringify(appData),
+        headers: {
+            'content-type': 'application/json',
+        },
+      }).then((response) => {
+          return response.json();
+      }).then((data: ApiApp) => {
         if (appService.apiApps && appData) {
-          let index = appService.apiApps.app.indexOf(appData);
-          appService.apiApps.app[index] = result;
+          let index = appService.apiApps.app.indexOf(data);
+          appService.apiApps.app[index] = data;
         }
 
-        appData = result;
+        appData = data;
         setProductChecks();
 
         appService.ShowSnackbar("Key has been created.");
@@ -100,7 +107,14 @@
     appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
       if (result === "ok") {
         if (appService.currentUser && appData) {
-          appService.DeleteAppKey(appService.currentUser?.email, appData?.name, key.consumerKey);
+          // appService.DeleteAppKey(appService.currentUser?.email, appData?.name, key.consumerKey);
+          
+          fetch("/api/apiapps/" + appData.name + "/keys/" + key.consumerKey + "?email=" + appService.currentUser.email, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+            },
+          });   
           // remove credential from local data
           let tempAppData = appData;
           let index = tempAppData.credentials?.indexOf(key);
@@ -143,8 +157,16 @@
 
       appService.ShowSnackbar("App updated.")
 
-      if (appService.currentUser?.email)
-        appService.UpdateApp(appService.currentUser?.email, appData);
+      if (appService.currentUser?.email) {
+        fetch("/api/apiapps/" + appData.name + "?email=" + appService.currentUser.email, {
+          method: 'PUT',
+          body: JSON.stringify(appData),
+          headers: {
+              'content-type': 'application/json',
+          },
+        });
+      }
+        // appService.UpdateApp(appService.currentUser?.email, appData);
     }
 
     goto("/apps/api");
@@ -211,6 +233,7 @@
                 </div>
 
                 <div class="input_field_panel">
+                  <!-- svelte-ignore a11y-autofocus -->
                   <input class="input_field" type="text" name="description" id="description" bind:value={appData.description} autocomplete="off" autofocus title="none" />
                   <label for="description" class='input_field_placeholder'>
                     Description

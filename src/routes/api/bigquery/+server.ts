@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { appServerService } from '$lib/app-service.server';
+import { utilsServer } from '$lib/utils.server';
 import { Storage, type GetSignedUrlConfig } from '@google-cloud/storage'
 import { Firestore } from '@google-cloud/firestore';
 import { AHSubscription } from '$lib/interfaces';
@@ -65,7 +65,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   }
 
   // Now create Apigee subscription for monetization
-  await appServerService.dataService.createApigeeSubscription(email, product);
+  await utilsServer.dataService.createApigeeSubscription(email, product);
 
 	return json(newSubscription);
 }

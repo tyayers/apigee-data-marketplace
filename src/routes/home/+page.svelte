@@ -291,7 +291,7 @@
   }
 
   .banner {
-    background-image: url('https://www.gstatic.com/pantheon/images/marketplace/cameo_banner-1x.png');
+    background-image: url('/products_banner.png');
     background-size: cover;
     width: 100%;
     height: 300px;

@@ -1,8 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-// import { appService } from '$lib/app-service.server';
 import type { ApiApp } from '$lib/interfaces';
-import { appServerService } from '$lib/app-service.server';
+import { utilsServer } from '$lib/utils.server';
 
 export const GET: RequestHandler = async ({ params, url }) => {
 
@@ -12,7 +11,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 		error(400, 'email and appid are required');
 	}
 	
-	let appData = await appServerService.dataService.getApiApp(email, params.id)
+	let appData = await utilsServer.dataService.getApiApp(email, params.id)
 
 	return json(appData);
 };
@@ -27,7 +26,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 		error(400, 'email and appid are required');
 	}
 
-	let appData = await appServerService.dataService.addApiAppKey(email, app);
+	let appData = await utilsServer.dataService.addApiAppKey(email, app);
 
 	return json(appData);
 }
@@ -42,7 +41,7 @@ export const PUT: RequestHandler = async ({ params, url, request }) => {
 		error(400, 'email and appid are required');
 	}
 	
-	let appData = await appServerService.dataService.updateApiApp(email, app);
+	let appData = await utilsServer.dataService.updateApiApp(email, app);
 
 	return json(appData);
 };
@@ -54,7 +53,7 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 		error(400, 'email and appid are required');
 	}
 
-	let appData = await appServerService.dataService.deleteApiApp(email, params.id);
+	let appData = await utilsServer.dataService.deleteApiApp(email, params.id);
 
 	return json(appData);
 }

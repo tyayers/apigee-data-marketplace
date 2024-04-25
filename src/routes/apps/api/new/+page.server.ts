@@ -1,13 +1,13 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
-import { appServerService } from '$lib/app-service.server';
+import { utilsServer } from '$lib/utils.server';
 import type { ApiApps, Products } from '$lib/interfaces';
 
 export const load: PageServerLoad = async ({ params }) => {
   let products: Products | undefined= undefined;
 
-  products = await appServerService.dataService.getProducts();
+  products = await utilsServer.dataService.getProducts();
   
 	return {
     products: products.products
@@ -40,10 +40,10 @@ export const actions = {
     }
     
     if (email && name) {
-		  await appServerService.dataService.createApiApp(email.toString(), name.toString(), description.toString(), products);
+		  await utilsServer.dataService.createApiApp(email.toString(), name.toString(), description.toString(), products);
       // Now create Apigee subscription for monetization
       for (let product of products)
-        await appServerService.dataService.createApigeeSubscription(email, product);
+        await utilsServer.dataService.createApigeeSubscription(email, product);
 
       redirect(303, "/apps/api");
     }

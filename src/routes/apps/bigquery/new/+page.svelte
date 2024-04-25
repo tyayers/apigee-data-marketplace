@@ -5,10 +5,8 @@
   import type { PageData } from "./$types";
   import { page } from '$app/stores'
   import { onMount } from "svelte";
-    import type { Product } from "$lib/interfaces";
+    import type { AHSubscription, Product } from "$lib/interfaces";
 
-  export let data: PageData;
-  
   let project: string = "";
   let datasetName: string = "";
   let product: string = "";
@@ -55,13 +53,16 @@
     }).then((response) => {
       if (response.ok && response.status === 200) {
         // Subscription was successfully created.
-        appService.CreateHubSubscription(project, datasetName, product, (new Date()).toLocaleString()).then((result) => {
+        const productData = appService.products.products.find(productItem => productItem.name === product);
+        fetch("/api/bigquery?email=" + appService.currentUser?.email + "&project=" + project + "&dataset=" + datasetName + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + (new Date()).toLocaleString(), {
+          method: 'POST',
+          headers: {
+              'content-type': 'application/json',
+          },
+        }).then((response) => {
+            return response.json();
+        }).then((data: AHSubscription) => {
           goto("/apps/bigquery");
-          // if(result.status === "Inactive") {
-          //   appService.ShowDialog("There was a problem connecting this product to your Google Cloud project. Please visit the Analytics Hub link above to register manually.", "OK", 0).then((answer) => {
-              
-          //   })
-          // }
         });
       }
       else if (response.status === 409) {

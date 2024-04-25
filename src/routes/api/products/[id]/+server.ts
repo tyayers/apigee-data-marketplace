@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
 
   let resultProduct: DataProduct | undefined = undefined;
 
-  const document = firestore.doc('data-marketplace/products/definitions/' + id);
+  const document = firestore.doc('data-marketplace-products/' + id);
   const doc = await document.get();
 
   if (doc.exists) {
@@ -32,7 +32,7 @@ export const PUT: RequestHandler = async({ params, url, request}) => {
 
   let newProduct: DataProduct = await request.json();
 
-  let newDoc = firestore.doc("data-marketplace/products/definitions/" + newProduct.id);
+  let newDoc = firestore.doc("data-marketplace-products/" + newProduct.id);
   newDoc.set(newProduct);
 	return json(newProduct);
 }
@@ -43,7 +43,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 
   let resultProduct: DataProduct | undefined = undefined;
 
-  const document = firestore.doc('data-marketplace/products/definitions/' + id);
+  const document = firestore.doc('data-marketplace-products/' + id);
   const doc = await document.get();
 
   if (doc.exists) {

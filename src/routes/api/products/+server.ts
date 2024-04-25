@@ -15,7 +15,7 @@ const apigeeService: ApiManagementInterface = new ApigeeService();
 
 export const GET: RequestHandler = async ({ url }) => {
 
-  let prodColRef = firestore.collection("data-marketplace/products/definitions");
+  let prodColRef = firestore.collection("data-marketplace-products");
   let products = await prodColRef.listDocuments();
 
   let results: DataProduct[] = [];
@@ -33,7 +33,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   let newProduct: DataProduct = await request.json();
 
   // Persist defnition to Firestore...
-  let newDoc = firestore.doc("data-marketplace/products/definitions/" + newProduct.id);
+  let newDoc = firestore.doc("data-marketplace-products/" + newProduct.id);
   newDoc.set(newProduct);
 
   // Create and deploy to Apigee...

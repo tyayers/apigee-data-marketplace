@@ -35,8 +35,25 @@
         appService.ShowDialog("Do you really want to delete this app?", "Delete", 0).then((result) => {
             if (result === "ok") {
                 if (appData) {
-                    if (appService.currentUser)
-                        appService.DeleteApp(appService.currentUser?.email, app.name);
+                    if (appService.currentUser)  {
+                      fetch("/api/apiapps/" + app.name + "?email=" + appService.currentUser.email, {
+                        method: 'DELETE',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                      }).then((response) => {
+                          return response.json();
+                      }).then((data: ApiApp) => {
+                        let index = appService.apiApps?.app.indexOf(data);
+                        if (index) {
+                            let newAppData = appService.apiApps;
+                            newAppData?.app.splice(index, 1);
+                            appService.apiApps = newAppData;
+                        }   
+                        const event = new Event('appsUpdated');
+                        document.dispatchEvent(event);
+                      });
+                    }
 
                     appService.ShowSnackbar("App has been deleted.");
                 }

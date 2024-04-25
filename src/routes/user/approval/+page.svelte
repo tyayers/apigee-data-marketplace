@@ -1,17 +1,31 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { appService } from "$lib/app-service";
+  import type { Developer } from "$lib/interfaces";
     import { onMount } from "svelte";
 
 	onMount(() => {
     setInterval(() => {
       if (appService.currentUser) {
-        appService.GetDeveloper(appService.currentUser.email).then((result) => {
-          if (result && appService.currentUser && result.email == appService.currentUser.email) {
+        fetch("/api/developers?email=" + appService.currentUser.email, {
+          method: 'GET',
+          headers: {
+              'content-type': 'application/json',
+          },
+        }).then((response) => {
+            return response.json();
+        }).then((data: Developer) => {
+          if (data && appService.currentUser && data.email == appService.currentUser.email) {
             appService.reloadFlag = true;
             goto("/home");
           }
-        })
+        });
+        // appService.GetDeveloper(appService.currentUser.email).then((result) => {
+        //   if (result && appService.currentUser && result.email == appService.currentUser.email) {
+        //     appService.reloadFlag = true;
+        //     goto("/home");
+        //   }
+        // })
       }
     }, 5000);
   });
