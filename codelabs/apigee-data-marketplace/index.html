@@ -89,9 +89,9 @@ export PATH=$PATH:$HOME/.integrationcli/bin
 <pre><code>cp 1_env.sh 1_env.local.sh</code></pre>
 <p>Open the file 1_env.local.sh in the editor and set the values from your environment.</p>
 <p class="image-container"><img style="width: 624.00px" src="img/9dc4245b44a189a8.png"></p>
-<p>In the above example, I will use the name data-marketplace for my deployments (you can set this to anything you want, it just needs to be lowercase with - or _ to separate words). I will be deploying into the GCP project Id apigee-test74 in the region europe-west4.</p>
-<p>The next part is important regarding the internal domain and the admin user. This user will get email alerts when new users register, and approve new users who are not internal. I will be using gmail.com as my internal domain (these users will be accepted without approval), but for all other domains, my testuser3432@gmail.com account will have to approve new user requests. This will be orchestrated by the Application Integration service in GCP.</p>
-<p>After setting your environment variables, save the file 1_env.local.sh and source it in your shell. Sourcing makes the variables available to all following commands.</p>
+<p>In the above example, I will use the name <strong>data-marketplace</strong> for my deployments (you can set this to anything you want, it just needs to be lowercase with - or _ to separate words). I will be deploying into the GCP project Id <strong>apigee-test74</strong> in the region <strong>europe-west4</strong>.</p>
+<p>The next part is important regarding the internal domain and the admin user. This user will get email alerts when new users register, and approve new users who are not internal. I will be using <strong>gmail.com</strong> as my internal domain (these users will be accepted without approval), but for all other domains, my <strong>testuser3432@gmail.com</strong> account will have to approve new user requests. This will be orchestrated by the Application Integration service in GCP.</p>
+<p>After setting your environment variables, save the file <strong>1_env.local.sh</strong> and source it in your shell. Sourcing makes the variables available to all following commands.</p>
 <pre><code>source 1_env.local.sh</code></pre>
 <h3 is-upgraded><strong>Create base resources</strong></h3>
 <p>The next step will create some basic resources in your project - a service account, enable Application Integration and other services, and prepare the project for the next deployments.</p>
