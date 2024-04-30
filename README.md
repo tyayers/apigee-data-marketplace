@@ -3,13 +3,7 @@ This project uses the Google Cloud Apigee and Application Integration services t
 
 This approach has the advantage that unified identity, access management, integration flows, monetization and security policies make it possible to truly offer a unified marketplace for data assets in an organization.
 
-## Deploy
-To deploy, clone this repository and follow these steps.
+## Codelab
+Click here to open a Codelab for the deployment.
 
-```sh
-# make a copy of the environment variables, change and source them
-cp 1_env.sh 1_env.dev.sh
-# make changes
-source 1_env.dev.sh
-
-```
+[Open Gen AI Solar Demo Codelab](https://tyayers.github.io/apigee-data-marketplace/codelabs/apigee-data-marketplace)
