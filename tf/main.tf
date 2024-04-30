@@ -35,6 +35,7 @@ module "project" {
     "cloudkms.googleapis.com",
     "compute.googleapis.com",
     "servicenetworking.googleapis.com"
+    "identitytoolkit.googleapis.com"
   ]
   policy_boolean = {
     "constraints/compute.requireOsLogin" = false

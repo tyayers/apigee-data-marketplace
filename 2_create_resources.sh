@@ -8,6 +8,7 @@ gcloud services enable secretmanager.googleapis.com
 gcloud services enable integrations.googleapis.com
 gcloud services enable connectors.googleapis.com
 gcloud services enable cloudkms.googleapis.com
+gcloud services enable identitytoolkit.googleapis.com
 
 # Sleep 5 seconds to let the API be initialized...
 sleep 5

@@ -1,0 +1,111 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Apigee Data Marketplace</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-143215160-5"
+                  codelab-ga4id=""
+                  id="apigee-data-marketplace"
+                  title="Apigee Data Marketplace"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Introduction" duration="0">
+        <p class="image-container"><img style="width: 475.47px" src="img/93b822fb45112d80.png"></p>
+<p><strong>Last Updated:</strong> 2024-04-30</p>
+<h2 is-upgraded><strong>What makes a data marketplace?</strong></h2>
+<p>A data marketplace is a web portal for browsing, consuming and buying data. There are many approaches to building such a marketplace, but in this demo we will be using Google Cloud services such as Firebase, Apigee, Application Integration, Cloud Run &amp; Identity Platform to build it using cloud-native, managed cloud services with no infrastructure management needed.</p>
+<aside class="warning"><p><strong>Note:</strong> To begin you will need a Google Cloud project to deploy this solution in. You will also need at least Editor rights to be able to enable APIs and create the services needed.</p>
+</aside>
+<h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
+<p>In this lab you will deploy a marketplace that lets data owners publish &amp; manage their data products, and data consumers register, browse, subscribe and get access to the products.</p>
+<p>Your app will:</p>
+<ul>
+<li>Set up Google Cloud Identity Platform to make it easy for users to register with their email or social media accounts.</li>
+<li>Deploy Application Integration workflows to handle processing &amp; background tasks for the marketplace.</li>
+<li>Publish APIs to Apigee to manage the API access to management &amp; data assets.</li>
+<li>Deploy the marketplace app to Cloud Run that presents the user interface to the user.</li>
+</ul>
+<p class="image-container"><img style="width: 590.50px" src="img/d0cbe92a390e35ea.png"></p>
+<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
+<ul class="checklist">
+<li>How to build a data marketplace solution using cloud-native Google Cloud services.</li>
+<li>How the API &amp; Integration layer can help orchestrate between the app and the data sources.</li>
+<li>How different data sources can be mapped to different access protocols to reach more users.</li>
+<li>The importance of data &amp; API product management for publishing effective and attractive data products.</li>
+</ul>
+<h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
+<ul>
+<li>A recent version of Chrome</li>
+<li>Access to a Linux shell such as <a href="https://shell.cloud.google.com/" target="_blank">Google Cloud Shell</a>, with the Google Cloud tooling installed (<a href="https://cloud.google.com/sdk/docs/install-sdk" target="_blank">gcloud CLI</a>) and with access to a Google Cloud project.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Getting set up" duration="2">
+        <h2 is-upgraded><strong>Clone the repository to your shell</strong></h2>
+<p>Open the Github repository and clone the source code to your shell environment.</p>
+<p><a href="https://github.com/tyayers/apigee-data-marketplace" target="_blank"><paper-button class="colored" raised>Open the repository</paper-button></a></p>
+<pre><code>git clone https://github.com/tyayers/apigee-data-marketplace.git
+
+cd apigee-genai-solar-demo
+
+npm i</code></pre>
+<p>The last command above npm i will install all of the dependencies for the project.</p>
+<h2 is-upgraded><strong>Setup Identity Platform</strong></h2>
+<p>Google Cloud Identity Platform uses Firebase Auth as a federated identity hub for users to be able to flexibly login to our marketplace.</p>
+<p>To start, we need to set up the service Identity Platform in our Google Cloud project. Open up the configuration page, and enable the service if needed. </p>
+<p><a href="https://console.cloud.google.com/customer-identity" target="_blank"><paper-button class="colored" raised>Open Identity Platform setup</paper-button></a></p>
+<p class="image-container"><img style="width: 564.50px" src="img/4152e4e0cfed3f0a.png"></p>
+<p>After enabling you should see a screen where you can manage identity providers.</p>
+<p class="image-container"><img style="width: 565.50px" src="img/1036b04802e2898e.png"></p>
+<p>Go ahead and add two providers by clicking the <strong>ADD A PROVIDER</strong> button and selecting <strong>Email / Password</strong> and <strong>Google</strong>. You can test adding other providers as well.</p>
+<p>For the <strong>Google</strong> provider you will need to configure the OAuth consent screen for your project.</p>
+<h3 is-upgraded><strong>Update identity details in the app</strong></h3>
+<p>After updating the identity providers, click on the button <strong>APPLICATION SETUP DETAILS</strong> and <strong>copy the two lines containing apiKey and authDomain from the code snippet</strong> shown in the window under <strong>WEB</strong>.</p>
+<p class="image-container"><img style="width: 565.30px" src="img/44cd89601ad7ff9c.png"></p>
+<p>Now go back to your shell environment, and open the folder <strong>apigee-data-marketplace</strong> in your source editor. If you are using Google Cloud Shell, you can click on the hamburger menu in the upper left corner, <strong>File</strong>, and then <strong>Open Folder</strong>.</p>
+<p class="image-container"><img style="width: 592.50px" src="img/c8b31f3a7a54dc9b.png"></p>
+<p>Open the file under src/lib/<a href="http://app-service.ts" target="_blank">app-service.ts</a> and scroll down a bit until you see the firebaseConfig definition, and replace the two lines with apiKey and authDomains with the values you copied from the <strong>Identity Platform</strong> config window.</p>
+<p class="image-container"><img style="width: 602.03px" src="img/4745be75e424716.png"></p>
+<p>Save the file.</p>
+<h3 is-upgraded><strong>Test the app</strong></h3>
+<p>Now go into the shell window and run npm run dev to start the application. You should see a message that the app is running at `http://localhost:5173` . Now go to the top-right corner and click the <strong>Web Preview</strong> button.</p>
+<p class="image-container"><img style="width: 82.00px" src="img/b8ec871e31934416.png"></p>
+<p>Then click <strong>Change Port</strong> and enter the <strong>5173</strong> port, and click <strong>Change.</strong><img style="width: 624.00px" src="img/87492d2c707fae6.png"></p>
+<p>A new tab should be opened with the application running.</p>
+<p class="image-container"><img style="width: 534.48px" src="img/7b0f4eeddfcc6bb8.png"></p>
+<p>Click on <strong>Register</strong> and then try registering with an email/password to create a new account.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
