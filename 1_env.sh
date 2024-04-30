@@ -2,6 +2,7 @@
 export NAME=
 export PROJECT_ID=
 export REGION=
+export APIGEE_ENV=
 
 # Internal domains are the email domains that will be considered internal for users registering (no approval needed)
 export INTERNAL_DOMAINS=

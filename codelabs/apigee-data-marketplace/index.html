@@ -103,6 +103,13 @@ export PATH=$PATH:$HOME/.integrationcli/bin
 <p>Check in the Application Integration console that the integrations were created correctly. You should see integrations like in this screenshot.</p>
 <p><a href="https://console.cloud.google.com/integrations/list" target="_blank"><paper-button class="colored" raised>Open the Application Integration console</paper-button></a></p>
 <p class="image-container"><img style="width: 624.00px" src="img/a51b0f693ea0766c.png"></p>
+<h3 is-upgraded><strong>Create APIs</strong></h3>
+<p>Let&#39;s now deploy our Users API to be used to register and login users.</p>
+<pre><code>cd ./apis/UsersAPI-v1
+apigeecli apis create bundle -f apiproxy --name UsersAPI-v1 -o $PROJECT_ID -t $(gcloud auth print-access-token)
+apigeecli apis deploy -n UsersAPI-v1 -o $PROJECT_ID -e $APIGEE_ENV -t $(gcloud auth print-access-token) -s &#34;mpservice@$PROJECT_ID.iam.gserviceaccount.com&#34; --ovr
+cd ../..</code></pre>
+<p>This will deploy the API to Apigee. </p>
 
 
       </google-codelab-step>
