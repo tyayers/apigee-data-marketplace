@@ -6,4 +6,4 @@ This approach has the advantage that unified identity, access management, integr
 ## Codelab
 Click here to open a Codelab for the deployment.
 
-[Open Gen AI Solar Demo Codelab](https://tyayers.github.io/apigee-data-marketplace/codelabs/apigee-data-marketplace)
+[Open Deployment Codelab](https://tyayers.github.io/apigee-data-marketplace/codelabs/apigee-data-marketplace)
