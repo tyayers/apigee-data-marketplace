@@ -8,8 +8,8 @@ curl -X POST "https://integrations.googleapis.com/v1/projects/$PROJECT_ID/locati
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json; charset=utf-8' \
   --data-binary @./integrations/$INTEGATION_NAME.local.json
-
-integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s 1
+SNAPSHOT=$(echo $(integrationcli integrations versions list -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION) | jq ".integrationVersions[0].snapshotNumber")
+integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s $SNAPSHOT
 
 INTEGATION_NAME=MP-UsersRoles
 cp ./integrations/$INTEGATION_NAME.json ./integrations/$INTEGATION_NAME.local.json
@@ -18,8 +18,8 @@ curl -X POST "https://integrations.googleapis.com/v1/projects/$PROJECT_ID/locati
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json; charset=utf-8' \
   --data-binary @./integrations/$INTEGATION_NAME.local.json
-
-integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s 1
+SNAPSHOT=$(echo $(integrationcli integrations versions list -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION) | jq ".integrationVersions[0].snapshotNumber")
+integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s $SNAPSHOT
 
 
 INTEGATION_NAME=MP-Users
@@ -33,5 +33,5 @@ curl -X POST "https://integrations.googleapis.com/v1/projects/$PROJECT_ID/locati
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json; charset=utf-8' \
   --data-binary @./integrations/$INTEGATION_NAME.local.json
-
-integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s 1
+SNAPSHOT=$(echo $(integrationcli integrations versions list -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION) | jq ".integrationVersions[0].snapshotNumber")
+integrationcli integrations versions publish -t $TOKEN -n $INTEGATION_NAME -p $PROJECT_ID -r $REGION -s $SNAPSHOT
