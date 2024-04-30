@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="6" name="UsersAPI-v1">
+  <DisplayName/>
+  <Description>API for managing users.</Description>
+  <CreatedAt>1714469913184</CreatedAt>
+  <LastModifiedAt>1714469913184</LastModifiedAt>
+  <BasePaths>/v1/users</BasePaths>
+  <Policies>
+    <Policy>SIR-set-integration-request</Policy>
+    <Policy>EV-GetUserData</Policy>
+    <Policy>AM-SetResponse</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <IntegrationEndpoints>
+    <IntegrationEndpoint>default</IntegrationEndpoint>
+  </IntegrationEndpoints>
+</APIProxy>
