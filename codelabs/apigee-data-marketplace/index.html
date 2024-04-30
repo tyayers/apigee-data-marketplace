@@ -35,6 +35,9 @@
 <p>A data marketplace is a web portal for browsing, consuming and buying data. There are many approaches to building such a marketplace, but in this demo we will be using Google Cloud services such as Firebase, Apigee, Application Integration, Cloud Run &amp; Identity Platform to build it using cloud-native, managed cloud services with no infrastructure management needed.</p>
 <aside class="warning"><p><strong>Note:</strong> To begin you will need a Google Cloud project to deploy this solution in. You will also need at least Editor rights to be able to enable APIs and create the services needed.</p>
 </aside>
+<p>This solution is built on three layers.</p>
+<p class="image-container"><img style="width: 568.38px" src="img/e26939f029bff684.png"></p>
+<p>We will be deploying components in all three of these layers, and focusing on the API &amp; Integration layer to automate the API, integration &amp; connectivity between the marketplace &amp; data layers. The result should be an end-to-end solution that works seamlessly to bring data products to market, and manage publishing and access to the products in an automated and unified way.</p>
 <h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
 <p>In this lab you will deploy a marketplace that lets data owners publish &amp; manage their data products, and data consumers register, browse, subscribe and get access to the products.</p>
 <p>Your app will:</p>
@@ -61,8 +64,9 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Getting set up" duration="2">
-        <h2 is-upgraded><strong>Clone the repository to your shell</strong></h2>
+      <google-codelab-step label="Setting up APIs &amp; integrations" duration="10">
+        <p>To begin, let&#39;s clone the Apigee Data Marketplace project into our shell environment.</p>
+<h2 is-upgraded><strong>Clone the repository to your shell</strong></h2>
 <p>Open the Github repository and clone the source code to your shell environment.</p>
 <p><a href="https://github.com/tyayers/apigee-data-marketplace" target="_blank"><paper-button class="colored" raised>Open the repository</paper-button></a></p>
 <pre><code>git clone https://github.com/tyayers/apigee-data-marketplace.git
@@ -71,7 +75,40 @@ cd apigee-genai-solar-demo
 
 npm i</code></pre>
 <p>The last command above npm i will install all of the dependencies for the project.</p>
-<h2 is-upgraded><strong>Setup Identity Platform</strong></h2>
+<p>Now also install the <a href="https://github.com/apigee/apigeecli" target="_blank">apigeecli</a> and <a href="https://github.com/GoogleCloudPlatform/application-integration-management-toolkit" target="_blank">integrationcli</a> CLI tools to help with the deployments.</p>
+<pre><code>curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+export PATH=$PATH:$HOME/.apigeecli/bin
+
+curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+export PATH=$PATH:$HOME/.integrationcli/bin
+</code></pre>
+<p>After the installations are complete, go back to your shell environment, and open the folder <strong>apigee-data-marketplace</strong> in your source editor. If you are using Google Cloud Shell, you can click on the hamburger menu in the upper left corner, <strong>File</strong>, and then <strong>Open Folder</strong>.</p>
+<p class="image-container"><img style="width: 592.50px" src="img/c8b31f3a7a54dc9b.png"></p>
+<h3 is-upgraded><strong>Set environment variables</strong></h3>
+<p>Run these commands in the shell to copy an environment variable file, so that you can set your values from your environment.</p>
+<pre><code>cp 1_env.sh 1_env.local.sh</code></pre>
+<p>Open the file 1_env.local.sh in the editor and set the values from your environment.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/9dc4245b44a189a8.png"></p>
+<p>In the above example, I will use the name data-marketplace for my deployments (you can set this to anything you want, it just needs to be lowercase with - or _ to separate words). I will be deploying into the GCP project Id apigee-test74 in the region europe-west4.</p>
+<p>The next part is important regarding the internal domain and the admin user. This user will get email alerts when new users register, and approve new users who are not internal. I will be using gmail.com as my internal domain (these users will be accepted without approval), but for all other domains, my testuser3432@gmail.com account will have to approve new user requests. This will be orchestrated by the Application Integration service in GCP.</p>
+<p>After setting your environment variables, save the file 1_env.local.sh and source it in your shell. Sourcing makes the variables available to all following commands.</p>
+<pre><code>source 1_env.local.sh</code></pre>
+<h3 is-upgraded><strong>Create base resources</strong></h3>
+<p>The next step will create some basic resources in your project - a service account, enable Application Integration and other services, and prepare the project for the next deployments.</p>
+<p>Run the command 2_create_resources.sh to run the commands.</p>
+<pre><code>./2_create_resources.sh</code></pre>
+<h3 is-upgraded><strong>Create integrations</strong></h3>
+<p>Now we&#39;re going to create the Application Integration integrations to handle the backend processing, for example when a new user is registered, and we want to register the user and check if an approval is necessary.</p>
+<pre><code>./3_deploy_integrations.sh</code></pre>
+<p>Check in the Application Integration console that the integrations were created correctly. You should see integrations like in this screenshot.</p>
+<p><a href="https://console.cloud.google.com/integrations/list" target="_blank"><paper-button class="colored" raised>Open the Application Integration console</paper-button></a></p>
+<p class="image-container"><img style="width: 624.00px" src="img/a51b0f693ea0766c.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Setting up identity &amp; the marketplace app" duration="10">
+        <h2 is-upgraded><strong>Setup Identity Platform</strong></h2>
 <p>Google Cloud Identity Platform uses Firebase Auth as a federated identity hub for users to be able to flexibly login to our marketplace.</p>
 <p>To start, we need to set up the service Identity Platform in our Google Cloud project. Open up the configuration page, and enable the service if needed. </p>
 <p><a href="https://console.cloud.google.com/customer-identity" target="_blank"><paper-button class="colored" raised>Open Identity Platform setup</paper-button></a></p>
@@ -83,9 +120,7 @@ npm i</code></pre>
 <h3 is-upgraded><strong>Update identity details in the app</strong></h3>
 <p>After updating the identity providers, click on the button <strong>APPLICATION SETUP DETAILS</strong> and <strong>copy the two lines containing apiKey and authDomain from the code snippet</strong> shown in the window under <strong>WEB</strong>.</p>
 <p class="image-container"><img style="width: 565.30px" src="img/44cd89601ad7ff9c.png"></p>
-<p>Now go back to your shell environment, and open the folder <strong>apigee-data-marketplace</strong> in your source editor. If you are using Google Cloud Shell, you can click on the hamburger menu in the upper left corner, <strong>File</strong>, and then <strong>Open Folder</strong>.</p>
-<p class="image-container"><img style="width: 592.50px" src="img/c8b31f3a7a54dc9b.png"></p>
-<p>Open the file under src/lib/<a href="http://app-service.ts" target="_blank">app-service.ts</a> and scroll down a bit until you see the firebaseConfig definition, and replace the two lines with apiKey and authDomains with the values you copied from the <strong>Identity Platform</strong> config window.</p>
+<p>Now go back to your shell environment with the source code, and open the file under src/lib/<a href="http://app-service.ts" target="_blank">app-service.ts</a> and scroll down a bit until you see the firebaseConfig definition, and replace the two lines with apiKey and authDomains with the values you copied from the <strong>Identity Platform</strong> config window.</p>
 <p class="image-container"><img style="width: 602.03px" src="img/4745be75e424716.png"></p>
 <p>Save the file.</p>
 <h3 is-upgraded><strong>Test the app</strong></h3>
