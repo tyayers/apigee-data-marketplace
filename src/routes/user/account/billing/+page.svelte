@@ -1,9 +1,9 @@
 <script lang="ts">
     import { appService } from "$lib/app-service";
-    import { UsageData, type AppUser, type BucketSubscription } from "$lib/interfaces";
+    import { UsageData, type User, type BucketSubscription } from "$lib/interfaces";
     import { onMount } from "svelte";
 
-    let currentUser: AppUser | undefined = appService.currentUser;
+    let currentUser: User | undefined = appService.currentUser;
     let usageData: UsageData | undefined = undefined;
     let appUsage: {[key: string]: string} | undefined = undefined;
 

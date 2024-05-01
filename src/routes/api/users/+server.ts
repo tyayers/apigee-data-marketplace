@@ -19,19 +19,6 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	let devData = await utilsServer.dataService.createDeveloper(email, firstName, lastName, userName);
-	return json(devData);
-};
-
-export const GET: RequestHandler = async ({ url }) => {
-
-	const email = url.searchParams.get('email') ?? '';
-  
-	if (!email) {
-		error(400, 'Developer email is required');
-	}
-
-	let devData = await utilsServer.dataService.getDeveloper(email);
-
+	let devData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
 	return json(devData);
 };

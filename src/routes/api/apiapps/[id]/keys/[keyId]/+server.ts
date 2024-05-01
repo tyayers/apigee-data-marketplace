@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import type { ApiManagementInterface } from 'apigee-x-module';
 // import { ApigeeService } from 'apigee-x-module';
 import { GoogleAuth } from 'google-auth-library';
-import type { ApiAppCredential } from '$lib/interfaces';
+import type { APIAppCredential } from '$lib/interfaces';
 import { utilsServer } from '$lib/utils.server';
 
 // const apigeeService: ApiManagementInterface = new ApigeeService();

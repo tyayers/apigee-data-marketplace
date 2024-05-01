@@ -2,16 +2,25 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
 import { DataProduct } from '$lib/interfaces';
-import type {ApiManagementInterface, ProxyRevision} from 'apigee-x-module';
+import type {ProxyDeployment, ProxyRevision} from 'apigee-x-module';
 import { ApigeeService } from 'apigee-x-module';
 import type {ApigeeTemplateService} from 'apigee-templater-module';
 import { ApigeeTemplater, ApigeeTemplateInput, RunPoint } from 'apigee-templater-module';
+import fs from 'fs';
+import FormData from 'form-data';
+import { GoogleAuth } from 'google-auth-library';
+
+const auth = new GoogleAuth({
+  scopes: 'https://www.googleapis.com/auth/cloud-platform'
+});
 
 // Create a new client
 const firestore = new Firestore();
 // Create Apigee services
 const apigeeTemplater: ApigeeTemplateService = new ApigeeTemplater();
-const apigeeService: ApiManagementInterface = new ApigeeService();
+const apigeeService: ApigeeService = new ApigeeService();
+const projectId: string = import.meta.env.VITE_PROJECT_ID;
+const apigeeEnvironment: string = import.meta.env.VITE_APIGEE_ENV;
 
 export const GET: RequestHandler = async ({ url }) => {
 
@@ -25,7 +34,6 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   return json(results);
-
 };
 
 export const POST: RequestHandler = async({ params, url, request}) => {
@@ -46,10 +54,47 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   if (apigeeTemplate) {
     let tempPath = ".";
-    let proxyResult = apigeeTemplater.generateProxy(apigeeTemplate, tempPath);
+    let proxyResult = await apigeeTemplater.generateProxy(apigeeTemplate, tempPath);
+
+    importProxy(apigeeTemplate.name, proxyResult.localPath).then((result: ProxyRevision) => {
+      apigeeService.deployProxyRevision(apigeeEnvironment, apigeeTemplate.name, result.revision, `mpservice@${projectId}.iam.gserviceaccount.com`).then((deployResult) => {
+        console.log(JSON.stringify(deployResult));
+      });
+    }).catch((error: any) => {
+      console.error("Error in importProxy:");
+      console.error(JSON.stringify(error));
+    });
   }
 
 	return json(newProduct);
+}
+
+function importProxy(name: string, path: string): Promise<ProxyRevision> {
+  return new Promise<ProxyRevision>((resolve, reject) => {
+    console.log("start getAccessToken");
+
+    auth.getAccessToken().then((token) => {
+      const formData = new FormData();
+      let buffer = fs.readFileSync(path);
+      formData.append('file', buffer, name + ".zip");
+      
+      fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apis?name=${name}&action=import`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          ...formData.getHeaders()
+        },
+        body: formData.getBuffer()
+      }).then((response) => {
+        return response.json();
+      }).then((result: ProxyRevision) => {
+        resolve(result);
+      }).catch((error) => {
+        console.log("Error in proxy import:");
+        console.error(error);
+      });
+    });
+  });
 }
 
 function createAPITemplate(product: DataProduct): ApigeeTemplateInput {

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { appService } from "$lib/app-service";
-    import type { AHSubscription, AppUser } from "$lib/interfaces";
+    import type { AHSubscription, User } from "$lib/interfaces";
     import { onMount } from "svelte";
 
-    let currentUser: AppUser | undefined = appService.currentUser;
+    let currentUser: User | undefined = appService.currentUser;
     let hubSubscriptions: AHSubscription[] | undefined = undefined;
 
     onMount(() => {

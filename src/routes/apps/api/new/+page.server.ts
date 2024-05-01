@@ -2,7 +2,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
 import { utilsServer } from '$lib/utils.server';
-import type { ApiApps, Products } from '$lib/interfaces';
+import type { APIApps, Products } from '$lib/interfaces';
 
 export const load: PageServerLoad = async ({ params }) => {
   let products: Products | undefined= undefined;

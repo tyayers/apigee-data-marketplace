@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { ApiApp } from '$lib/interfaces';
+import type { APIApp } from '$lib/interfaces';
 import { utilsServer } from '$lib/utils.server';
 
 export const GET: RequestHandler = async ({ params, url }) => {
@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 export const POST: RequestHandler = async({ params, url, request}) => {
 	const email = url.searchParams.get('email') ?? '';
 
-	const app: ApiApp = await request.json();
+	const app: APIApp = await request.json();
 
 	if (!email || !params.id) {
 		error(400, 'email and appid are required');
@@ -35,7 +35,7 @@ export const PUT: RequestHandler = async ({ params, url, request }) => {
 
 	const email = url.searchParams.get('email') ?? '';
 
-	const app: ApiApp = await request.json();
+	const app: APIApp = await request.json();
 
 	if (!email || !params.id) {
 		error(400, 'email and appid are required');

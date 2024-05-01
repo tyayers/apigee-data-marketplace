@@ -12,44 +12,47 @@ import {
   signInWithEmailAndPassword,
   SAMLAuthProvider
 } from "firebase/auth";
-import type { User } from "firebase/auth";
+import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { AppUser, Developer, ApiApps, ApiApp, Products, AHSubscription } from "./interfaces";
-import { product_index } from "./products_new";
-
-let appName: string = import.meta.env.VITE_SITE_NAME;
-if (!appName) appName = "Data Marketplace";
+import { User, Developer, APIApps, APIApp, Products, AHSubscription } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
   SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
-  siteName: string = import.meta.env.VITE_SITE_NAME;
-
   firebaseConfig = {
     apiKey: "AIzaSyC9rR3wblvxeWdARAV6juR2uw8dBCYfiZM",
     authDomain: "apigee-test38.firebaseapp.com",
   };
-  
+  siteName: string = import.meta.env.VITE_SITE_NAME;
+
   // Initialize Firebase & Firebase Auth
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
-  currentUser: AppUser | undefined = undefined;
+  currentUser: User | undefined = undefined;
   currentUserLoaded: boolean = false;
-  firebaseUser: User | undefined = undefined;
-  apiApps: ApiApps | undefined = undefined;
+  firebaseUser: FirebaseUser | undefined = undefined;
+  apiApps: APIApps | undefined = undefined;
   reloadFlag: boolean = false;
-  products: Products = product_index;
+  products: Products = new Products();
   testMode: boolean = false;
 
   constructor() {
     if (!this.siteName) this.siteName = "Data Marketplace";
 
     if (browser) {
-      document.title = appName;
-      
+
+      document.title = this.siteName;
+
+      fetch("/api/products").then((response) => {
+        return response.json();
+      }).then((result: Products) => {
+        this.products = result;
+        document.dispatchEvent(new Event("productsUpdated"));
+      })
+
       if (!this.testMode) {
-        this.auth.onAuthStateChanged((u: User | null) => {
+        this.auth.onAuthStateChanged((u: FirebaseUser | null) => {
           // if u is undefined, means we don't know user state
           // if u is null, means user is signed out
           // if u is an object, means user is signed in
@@ -64,40 +67,23 @@ export class AppService {
             goto("/");
           } else {
             this.firebaseUser = u;
-            this.currentUser = new AppUser();
-
-            if (u?.email) this.currentUser.email = u.email.replaceAll("#", "");
-            if (u?.photoURL) 
-              this.currentUser.photoUrl = u.photoURL;
-            else
-              this.currentUser.photoUrl = "/avatar.png";
-
-            if (u?.displayName) {
-              this.currentUser.userName = u.displayName;
-            }
-            else {
-              this.currentUser.userName = "New User";
-            }
-
-            if (u.providerData && u.providerData.length > 0)
-              this.currentUser.providerId = u.providerData[0].providerId;
+            let email: string =  u.email ? u.email?.replaceAll("#", "") : "";
+            let photoURL: string = u.photoURL ? u.photoURL : "/avatar.png";
+            let userName: string = u.displayName ? u.displayName : "New User";
+            let provider: string = u.providerData ? u.providerData[0].providerId : "";
+            this.currentUser = new User(email, userName, "", "");
 
             // Use AppIntegration to create developer
-            fetch("/api/developers?email=" + this.currentUser?.email + "&username=" + this.currentUser?.userName, {
+            fetch("/api/users?email=" + email + "&username=" + userName, {
               method: 'POST',
-              body: JSON.stringify({
-                email: this.currentUser?.email,
-                username: this.currentUser?.userName,
-              }),
               headers: {
                   'content-type': 'application/json',
               },
             }).then((response) => {
                 return response.json();
-            }).then((data: any) => {
-              if (data.outputParameters.developerData) {
-                if (this.currentUser) this.currentUser.developerData = data.outputParameters.developerData;
-                if (this.currentUser)this.currentUser.status = data.outputParameters.developerData.status;
+            }).then((data: User) => {
+              this.currentUser = data;
+              if (data.developerData) {
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);
 
@@ -111,8 +97,8 @@ export class AppService {
                     return response.json();
                 }).then((data: any) => {
                   this.apiApps = data;
-                  if (this.apiApps && this.apiApps.app) {
-                    for (let app of this.apiApps.app) {
+                  if (this.apiApps && this.apiApps.apps) {
+                    for (let app of this.apiApps.apps) {
                       if (!app.apiProducts) app.apiProducts = [];
                       if (app.credentials) {
                         for (let cred of app.credentials) {
@@ -133,7 +119,7 @@ export class AppService {
               else {
                 // Developer is not yet registered, send to wait page...
                 goto("/user/approval");
-                if (this.currentUser)this.currentUser.status = "approval";
+                if (this.currentUser) this.currentUser.status = "approval";
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);
               }
@@ -150,9 +136,7 @@ export class AppService {
         });
       }
       else {
-        this.currentUser = new AppUser();
-        this.currentUser.email = "test@example.com";
-        this.currentUser.userName = "testUser";
+        this.currentUser = new User("test@example.com", "testUser", "Test", "User");
         this.currentUser.photoUrl = "/avatar.png";
         this.currentUser.providerId = "test";
         this.currentUser.status = "approved";
@@ -255,99 +239,6 @@ export class AppService {
       }
     });
   }
-
-  // DeleteApp(email: string, appName: string) {
-  //   fetch("/api/apiapps/" + appName + "?email=" + email, {
-  //     method: 'DELETE',
-  //     headers: {
-  //         'content-type': 'application/json',
-  //     },
-  //   }).then((response) => {
-  //       return response.json();
-  //   }).then((data: ApiApp) => {
-  //     let index = this.apiApps?.app.indexOf(data);
-  //     if (index) {
-  //         let newAppData = this.apiApps;
-  //         newAppData?.app.splice(index, 1);
-  //         this.apiApps = newAppData;
-  //     }   
-  //     const event = new Event('appsUpdated');
-  //     document.dispatchEvent(event);
-  //   });
-  // }
-
-  // UpdateApp(email: string, app: ApiApp) {
-  //   fetch("/api/apiapps/" + app.name + "?email=" + email, {
-  //     method: 'PUT',
-  //     body: JSON.stringify(app),
-  //     headers: {
-  //         'content-type': 'application/json',
-  //     },
-  //   }).then((response) => {
-  //       return response.json();
-  //   }).then((data: ApiApps) => {
-  //   });
-  // }
-
-  // DeleteAppKey(email: string, appName: string, keyId: string) {
-  //   fetch("/api/apiapps/" + appName + "/keys/" + keyId + "?email=" + email, {
-  //     method: 'DELETE',
-  //     headers: {
-  //         'content-type': 'application/json',
-  //     },
-  //   }).then((response) => {
-  //       return response.json();
-  //   }).then((data: ApiApps) => {
-  //   });    
-  // }
-
-  // GetDeveloper(email: string): Promise<Developer> {
-  //   return new Promise<Developer>((resolve, reject) => {
-  //     fetch("/api/developers?email=" + email, {
-  //       method: 'GET',
-  //       headers: {
-  //           'content-type': 'application/json',
-  //       },
-  //     }).then((response) => {
-  //         return response.json();
-  //     }).then((data: Developer) => {
-  //         resolve(data);
-  //     }).catch((error) => {
-  //       reject(error);
-  //     });        
-  //   });
-  // }
-
-  // CreateHubSubscription(project: string, dataset: string, product: string, createdAt: string): Promise<AHSubscription> {
-  //   return new Promise<AHSubscription>((resolve, reject) => {
-  //     const productData = this.products.products.find(productItem => productItem.name === product);
-  //     fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + createdAt, {
-  //       method: 'POST',
-  //       headers: {
-  //           'content-type': 'application/json',
-  //       },
-  //     }).then((response) => {
-  //         return response.json();
-  //     }).then((data: AHSubscription) => {
-  //         resolve(data);
-  //     }).catch((error) => {
-  //       reject(error);
-  //     });
-  //   });
-  // }
-
-  // DeleteHubSubscription(project: string, dataset: string) {
-  //   fetch("/api/bigquery?email=" + this.currentUser?.email + "&project=" + project + "&dataset=" + dataset, {
-  //     method: 'DELETE',
-  //     headers: {
-  //         'content-type': 'application/json',
-  //     },
-  //   }).then((response) => {
-    
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
-  // }
 }
 
 export let appService: AppService = new AppService();

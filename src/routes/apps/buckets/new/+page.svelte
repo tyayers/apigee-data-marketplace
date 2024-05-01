@@ -4,12 +4,12 @@
   import { equalTo } from "firebase/database";
   import type { PageData } from "./$types";
   import { page } from '$app/stores'
-  import type { AppUser, BucketSubscription } from "$lib/interfaces";
+  import type { User, BucketSubscription } from "$lib/interfaces";
     import { onMount } from "svelte";
 
   export let data: PageData;
   
-  let currentUser: AppUser | undefined = appService.currentUser;
+  let currentUser: User | undefined = appService.currentUser;
   let product: string = "";
   
   var urlProduct = $page.url.searchParams.get('product');

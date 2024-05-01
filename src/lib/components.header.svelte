@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { AppUser } from './interfaces';
+  import { User } from './interfaces';
   import { appService } from './app-service';
 	import { goto } from '$app/navigation';
 
-  let currentUser: AppUser | undefined = appService.currentUser;
+  let currentUser: User | undefined = appService.currentUser;
   let menuVisible: boolean = false;
 
   onMount(async () => {

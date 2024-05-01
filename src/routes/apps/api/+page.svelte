@@ -1,11 +1,11 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import {appService} from "$lib/app-service";
-    import { ApiApp, ApiApps, AppUser } from "$lib/interfaces";
+    import { ApiApp, APIApps, User } from "$lib/interfaces";
     import { onMount } from "svelte";
     import type { PageData } from "./$types";
 
-    let appData: ApiApps | undefined = appService.apiApps;
+    let appData: APIApps | undefined = appService.apiApps;
     updateApps();
 
 	onMount(() => {

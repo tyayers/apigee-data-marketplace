@@ -4,7 +4,7 @@
   <Properties/>
   <Set>
     <Payload contentType="application/json">
-      {"userData":"{result.userData}", "developerData":"{result.developerData}"}
+      {"userData": {result.userData}, "developerData": {result.developerData}}
     </Payload>
   </Set>
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>

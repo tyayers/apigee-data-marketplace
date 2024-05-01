@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import type { AppUser, DataProduct } from "$lib/interfaces";
+  import type { User, DataProduct } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { onMount } from "svelte";
 
-  let currentUser: AppUser | undefined = appService.currentUser;
+  let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = undefined;
 
   onMount(() => {

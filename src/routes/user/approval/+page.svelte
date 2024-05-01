@@ -7,7 +7,7 @@
 	onMount(() => {
     setInterval(() => {
       if (appService.currentUser) {
-        fetch("/api/developers?email=" + appService.currentUser.email, {
+        fetch("/api/users?email=" + appService.currentUser.email, {
           method: 'GET',
           headers: {
               'content-type': 'application/json',
@@ -20,12 +20,6 @@
             goto("/home");
           }
         });
-        // appService.GetDeveloper(appService.currentUser.email).then((result) => {
-        //   if (result && appService.currentUser && result.email == appService.currentUser.email) {
-        //     appService.reloadFlag = true;
-        //     goto("/home");
-        //   }
-        // })
       }
     }, 5000);
   });
@@ -33,7 +27,7 @@
 
 <div class="approval">
   <div class="approval_message">
-    Thank you for registering, you will be notified by email when your registration is approved, and you can sign-in to the Data Marketplace. 
+    Thank you for registering, you will be notified by email when your registration is approved. 
   </div>
 </div>
 

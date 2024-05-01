@@ -2,12 +2,12 @@
   import type { PageServerData } from './$types';
 
   import ProductCard from '$lib/components.product-card.svelte';
-  import type { AppUser, Product, Products } from '$lib/interfaces';
+  import type { User, Product, Products } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import { appService } from '$lib/app-service';
   import { goto } from '$app/navigation';
 
-  let currentUser: AppUser | undefined = appService.currentUser;
+  let currentUser: User | undefined = appService.currentUser;
   let products: Products = appService.products;
   let productsByName: {[key: string]: Product} = {};
   let catProducts: {[key: string]: string[]} = {};
@@ -86,18 +86,13 @@
     refreshProductList();
   }
 
-  function loadUserGroups(newUser: AppUser) {
+  function loadUserGroups(newUser: User) {
     if (newUser.developerData?.attributes) {
       for (let tag of newUser.developerData?.attributes) {
         if (tag.name == "Groups") {
           userGroups = tag.value.split(", ");
         }
       }
-    }
-
-    // TODO remove later, workaround to set group
-    if (newUser.email.endsWith("gmail.com")) {
-      userGroups.push("Internal");
     }
   }
 

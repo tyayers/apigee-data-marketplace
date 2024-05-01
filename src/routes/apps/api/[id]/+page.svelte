@@ -1,25 +1,25 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
-  import { ApiApp, ApiAppCredential } from "$lib/interfaces";
+  import { APIApp, APIAppCredential } from "$lib/interfaces";
   import type { PageData } from "./$types";
   import { goto } from '$app/navigation';
 
   export let data: PageData;
 
-  let appData: ApiApp | undefined = undefined;
-  //if (appService.apiApps) appService.apiApps?.apps.find((item) => item.name === data.appName);
+  let appData: APIApp | undefined = undefined;
+  //if (appService.apiApps) appService.apiApps?.apps.find((item) => APIAppame === data.appName);
   let apiProductChecks: {[key: string]: boolean} = {};
 
 	onMount(() => {
     document.addEventListener("appsUpdated", () => {
-      if (appService.apiApps?.app)
-        appData = appService.apiApps?.app.find((item) => item.name === data.appName);
+      if (appService.apiApps?.apps)
+        appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
 
       setProductChecks();
     });
 
-    if (!appData) appData = appService.apiApps?.app.find((item) => item.name === data.appName);
+    if (!appData) appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
     setProductChecks();
 	});
 
@@ -89,10 +89,10 @@
         },
       }).then((response) => {
           return response.json();
-      }).then((data: ApiApp) => {
+      }).then((data: APIApp) => {
         if (appService.apiApps && appData) {
-          let index = appService.apiApps.app.indexOf(data);
-          appService.apiApps.app[index] = data;
+          let index = appService.apiApps.apps.indexOf(data);
+          appService.apiApps.apps[index] = data;
         }
 
         appData = data;
@@ -103,7 +103,7 @@
     }
   }
 
-  function deleteKey(key: ApiAppCredential) {
+  function deleteKey(key: APIAppCredential) {
     appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
       if (result === "ok") {
         if (appService.currentUser && appData) {

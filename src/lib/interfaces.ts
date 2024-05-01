@@ -1,10 +1,19 @@
-export class AppUser {
-  email = "";
-  userName = "";
+export class User {
+  email: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
   photoUrl = "";
   providerId = "";
   developerData?: Developer;
   status = "";
+
+  constructor(email: string, userName: string, firstName: string, lastName: string) {
+    this.email = email;
+    this.userName = userName;
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
 }
 
 export class Products {
@@ -47,7 +56,7 @@ export class Developer {
   attributes?: KeyValue[];
 }
 
-export class ApiApp {
+export class APIApp {
   appId: string = "";
   name: string = "";
   description?: string = "";
@@ -56,29 +65,29 @@ export class ApiApp {
   callbackUrl?: string;
   apiProducts?: string[];
   status?: string;
-  credentials?: ApiAppCredential[];
+  credentials?: APIAppCredential[];
   attributes?: KeyValue[];
   error?: Error;
 }
 
-export class ApiAppCredential {
+export class APIAppCredential {
   consumerKey: string = "";
   consumerSecret: string = "";
   issuedAt: string = "";
   expiresAt: string = "";
   scopes?: string[];
-  apiProducts?: ApiAppCredentialProduct[];
+  apiProducts?: APIAppCredentialProduct[];
   status?: string;
   error?: Error;
 }
 
-export class ApiAppCredentialProduct {
+export class APIAppCredentialProduct {
   apiproduct: string = "";
   status?: string = "";
 }
 
-export class ApiApps {
-  app: ApiApp[] = [];
+export class APIApps {
+  apps: APIApp[] = [];
 }
 
 export interface KeyValue {

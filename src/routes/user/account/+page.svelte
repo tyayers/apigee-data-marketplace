@@ -1,11 +1,11 @@
 <script lang="ts">
     import { appService } from "$lib/app-service";
-    import type { AppUser, BucketSubscription } from "$lib/interfaces";
+    import type { User, BucketSubscription } from "$lib/interfaces";
     import type { Bucket } from "@google-cloud/storage";
     import { onMount } from "svelte";
 
 
-    let currentUser: AppUser | undefined = appService.currentUser;
+    let currentUser: User | undefined = appService.currentUser;
     let bucketSubscriptions: BucketSubscription[] | undefined = undefined;
     let product: string = "";
 

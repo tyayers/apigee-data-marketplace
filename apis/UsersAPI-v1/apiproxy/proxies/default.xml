@@ -5,6 +5,9 @@
   <PreFlow name="PreFlow">
     <Request>
       <Step>
+        <Name>AM-SetVariables</Name>
+      </Step>
+      <Step>
         <Name>SIR-set-integration-request</Name>
       </Step>
     </Request>

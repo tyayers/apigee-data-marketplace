@@ -30,16 +30,11 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/apigee.developerAdmin"
 
-# echo "Provision Cloud KMS..."
-# gcloud kms keyrings create "integration-keys" \
-#     --location "$REGION"
-# gcloud kms keys create "integration-key" \
-#     --location "$REGION" \
-#     --keyring "integration-keys" \
-#     --purpose "encryption"
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="user:$ADMIN_EMAIL" \
+    --role="roles/integrations.suspensionResolver"
 
 echo "Provision Application Integration..."
-#integrationcli provision -t $TOKEN -p $PROJECT_ID -r $REGION -k projects/$PROJECT_ID/locations/$REGION/keyRings/integration-keys/cryptoKeys/integration-key/cryptoKeyVersions/1
 integrationcli provision -t $TOKEN -p $PROJECT_ID -r $REGION
 
 PROJECTNUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
