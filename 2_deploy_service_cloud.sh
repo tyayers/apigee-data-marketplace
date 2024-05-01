@@ -1,5 +1,4 @@
 # Load environment variables
-source 1_env.dev.sh
 gcloud config set project $PROJECT_ID
 SECONDS=0
 
@@ -13,8 +12,15 @@ gcloud builds submit --config=cloudbuild.yaml \
 
 # Deploy to Cloud Run
 gcloud run deploy $SERVICE_NAME --image "$REGION-docker.pkg.dev/$PROJECT_ID/docker-registry/$SERVICE_NAME" \
+    --platform managed --region $REGION --allow-unauthenticated --min-instances=1
+
+# Get service URL
+SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --format 'value(status.url)' --region $REGION)
+
+# Redeploy to Cloud Run
+gcloud run deploy $SERVICE_NAME --image "$REGION-docker.pkg.dev/$PROJECT_ID/docker-registry/$SERVICE_NAME" \
     --platform managed --region $REGION --allow-unauthenticated --min-instances=1 \
-    --set-env-vars ORIGIN="$CLOUD_RUN_URL"
+    --set-env-vars ORIGIN="$SERVICE_URL,VITE_SITE_NAME=$SITE_NAME,VITE_API_HOST=$APIGEE_ENVGROUP_HOST,VITE_PROJECT_ID=$PROJECT_ID,VITE_APIGEE_ENV=$APIGEE_ENV"
 
 duration=$SECONDS
 echo "Total deployment finished in $((duration / 60)) minutes and $((duration % 60)) seconds."
