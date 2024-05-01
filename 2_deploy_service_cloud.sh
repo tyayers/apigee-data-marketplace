@@ -9,10 +9,10 @@ gcloud artifacts repositories create docker-registry --repository-format=docker 
 
 # Submit build
 gcloud builds submit --config=cloudbuild.yaml \
-  --substitutions=_LOCATION="$REGION",_REPOSITORY="docker-registry",_IMAGE="$NAME" .
+  --substitutions=_LOCATION="$REGION",_REPOSITORY="docker-registry",_IMAGE="$SERVICE_NAME" .
 
 # Deploy to Cloud Run
-gcloud run deploy $NAME --image "$REGION-docker.pkg.dev/$PROJECT_ID/docker-registry/$NAME" \
+gcloud run deploy $SERVICE_NAME --image "$REGION-docker.pkg.dev/$PROJECT_ID/docker-registry/$SERVICE_NAME" \
     --platform managed --region $REGION --allow-unauthenticated --min-instances=1 \
     --set-env-vars ORIGIN="$CLOUD_RUN_URL"
 

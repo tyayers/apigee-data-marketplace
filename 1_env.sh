@@ -1,5 +1,6 @@
 # Set environment variables here
-export NAME=
+export SITE_NAME=
+export SERVICE_NAME=
 export PROJECT_ID=
 export REGION=
 export APIGEE_ENV=

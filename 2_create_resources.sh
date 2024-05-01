@@ -69,3 +69,10 @@ EOF
 echo "Creating Firestore default instance..."
 if [[ $(gcloud app describe 2>&1 || true) == *'ERROR'* ]]; then echo 'No app engine or firestore instances found, creating...' && gcloud app create --region=europe-west; fi
 gcloud alpha firestore databases update --type=firestore-native
+
+echo "Setting web app variables..."
+cp .env .env.local
+sed -i "/VITE_SITE_NAME=/c\VITE_SITE_NAME=$SITE_NAME" .env.local
+sed -i "/VITE_API_HOST=/c\VITE_API_HOST=$APIGEE_ENVGROUP_HOST" .env.local
+sed -i "/VITE_PROJECT_ID=/c\VITE_PROJECT_ID=$PROJECT_ID" .env.local
+sed -i "/VITE_APIGEE_ENV=/c\VITE_APIGEE_ENV=$APIGEE_ENV" .env.local
