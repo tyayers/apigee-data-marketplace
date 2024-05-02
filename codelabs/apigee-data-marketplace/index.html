@@ -140,6 +140,18 @@ cd ../..</code></pre>
 <p>A new tab should be opened with the application running.</p>
 <p class="image-container"><img style="width: 534.48px" src="img/7b0f4eeddfcc6bb8.png"></p>
 <p>Click on <strong>Register</strong> and then try registering with an email/password to create a new account.</p>
+<h3 is-upgraded><strong>Set your account to admin</strong></h3>
+<p>Now that you are registered, let&#39;s make sure your account has admin access. The app uses Firestore to store application data.</p>
+<p>Open the Firestore Studio console so that we can set the user to have the admin role.</p>
+<p><a href="https://console.cloud.google.com/firestore/databases/-default-" target="_blank"><paper-button class="colored" raised>Open Firestore Studio</paper-button></a></p>
+<p>Open up the collection <strong>data-marketplace-users</strong>, click on your account&#39;s email address, and press the <strong>+</strong> symbol next to the <strong>roles</strong> property in the right panel. Type in <strong>admin</strong> and save the entry, you should now have both <strong>internal</strong> and <strong>admin</strong> roles in the collection for your user.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a131360244eb56fd.png"></p>
+<p>Now refresh the marketplace app again, and you should have the <strong>Publish data</strong> button available in the header bar on the right-hand side.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7d2700d58bf2cfb0.png"></p>
+<p>Click on the <strong>Publish data</strong> button to create a new data product. Enter <strong>BikeData-v1</strong> as the name, enter any description, set <strong>bike-data</strong> as the entity, and then set a BigQuery test dataset <strong>bigquery-public-data.austin_bikeshare.bikeshare_trips</strong> as the query.</p>
+<p>Set the other properties with some values, and make sure the status is set to <strong>Published</strong> before clicking <strong>Save.</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img/1ced0054cf347013.png"></p>
+<p>After clicking <strong>Save</strong> you can go back to the <strong>Data Marketplace </strong>home page, and you should see your published product available for users.</p>
 
 
       </google-codelab-step>
