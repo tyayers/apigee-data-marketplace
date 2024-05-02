@@ -15,7 +15,7 @@ import {
 import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import { User, Developer, APIApps, APIApp, Products, AHSubscription } from "./interfaces";
+import { User, Developer, APIApps, APIApp, Products, AHSubscription, DataProduct } from "./interfaces";
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
@@ -34,7 +34,8 @@ export class AppService {
   firebaseUser: FirebaseUser | undefined = undefined;
   apiApps: APIApps | undefined = undefined;
   reloadFlag: boolean = false;
-  products: Products = new Products();
+  // products: Products = new Products();
+  products: DataProduct[] = [];
   testMode: boolean = false;
 
   constructor() {
@@ -46,7 +47,8 @@ export class AppService {
 
       fetch("/api/products").then((response) => {
         return response.json();
-      }).then((result: Products) => {
+      }).then((result: DataProduct[]) => {
+        console.log(result);
         this.products = result;
         document.dispatchEvent(new Event("productsUpdated"));
       })

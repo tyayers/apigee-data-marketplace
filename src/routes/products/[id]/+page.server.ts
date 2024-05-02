@@ -8,6 +8,6 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	// });
 
 	return {
-		product: await utilsServer.dataService.getProduct(params.id)
+		productId: params.id
 	};
 };

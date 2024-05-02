@@ -71,6 +71,7 @@
               <tr>
                 <th>Name</th>
                 <th>Owner</th>
+                <th>Data source</th>
                 <th>Creation date</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -81,13 +82,18 @@
                 <tr on:click={() => openProduct(prod.id)}>
                   <td>{prod.productName}</td>
                   <td>{prod.ownerEmail}</td>
+                  <td>{prod.source}</td>
                   {#if prod.createdAt}
                     <td>{prod.createdAt}</td>
                   {:else}
                     <td></td>
                   {/if}
                   <td>
-                    <span style="color: green; font-weight: bold;">Active</span>
+                  {#if prod.status == "draft"}
+                    <span style="color: orange; font-weight: bold;">Draft</span>
+                  {:else}
+                    <span style="color: green; font-weight: bold;">Published</span>
+                  {/if}
                   </td>
                   <td>
                     <button>

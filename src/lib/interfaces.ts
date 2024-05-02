@@ -3,6 +3,7 @@ export class User {
   userName: string;
   firstName: string;
   lastName: string;
+  roles: string[] = [];
   photoUrl = "";
   providerId = "";
   developerData?: Developer;
@@ -39,6 +40,45 @@ export class Product {
   attrArray?: string[] = [];
   groupArray?: string[] = [];
   typeArray?: string[] = [];
+}
+
+export class DataProduct {
+  id: string;
+  ownerEmail: string;
+  productName: string;
+  productDescription: string;
+  imageUrl: string = "/data_icon.png";
+  specUrl: string = "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/esg-analytics.yaml";
+  pricing: {tier: string, price: string, range: string}[] = [
+    {
+      "tier": "Starter",
+      "price": "Free",
+      "range": "20 API calls or file downloads per month"
+    }
+  ];
+  status: string;
+  source: string;
+  entity: string;
+  query: string;
+  createdAt: string;
+  protocols: string[];
+  audiences: string[];
+  categories: string[];
+
+  constructor(id: string, email: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[], categories: string[]) {
+    this.id = id;
+    this.ownerEmail = email;
+    this.productName = name;
+    this.productDescription = description;
+    this.status = status;
+    this.source = source;
+    this.entity = entity;
+    this.query = query;
+    this.createdAt = createdAt;
+    this.protocols = protocols;
+    this.audiences = audiences;
+    this.categories = categories;
+  }
 }
 
 export class Developer {
@@ -116,34 +156,6 @@ export class BucketSubscription {
   url: string = "";
   createdAt: string = "";
   status: string = "";
-}
-
-export class DataProduct {
-  id: string;
-  ownerEmail: string;
-  productName: string;
-  productDescription: string;
-  status: string;
-  source: string;
-  entity: string;
-  query: string;
-  createdAt: string;
-  protocols: string[];
-  audiences: string[];
-
-  constructor(id: string, email: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[]) {
-    this.id = id;
-    this.ownerEmail = email;
-    this.productName = name;
-    this.productDescription = description;
-    this.status = status;
-    this.source = source;
-    this.entity = entity;
-    this.query = query;
-    this.createdAt = createdAt;
-    this.protocols = protocols;
-    this.audiences = audiences;
-  }
 }
 
 export class DisplayOptions {name: string = ""; displayName: string = ""; active: boolean = false};

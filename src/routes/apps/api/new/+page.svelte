@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto, invalidate } from "$app/navigation";
-    import { page } from "$app/stores";
+  import { page } from "$app/stores";
   import { appService } from "$lib/app-service";
   import type { PageData } from "./$types";
 

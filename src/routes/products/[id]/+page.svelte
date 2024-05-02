@@ -1,11 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-    import { appService } from "$lib/app-service";
-    import { onMount } from "svelte";
+  import { appService } from "$lib/app-service";
+  import { onMount } from "svelte";
 	import type { PageServerData } from "./$types";
+  import type { DataProduct } from "$lib/interfaces";
   export let data: PageServerData;
 
+  let products: DataProduct[] = appService.products;
+  let product: DataProduct | undefined = undefined;
+  
   let selectedProductTab = "overview";
 
   let newTab = $page.url.searchParams.get('tab')
@@ -18,6 +22,7 @@
   let apiDocOpen: boolean = false;
 
   onMount(async () => {
+    
     document.addEventListener("cancelEvent", () => {
       previewDataOpen = false;
       apiDocOpen = false;
@@ -27,36 +32,31 @@
       refreshApps();
     });
 
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+      loadProduct();
+      apiDocOpen = false;
+    });
+
+    products = appService.products;
+    loadProduct();
+
     refreshApps();
   });
 
-  if (data.product) {
-    data.product.attrArray = [];
-    data.product.groupArray = [];
-    data.product.typeArray = data.product.type?.split(",");
-    if (data.product.attributes) {
-      for (let tagData of data.product.attributes){
-        if (tagData.name === "tags") {
-          let tags = tagData.value.split(", ");
-
-          for (let tag of tags) {
-            data.product.attrArray.push(tag);
-            let pieces = tag.split("/");
-            if (! data.product.attrArray.includes(pieces[0])) data.product.attrArray.push(pieces[0]);
-          }
-        }
-        else if (tagData.name === "groups") {
-          data.product.groupArray = tagData.value.split(", ");
-        }
-      }
+  function loadProduct() {
+    if (products.length > 0 && !product) {
+      product = products.find(prod => prod.productName === data.productId);
     }
   }
 
   function refreshApps() {
-    if (appService.apiApps && appService.apiApps.app) {
+    if (appService.apiApps && appService.apiApps.apps) {
       var newAppSubscriptions = appSubscriptions;
-      for (let app of appService.apiApps.app) {
-        if (app.apiProducts && app.apiProducts.includes(data.product.name)) {
+      for (let app of appService.apiApps.apps) {
+        let productName: string = "";
+        if (product && product.productName) productName = product.productName;
+        if (app.apiProducts && app.apiProducts.includes(productName)) {
           newAppSubscriptions.push(app.name);
           if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
         }
@@ -90,25 +90,25 @@
 <div class="product_overview">
   <div class="product_overview_icon">
 
-    {#if data.product.imageUrl}
-      <img height="62px" alt="Product" src={data.product.imageUrl} />
+    {#if product?.imageUrl}
+      <img height="62px" alt="Product" src={product?.imageUrl} />
     {:else}
       <img height="62px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
     {/if}
   </div>
   <div class="product_overview_details">
-    <h2>{data.product.name}</h2>
-    <div class="product_overview_owner">{data.product.groupArray?.join(", ")}</div>
+    <h2>{product?.productName}</h2>
+    <div class="product_overview_owner">{product?.audiences?.join(", ")}</div>
     <div class="product_overview_description">
-      {data.product.description}
+      {product?.productDescription}
     </div>
 
     <div class="product_overview_buy">
-      {#if data.product.type?.includes("api") || data.product.type?.includes("event")}
-        <a href={"/apps/api/new?product=" + data.product.name} class="rounded_button_filled">Subscribe to API</a>
+      {#if product?.protocols.includes("API") || product?.protocols.includes("Event")}
+        <a href={"/apps/api/new?product=" + product?.productName} class="rounded_button_filled">Subscribe to API</a>
       {/if}
-      {#if data.product.type?.includes("ah")}
-        <a href={"/apps/bigquery/new?product=" + data.product.name} class="rounded_button_filled">
+      {#if product?.audiences.includes("Analytics hub")}
+        <a href={"/apps/bigquery/new?product=" + product?.productName} class="rounded_button_filled">
           <svg width="25" height="25" style="position: relative; top: 7px; left: -6px;" class="sobti"
           ><g fill="none" fill-rule="evenodd"
             ><path
@@ -128,8 +128,8 @@
           Subscribe on Analytics Hub
         </a>
       {/if}
-      {#if data.product.type?.includes("sync")}
-        <a href={"/apps/buckets/new?product=" + data.product.name} class="rounded_button_filled">Enable data sync</a>
+      {#if product?.protocols.includes("Data sync")}
+        <a href={"/apps/buckets/new?product=" + product?.productName} class="rounded_button_filled">Enable data sync</a>
       {/if}      
       <button class="rounded_button_outlined" on:click|stopPropagation={()=>{previewDataOpen=!previewDataOpen}}>Preview data</button>
     </div>
@@ -160,7 +160,7 @@
     <div class="product_tab_content_inner">
       <h3>Overview</h3>
       <div class="product_tab_content_text">
-        {data.product.description}
+        {product?.productDescription}
       </div>
       <h3>SLA</h3>
       <div class="product_tab_content_text">
@@ -169,12 +169,12 @@
     </div>
   {:else if selectedProductTab == "documentation"}
     <div>
-      {#if data.product.type?.includes("api") && data.product.specUrl}
+      {#if product?.protocols.includes("API") && product?.specUrl}
         <button class="api_maximize_button" title="Maximize window" on:click|stopPropagation={()=>{apiDocOpen=!apiDocOpen}}>
           <svg style="width: 34px; height: 34px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17 7H14M17 7V10M17 7L13.5 10.5M7 17H10M7 17V14M7 17L10.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7 7H10M7 7V10M7 7L10.5 10.5M17 17H14M17 17V14M17 17L13.5 13.5" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="var(--light-gray-color)" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>        
         </button>
         <rapi-doc
-          spec-url={data.product.specUrl}
+          spec-url={product?.specUrl}
           show-header = 'false'
           show-info = 'true'
           bg-color = "#fafafa"
@@ -194,8 +194,9 @@
           data-reveal-delay="200"
           class="blue_text"
         > </rapi-doc>
-      {:else if data.product.type?.includes("event")}
-        <iframe style="width: 100%; height: 1000px; border: 0px;" src={data.product.specUrl}></iframe>
+      {:else if product?.protocols?.includes("Evet")}
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <iframe style="width: 100%; height: 1000px; border: 0px;" src={product?.specUrl}></iframe>
       {/if}
 
     </div>
@@ -216,8 +217,8 @@
               </tr>
           </thead>
           <tbody>
-            {#if data.product.pricing}
-              {#each data.product.pricing as price_tier}
+            {#if product?.pricing}
+              {#each product?.pricing as price_tier}
                 <tr>
                   <td>{price_tier.tier}</td>
                   <td>{price_tier.price}</td>
@@ -1780,7 +1781,7 @@
       </div>
       <div style="position: absolute; top: 70px; bottom: 10px; overflow: auto; width: 97%;">
         <rapi-doc
-          spec-url={data.product.specUrl}
+          spec-url={product?.specUrl}
           show-header = 'false'
           show-info = 'true'
           bg-color = "#fafafa"

@@ -5,24 +5,24 @@ export const generateRandomString = (length=6)=>Math.random().toString(20).subst
 
 export let protocols: DisplayOptions[] = [
   {
-    name: "api",
+    name: "API",
     displayName: "API",
     active: true
   },
   {
-    name: "event",
+    name: "Event",
     displayName: "Event stream",
-    active: false
+    active: true
   },
   {
-    name: "ah",
+    name: "Analytics Hub",
     displayName: "Analytics Hub",
-    active: false
+    active: true
   },
   {
-    name: "sync",
+    name: "Data sync",
     displayName: "Data sync",
-    active: false
+    active: true
   }
 ];
 

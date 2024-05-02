@@ -19,6 +19,6 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	let devData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
-	return json(devData);
+	let userData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
+	return json(userData);
 };

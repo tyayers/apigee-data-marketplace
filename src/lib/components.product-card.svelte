@@ -1,48 +1,24 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
     import { resolveRoute } from "$app/paths";
-    import type { Product } from "./interfaces";
+    import type { DataProduct } from "./interfaces";
 
-  export let data: Product | undefined = undefined;
-  let types: string[] = [];
-  let tags: { [key: string]: string } = {};
-
-  if (data && data.attributes) {
-    for (let tagData of data.attributes) {
-      tags[tagData.name] = tagData.value;
-    }
-  }
-
-  if (data && data.type)
-    types = data.type.split(",");
+  export let data: DataProduct | undefined = undefined;
 
   function OpenProduct() {
-    goto("/products/" + data?.name);
+    goto("/products/" + data?.productName);
   }
 
   function getTypeClass(type: string) {
     let result = "tag tag_blue";
-    if (type === "api")
+    if (type === "API")
       result = "tag tag_green";
-    else if (type === "ah")
+    else if (type === "Analytics Hub")
       result = "tag tag_red";
-    else if (type === "event")
+    else if (type === "Event")
       result = "tag tag_orange";
 
     return result;
-  }
-
-  function getTypeName(type: string): string {
-    let result = type;
-
-    if (type === "ah")
-      result = "Analytics hub";
-    else if (type === "sync")
-      result = "Data sync";
-    else if (type === "api")
-      result = "API";
-    
-    return result.charAt(0).toUpperCase() + result.slice(1);
   }
 </script>
 
@@ -57,16 +33,16 @@
         <img height="32px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
       {/if}
     </div>
-    {data.name}
+    {data.productName}
     <div class="product-owner-box">
-      {data.groupArray?.join(", ")}
+      {data.audiences?.join(", ")}
     </div>
     <div class="product-description-box">
-      {data.description}
+      {data.productDescription}
     </div>
     <div class="tags_box">
-      {#each types as type}
-        <span class={getTypeClass(type)}>{getTypeName(type)}</span>
+      {#each data.protocols as type}
+        <span class={getTypeClass(type)}>{type}</span>
       {/each}
     </div>
   </div>

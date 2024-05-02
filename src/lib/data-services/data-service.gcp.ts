@@ -51,7 +51,6 @@ export class GoogleCloudDataService {
 
   public getOrCreateUser(email: string, firstName: string, lastName: string, userName: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      console.log("https://" + apiHost + "/v1/users");
       fetch("https://" + apiHost + "/v1/users", {
         method: 'POST',
         headers: {
@@ -66,9 +65,12 @@ export class GoogleCloudDataService {
       }).then((response) => {
         return response.json();
       }).then((data: any) => {
-        console.log(JSON.stringify(data));
         let appUser: User = new User(data.userData.email, data.userData.firstName, data.userData.lastName, data.userData.userName);
         appUser.developerData = data.developerData;
+        if (data.userData) {
+          appUser.roles = data.userData.roles;
+          appUser.status = data.userData.status;
+        }
         resolve(appUser);
       });
     });

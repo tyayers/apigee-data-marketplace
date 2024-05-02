@@ -2,14 +2,15 @@
   import type { PageServerData } from './$types';
 
   import ProductCard from '$lib/components.product-card.svelte';
-  import type { User, Product, Products } from '$lib/interfaces';
+  import type { User, Product, Products, DataProduct } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import { appService } from '$lib/app-service';
   import { goto } from '$app/navigation';
 
   let currentUser: User | undefined = appService.currentUser;
-  let products: Products = appService.products;
-  let productsByName: {[key: string]: Product} = {};
+  let products: DataProduct[] = appService.products;
+  let productsByName: {[key: string]: DataProduct} = {};
+  let productCategories: {[key: string]: string[]} = {};
   let catProducts: {[key: string]: string[]} = {};
   let catSubProducts: {[key: string]: string[]} = {};
   let category_filter: string = "";
@@ -17,18 +18,20 @@
   let types: string[] = [];
   let catChecked: string[] = [];
   let typesChecked: string[] = [];
-  let userGroups: string[] = [];
   let searchText: string = "";
-
-  if (currentUser) loadUserGroups(currentUser);
 
 	onMount(() => {
     document.addEventListener("userUpdated", () => {
       if (appService.currentUser) {
         currentUser = appService.currentUser;
-        loadUserGroups(currentUser);
-        refreshProductList();
+        products = appService.products;
+        reloadProducts();
       }
+    });
+
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+      reloadProducts();
     });
 
     if (appService.reloadFlag) {
@@ -40,59 +43,46 @@
       // This means no user is signed in, go to landing page
       goto("/");
     }
+
+    products = appService.products;
+    reloadProducts();
   });
 
-  if (products) {
-    for (let prod of products.products) {
-      productsByName[prod.name] = prod;
-      prod.attrArray = [];
-      prod.groupArray = [];
-      prod.typeArray = prod.type?.split(",");
-      if (prod.typeArray && prod.typeArray.length > 0) {
-        for (let type of prod.typeArray) {
-          if (!types.includes(type)) types.push(type);
-        }
-      }
+  function reloadProducts() {
+    let tempTypes = types;
+    if (products.length > 0) {
+      for (let prod of products) {
+        if (prod.status == "Published") {
+          productsByName[prod.productName] = prod;
+          for (let type of prod.protocols) {
+            if (!tempTypes.includes(type)) tempTypes.push(type);
+          }
+            
+          for (let category of prod.categories) {
+            let pieces = category.split(" - ");
+            if (!productCategories[prod.productName]) {
+              productCategories[prod.productName] = [];
+            }
+            productCategories[prod.productName].push(category);
+            if (! productCategories[prod.productName].includes(pieces[0])) productCategories[prod.productName].push(pieces[0]);
 
-      if (prod.attributes) {
-        for (let tagData of prod.attributes){
-          if (tagData.name === "tags") {
-            let tags = tagData.value.split(", ");
+            if (! catProducts[pieces[0]]) catProducts[pieces[0]] = [];
+            if (! catProducts[pieces[0]].includes(prod.productName)) catProducts[pieces[0]].push(prod.productName);
+            if (! catSubProducts[category]) catSubProducts[category] = [];
+            catSubProducts[category].push(prod.productName);
 
-            for (let tag of tags) {
-              prod.attrArray.push(tag);
-              let pieces = tag.split("/");
-              if (! prod.attrArray.includes(pieces[0])) prod.attrArray.push(pieces[0]);
-              if (! catProducts[pieces[0]]) catProducts[pieces[0]] = [];
-              if (! catProducts[pieces[0]].includes(prod.name)) catProducts[pieces[0]].push(prod.name);
-              if (! catSubProducts[tag]) catSubProducts[tag] = [];
-              catSubProducts[tag].push(prod.name);
+            if (! categories[pieces[0]])
+              categories[pieces[0]] = [];
 
-              if (! categories[pieces[0]])
-                categories[pieces[0]] = [];
-
-              if (!categories[pieces[0]].includes(tag)) {
-                categories[pieces[0]].push(tag)
-              }
+            if (!categories[pieces[0]].includes(category)) {
+              categories[pieces[0]].push(category)
             }
           }
-          else if (tagData.name === "groups") {
-            prod.groupArray = tagData.value.split(", ");
-          }
         }
       }
-    }
 
-    refreshProductList();
-  }
-
-  function loadUserGroups(newUser: User) {
-    if (newUser.developerData?.attributes) {
-      for (let tag of newUser.developerData?.attributes) {
-        if (tag.name == "Groups") {
-          userGroups = tag.value.split(", ");
-        }
-      }
+      types = tempTypes;
+      refreshProductList();
     }
   }
 
@@ -120,7 +110,7 @@
 
   function onCatChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];
-    let category: string = name.split("/")[0];
+    let category: string = name.split(" - ")[0];
 
     let tempChecked = catChecked;
     if (e.target.checked) {
@@ -144,14 +134,14 @@
   function refreshProductList() {
     let tempCatProducts: {[key: string]: string[]} = {};
     for (let subCatSel of catChecked) {
-      let cat = subCatSel.split("/")[0];
+      let cat = subCatSel.split(" - ")[0];
       if (! tempCatProducts[cat]) tempCatProducts[cat] = [];
 
       for (let prodName of catSubProducts[subCatSel]) {
         let prod = productsByName[prodName];
         if (!tempCatProducts[cat].includes(prodName) &&
-            (typesChecked.length === 0 || prod.typeArray?.some(item => typesChecked.includes(item))) &&
-            (prod.groupArray?.length === 0 || userGroups.some(item => prod.groupArray?.includes(item)))) {
+            (typesChecked.length === 0 || prod.protocols?.some(item => typesChecked.includes(item))) &&
+            (prod.audiences?.length === 0 || prod.audiences.includes("external") || currentUser?.roles.some(item => prod.audiences?.includes(item)))) {
           tempCatProducts[cat].push(prodName);
         }
       }
@@ -159,13 +149,13 @@
 
     if (catChecked.length === 0) {
       for (let subCat of Object.keys(catSubProducts)) {
-        let cat: string = subCat.split("/")[0];
+        let cat: string = subCat.split(" - ")[0];
         for (let prodName of catSubProducts[subCat]) {
           let prod = productsByName[prodName];
           if (!tempCatProducts[cat]) tempCatProducts[cat] = [];
           if (!tempCatProducts[cat].includes(prodName) &&
-            (typesChecked.length === 0 || prod.typeArray?.some(item => typesChecked.includes(item))) &&
-            (prod.groupArray?.length === 0 || userGroups.some(item => prod.groupArray?.includes(item)))) {
+            (typesChecked.length === 0 || prod.protocols?.some(item => typesChecked.includes(item))) &&
+            (prod.audiences?.length === 0 || prod.audiences.includes("external") || currentUser?.roles.some(item => prod.audiences?.includes(item)))) {
             tempCatProducts[cat].push(prodName);
           }
         }
@@ -173,19 +163,6 @@
     }
 
     catProducts = tempCatProducts;
-  }
-
-  function getTypeName(type: string): string {
-    let result = type;
-
-    if (type === "ah")
-      result = "Analytics hub";
-    else if (type === "sync")
-      result = "Data sync";
-    else if (type === "api")
-      result = "API";
-    
-    return result.charAt(0).toUpperCase() + result.slice(1);
   }
 </script>
 
@@ -238,7 +215,7 @@
         </div>
         {#each types as type}
           <div class="product_filter_checkbox">
-            <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{getTypeName(type)}</label>
+            <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{type}</label>
           </div>
         {/each}
         {#each Object.keys(categories) as cat}
@@ -248,7 +225,7 @@
           {#each categories[cat] as subcat}
             {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
               <div class="product_filter_checkbox">
-                <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + "/", "")}</label>
+                <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + " - ", "")}</label>
               </div>
             {/if}
           {/each}
@@ -259,12 +236,12 @@
       {#each Object.keys(catProducts) as catName}
         {#if catProducts[catName].length > 0}
           <div class="product_list_header">
-            {#if searchText === "" || catName.toLowerCase().includes(searchText)}
+            {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase())}
               <h3>{catName} products</h3>
             {/if}
           </div>
           {#each catProducts[catName] as prodName, i}
-            {#if searchText === "" || prodName.toLowerCase().includes(searchText)}
+            {#if searchText === "" || prodName.toLowerCase().includes(searchText.toLowerCase())}
               <ProductCard data={productsByName[prodName]} />
             {/if}
           {/each}

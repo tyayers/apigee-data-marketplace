@@ -3,9 +3,18 @@
   import { appService } from '$lib/app-service';
   import { DataProduct, DisplayOptions } from '$lib/interfaces';
   import MenuLeftAccount from '$lib/components-menus-left/menus-left.account.svelte';
+  import InputSelect from '$lib/components.input.select.svelte';
+  import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
 
-  let newProduct: DataProduct = new DataProduct(generateRandomString(8), "", "", "", "draft", "bigquery", "", "", "", ["api"], ["internal"]);
+  let newProduct: DataProduct = new DataProduct(generateRandomString(8), "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal"], []);
+  let categoryData: string[] = [
+    "ESG - Environmental", "ESG - Social", "ESG - Governance",
+    "Investment - Research", "Investment - Statistics", "Investment - Management",
+    "Pre-IPO - Research", "Pre-IPO - Statistics", "Pre-IPO - Management",
+    "Listing - Research", "Listing - Statistics", "Listing - Management",
+    "Trading - Research", "Trading - Statistics", "Trading - Classes"
+  ];
 
   function submit() {
     newProduct.createdAt = new Date().toString();
@@ -55,6 +64,23 @@
       let index = newProduct.audiences.indexOf(name);
       if (index >= 0)
         newProduct.audiences.splice(index, 1);
+    }
+  }
+
+  function addCategory(category: string) {
+    if (!newProduct.categories.includes(category)) {
+      let newProductCopy = newProduct;
+      newProductCopy.categories.push(category);
+      newProduct = newProductCopy;
+    }
+  }
+
+  function removeCategory(category: string) {
+    if (newProduct.categories.includes(category)) {
+      let newProductCopy = newProduct;
+      let index = newProductCopy.categories.indexOf(category);
+      newProductCopy.categories.splice(index, 1);
+      newProduct = newProductCopy;
     }
   }
 </script>
@@ -107,12 +133,12 @@
             <h4>Data source</h4>
             <div class="select_dropdown">
               <select name="source" id="source" bind:value={newProduct.source}>
-                <option value="bigquery">BigQuery</option>
-                <option value="api">API</option>
-                <option value="alloydb" disabled>AlloyDB</option>
-                <option value="cloudspanner" disabled>Cloud Spanner</option>
-                <option value="snowflake" disabled>Snowflake</option>
-                <option value="databricks" disabled>Databricks</option>
+                <option value="BigQuery">BigQuery</option>
+                <option value="API">API</option>
+                <option value="AlloyDB">AlloyDB</option>
+                <option value="Cloud Spanner">Cloud Spanner</option>
+                <option value="Snowflake">Snowflake</option>
+                <option value="Databricks">Databricks</option>
               </select>
             </div>
           </div>
@@ -120,18 +146,27 @@
           <div class="input_field_panel">
             <textarea name="query" id="query" required class="input_field" bind:value={newProduct.query} rows="10"></textarea>
             <label for="query" class='input_field_placeholder'>
-              Query or table
+              Query, table or backend URL
             </label>
           </div>
 
           <div class="form_list">
-            <h4>Publish protocols</h4>
+            <h4>Categories</h4>
+
+            <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
+
+            <TagCloud data={newProduct.categories} onRemove={removeCategory} />
+
+          </div>
+
+          <div class="form_list">
+            <h4>Protocols</h4>
             {#each protocols as protocol}
               <div class="form_list_line">
                 <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={newProduct.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
               </div>
             {/each}
-          </div>
+          </div>          
 
           <div class="form_list">
             <h4>Audiences</h4>
@@ -146,8 +181,8 @@
             <h4>Status</h4>
             <div class="select_dropdown">
               <select name="status" id="status" bind:value={newProduct.status}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
               </select>
             </div>
           </div>
