@@ -5,6 +5,8 @@ export PROJECT_ID=
 export REGION=
 export APIGEE_ENV=
 export APIGEE_ENVGROUP_HOST=
+export FIREBASE_APIKEY=
+export FIREBASE_AUTHDOMAIN=
 
 # Internal domains are the email domains that will be considered internal for users registering (no approval needed)
 export INTERNAL_DOMAINS=

@@ -14,15 +14,17 @@ import {
 } from "firebase/auth";
 import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { User, Developer, APIApps, DataProduct } from "./interfaces";
 
-import { User, Developer, APIApps, APIApp, Products, AHSubscription, DataProduct } from "./interfaces";
+let FirebaseAPIKey: string = import.meta.env.VITE_FIREBASE_APIKEY;
+let FirebaseAuthDomain: string = import.meta.env.VITE_FIREBASE_AUTHDOMAIN;
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
   SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
   firebaseConfig = {
-    apiKey: "AIzaSyC9rR3wblvxeWdARAV6juR2uw8dBCYfiZM",
-    authDomain: "apigee-test38.firebaseapp.com",
+    apiKey: FirebaseAPIKey,
+    authDomain: FirebaseAuthDomain,
   };
   siteName: string = import.meta.env.VITE_SITE_NAME;
 
@@ -74,6 +76,8 @@ export class AppService {
             let userName: string = u.displayName ? u.displayName : "New User";
             let provider: string = u.providerData ? u.providerData[0].providerId : "";
             this.currentUser = new User(email, userName, "", "");
+            this.currentUser.photoUrl = photoURL;
+            this.currentUser.providerId = provider;
 
             // Use AppIntegration to create developer
             fetch("/api/users?email=" + email + "&username=" + userName, {
@@ -85,6 +89,9 @@ export class AppService {
                 return response.json();
             }).then((data: User) => {
               this.currentUser = data;
+              this.currentUser.photoUrl = photoURL;
+              this.currentUser.providerId = provider;
+
               if (data.developerData) {
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);

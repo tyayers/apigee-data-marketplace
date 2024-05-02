@@ -6,47 +6,34 @@
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
-  let products: DataProduct[] | undefined = undefined;
+  let products: DataProduct[] | undefined = appService.products;
 
   onMount(() => {
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+    });
+
     document.addEventListener("userUpdated", () => {
-      currentUser = appService?.currentUser;
-      getProducts();
+      currentUser = appService.currentUser;
+      products = appService.products;
     });
-
-    if (currentUser) getProducts();
   });
-
-  function getProducts() {
-    products = undefined;
-    fetch("/api/products", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data: DataProduct[]) => {
-      products = data;
-      console.log(data);
-    });
-  }
 
   function openProduct(product: string) {
     goto("/user/account/products/" + product);
   }
 
-  function deleteProduct(product: string) {
-    fetch("/api/products/" + product, {
+  function deleteProduct(productId: string) {
+    fetch("/api/products/" + productId, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
       },
     })
     .then((response) => {
-      getProducts();
+      let index = appService.products.findIndex(x => x.id == productId); 
+      appService.products.splice(index, 1);
+      products = appService.products;
     });
   }
 </script>
@@ -79,7 +66,7 @@
             </thead>
             <tbody>
               {#each Object.values(products) as prod, i}
-                <tr on:click={() => openProduct(prod.id)}>
+                <tr on:click={() => openProduct(prod.productName)}>
                   <td>{prod.productName}</td>
                   <td>{prod.ownerEmail}</td>
                   <td>{prod.source}</td>
@@ -95,7 +82,7 @@
                     <span style="color: green; font-weight: bold;">Published</span>
                   {/if}
                   </td>
-                  <td>
+                  <td style="white-space: pre;">
                     <button>
                       <svg
                         width="18px"

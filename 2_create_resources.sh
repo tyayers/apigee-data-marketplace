@@ -31,6 +31,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --role="roles/apigee.developerAdmin"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/bigquery.dataViewer"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="user:$ADMIN_EMAIL" \
     --role="roles/integrations.suspensionResolver"
 
@@ -76,3 +80,5 @@ sed -i "/VITE_SITE_NAME=/c\VITE_SITE_NAME=$SITE_NAME" .env.local
 sed -i "/VITE_API_HOST=/c\VITE_API_HOST=$APIGEE_ENVGROUP_HOST" .env.local
 sed -i "/VITE_PROJECT_ID=/c\VITE_PROJECT_ID=$PROJECT_ID" .env.local
 sed -i "/VITE_APIGEE_ENV=/c\VITE_APIGEE_ENV=$APIGEE_ENV" .env.local
+sed -i "/VITE_FIREBASE_APIKEY=/c\VITE_FIREBASE_APIKEY=$FIREBASE_APIKEY" .env.local
+sed -i "/VITE_FIREBASE_AUTHDOMAIN=/c\VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN" .env.local
