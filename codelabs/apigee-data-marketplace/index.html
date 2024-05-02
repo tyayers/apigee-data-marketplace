@@ -88,9 +88,9 @@ export PATH=$PATH:$HOME/.integrationcli/bin
 <p>Run these commands in the shell to copy an environment variable file, so that you can set your values from your environment.</p>
 <pre><code>cp 1_env.sh 1_env.local.sh</code></pre>
 <p>Open the file 1_env.local.sh in the editor and set the values from your environment.</p>
-<p class="image-container"><img style="width: 624.00px" src="img/9dc4245b44a189a8.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/f5b5beba0e7fe3fe.png"></p>
 <p>In the above example, I will use the name <strong>data-marketplace</strong> for my deployments (you can set this to anything you want, it just needs to be lowercase with - or _ to separate words). I will be deploying into the GCP project Id <strong>apigee-test74</strong> in the region <strong>europe-west4</strong>.</p>
-<p>The next part is important regarding the internal domain and the admin user. This user will get email alerts when new users register, and approve new users who are not internal. I will be using <strong>gmail.com</strong> as my internal domain (these users will be accepted without approval), but for all other domains, my <strong>testuser3432@gmail.com</strong> account will have to approve new user requests. This will be orchestrated by the Application Integration service in GCP.</p>
+<p>The next part is important regarding the internal domain and the admin user. This user will get email alerts when new users register, and approve new users who are not internal. I will be using <strong>gmail.com</strong> as my internal domain (these users will be accepted without approval), but for all other domains, my <strong>testuser5532@gmail.com</strong> account will have to approve new user requests. This will be orchestrated by the Application Integration service in GCP.</p>
 <p>After setting your environment variables, save the file <strong>1_env.local.sh</strong> and source it in your shell. Sourcing makes the variables available to all following commands.</p>
 <pre><code>source 1_env.local.sh</code></pre>
 <h3 is-upgraded><strong>Create base resources</strong></h3>
@@ -109,7 +109,10 @@ export PATH=$PATH:$HOME/.integrationcli/bin
 apigeecli apis create bundle -f apiproxy --name UsersAPI-v1 -o $PROJECT_ID -t $(gcloud auth print-access-token)
 apigeecli apis deploy -n UsersAPI-v1 -o $PROJECT_ID -e $APIGEE_ENV -t $(gcloud auth print-access-token) -s &#34;mpservice@$PROJECT_ID.iam.gserviceaccount.com&#34; --ovr
 cd ../..</code></pre>
-<p>This will deploy the API to Apigee. </p>
+<p>This will deploy the API to Apigee. Now open the Apigee console to see the API for users.</p>
+<p><a href="https://console.cloud.google.com/apigee/proxies" target="_blank"><paper-button class="colored" raised>Open the Apigee console</paper-button></a></p>
+<p>You should see the UsersAPI-v1, and if you click on it, see the deployment being done to your chosen environment.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e3787cfeb6ad0e0.png"></p>
 
 
       </google-codelab-step>
