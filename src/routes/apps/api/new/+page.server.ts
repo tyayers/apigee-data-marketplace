@@ -4,15 +4,15 @@ import { fail, redirect } from '@sveltejs/kit';
 import { utilsServer } from '$lib/utils.server';
 import type { APIApps, Products } from '$lib/interfaces';
 
-export const load: PageServerLoad = async ({ params }) => {
-  let products: Products | undefined= undefined;
+// export const load: PageServerLoad = async ({ params }) => {
+//   let products: Products | undefined= undefined;
 
-  products = await utilsServer.dataService.getProducts();
+//   products = await utilsServer.dataService.getProducts();
   
-	return {
-    products: products.products
-  };
-};
+// 	return {
+//     products: products.products
+//   };
+// };
 
 export const actions = {
 	default: async (event) => {

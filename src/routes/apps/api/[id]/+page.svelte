@@ -7,6 +7,7 @@
 
   export let data: PageData;
 
+  let products = appService.products;
   let appData: APIApp | undefined = undefined;
   //if (appService.apiApps) appService.apiApps?.apps.find((item) => APIAppame === data.appName);
   let apiProductChecks: {[key: string]: boolean} = {};
@@ -19,13 +20,17 @@
       setProductChecks();
     });
 
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+    });
+
     if (!appData) appData = appService.apiApps?.apps.find((item) => item.name === data.appName);
     setProductChecks();
 	});
 
   function setProductChecks() {
-    for (let product of data.products.products) {
-      apiProductChecks[product.name] = false;
+    for (let product of products) {
+      apiProductChecks[product.productName] = false;
     }
 
     if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
@@ -284,9 +289,9 @@
 
                 <div class="product_list">
                   <h4>Product subscriptions</h4>
-                  {#each data.products.products as product}
+                  {#each products as product}
                     <div class="product_list_line">
-                      <input type="checkbox" id={product.name} name={product.name} bind:checked={apiProductChecks[product.name]}/><label for={product.name}>{product.name}</label>
+                      <input type="checkbox" id={product.productName} name={product.productName} bind:checked={apiProductChecks[product.productName]}/><label for={product.productName}>{product.productName}</label>
                     </div>
                   {/each}
                 </div>

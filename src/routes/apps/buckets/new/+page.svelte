@@ -1,14 +1,10 @@
 <script lang="ts">
   import { goto, invalidate } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import { equalTo } from "firebase/database";
-  import type { PageData } from "./$types";
   import { page } from '$app/stores'
   import type { User, BucketSubscription } from "$lib/interfaces";
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
-  export let data: PageData;
-  
   let currentUser: User | undefined = appService.currentUser;
   let product: string = "";
   
@@ -90,9 +86,9 @@
                 <h4>Product subscriptions</h4>
                 <div class="select_dropdown">
                   <select name="product" id="product" bind:value={product}>
-                      {#each appService.products.products as product}
-                        {#if product.type?.includes("sync")}
-                          <option value={product.name}>{product.name}</option>
+                      {#each appService.products as product}
+                        {#if product.protocols?.includes("Data sync")}
+                          <option value={product.productName}>{product.productName}</option>
                         {/if}
                       {/each}
                   </select>

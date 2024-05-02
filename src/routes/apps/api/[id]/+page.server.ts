@@ -6,7 +6,6 @@ import { redirect, type Actions } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ params }) => {
 
 	return {
-		products: await utilsServer.dataService.getProducts(),
 		appName: params.id
 	};
 };

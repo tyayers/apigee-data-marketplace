@@ -2,7 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
 import { DataProduct } from '$lib/interfaces';
-import type {ProxyDeployment, ProxyRevision} from 'apigee-x-module';
+import type {APIProduct, ProxyDeployment, ProxyRevision} from 'apigee-x-module';
 import { ApigeeService } from 'apigee-x-module';
 import type {ApigeeTemplateService} from 'apigee-templater-module';
 import { ApigeeTemplater, ApigeeTemplateInput, RunPoint } from 'apigee-templater-module';
@@ -47,9 +47,9 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   // Create and deploy to Apigee...
   let apigeeTemplate: ApigeeTemplateInput | undefined = undefined;
   
-  if (newProduct.source === "bigquery")
+  if (newProduct.source === "BigQuery")
     apigeeTemplate = createBigQueryTemplate(newProduct);
-  else if (newProduct.source === "api")
+  else if (newProduct.source === "API")
     apigeeTemplate = createAPITemplate(newProduct);
 
   if (apigeeTemplate) {
@@ -58,7 +58,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
     importProxy(apigeeTemplate.name, proxyResult.localPath).then((result: ProxyRevision) => {
       apigeeService.deployProxyRevision(apigeeEnvironment, apigeeTemplate.name, result.revision, `mpservice@${projectId}.iam.gserviceaccount.com`).then((deployResult) => {
-        console.log(JSON.stringify(deployResult));
+        createProduct(newProduct.id, newProduct.productName, apigeeTemplate.name);
       });
     }).catch((error: any) => {
       console.error("Error in importProxy:");
@@ -71,8 +71,6 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
 function importProxy(name: string, path: string): Promise<ProxyRevision> {
   return new Promise<ProxyRevision>((resolve, reject) => {
-    console.log("start getAccessToken");
-
     auth.getAccessToken().then((token) => {
       const formData = new FormData();
       let buffer = fs.readFileSync(path);
@@ -91,6 +89,36 @@ function importProxy(name: string, path: string): Promise<ProxyRevision> {
         resolve(result);
       }).catch((error) => {
         console.log("Error in proxy import:");
+        console.error(error);
+      });
+    });
+  });
+}
+
+function createProduct(name: string, displayName: string, proxyName: string): Promise<ProxyRevision> {
+  return new Promise<ProxyRevision>((resolve, reject) => {
+    auth.getAccessToken().then((token) => {
+
+      fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          displayName: displayName,
+          approvalType: "auto",
+          environments: [apigeeEnvironment],
+          proxies: [proxyName]
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((result: any) => {
+        console.log(result);
+        resolve(result);
+      }).catch((error) => {
+        console.log("Error in product create:");
         console.error(error);
       });
     });

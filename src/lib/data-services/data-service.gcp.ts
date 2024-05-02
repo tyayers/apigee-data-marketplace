@@ -89,9 +89,12 @@ export class GoogleCloudDataService {
 
   public createApiApp(devEmail: string, appName: string, description: string, products: string[]): Promise<APIApp> {
     return new Promise((resolve, reject) => {
+      console.log("writing app: " + devEmail + " " + products.join(", "));
       this.apigeeService.createApp(devEmail, appName, products, description).then((app) => {
+        console.log(app);
         resolve(app as APIApp);
       }).catch((err: any) => {
+        console.error(err);
         reject(err);
       });
     });

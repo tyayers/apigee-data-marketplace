@@ -2,16 +2,23 @@
   import { goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
   import { appService } from "$lib/app-service";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
-  export let data: PageData;
-  
   let name: string = "";
   let description: string = "";
   let product_input: string = "";
 
+  let products = appService.products;
   var urlProduct = $page.url.searchParams.get('product');
   if (urlProduct) product_input = urlProduct;
+
+	onMount(() => {
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+    });
+	});
+
 
   function back() {
     history.back();
@@ -81,12 +88,12 @@
 
               <div class="form_list">
                 <h4>Product subscriptions</h4>
-                {#each data.products as product}
+                {#each products as product}
                 <div class="form_list_line">
-                  {#if product.name === product_input}
-                    <input id={product.name} name={product.name} checked type="checkbox" /><label for={product.name}>{product.name}</label>
+                  {#if product.productName === product_input}
+                    <input id={product.productName} name={product.productName} checked type="checkbox" /><label for={product.productName}>{product.productName}</label>
                   {:else}
-                    <input id={product.name} name={product.name} type="checkbox" /><label for={product.name}>{product.name}</label>
+                    <input id={product.productName} name={product.productName} type="checkbox" /><label for={product.productName}>{product.productName}</label>
                   {/if}
                 </div>
                 {/each}

@@ -114,9 +114,9 @@
   <div class="form_list">
     <h4>Categories</h4>
 
-    <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
-
     <TagCloud data={product.categories} onRemove={removeCategory} />
+
+    <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
 
   </div>
 
