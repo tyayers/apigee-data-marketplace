@@ -24,7 +24,7 @@
 
   function loadProduct() {
     if (products.length > 0 && !product) {
-      product = products.find(prod => prod.name === data.productId);
+      product = products.find(prod => prod.id === data.productId);
     }
   }
 
@@ -32,8 +32,8 @@
     
     if (appService.currentUser && product) product.ownerEmail = appService.currentUser.email;
     
-    fetch("/api/products", {
-      method: 'POST',
+    fetch("/api/products/" + product?.id, {
+      method: 'PUT',
       body: JSON.stringify(product),
       headers: {
         'content-type': 'application/json',
@@ -41,7 +41,9 @@
     }).then((response) => {
         return response.json();
     }).then((data: DataProduct) => {
-        goto("/user/account/products");
+      let index = appService.products.findIndex(x => x.id == data.id);
+      appService.products[index] = data;
+      goto("/user/account/products");
     }).catch((error) => {
       console.error(error);
     });

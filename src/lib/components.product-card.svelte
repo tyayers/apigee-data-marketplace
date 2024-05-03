@@ -6,7 +6,7 @@
   export let data: DataProduct | undefined = undefined;
 
   function OpenProduct() {
-    goto("/products/" + data?.name);
+    goto("/products/" + data?.id);
   }
 
   function getTypeClass(type: string) {

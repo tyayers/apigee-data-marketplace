@@ -291,7 +291,7 @@
                   <h4>Product subscriptions</h4>
                   {#each products as product}
                     <div class="product_list_line">
-                      <input type="checkbox" id={product.name} name={product.name} bind:checked={apiProductChecks[product.name]}/><label for={product.name}>{product.name}</label>
+                      <input type="checkbox" id={product.id} name={product.id} bind:checked={apiProductChecks[product.id]}/><label for={product.id}>{product.name}</label>
                     </div>
                   {/each}
                 </div>

@@ -19,6 +19,7 @@
     product.createdAt = new Date().toString();
     product.id = product.name.toLowerCase().replaceAll(" ", "_") + "_" + product.id;
     if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
+    if (product.categories.length == 0) product.categories.push("Uncategorized");
     
     fetch("/api/products", {
       method: 'POST',

@@ -5,14 +5,14 @@
   import type { PageData } from "./$types";
   import { page } from '$app/stores'
   import { onMount } from "svelte";
-    import type { AHSubscription, Product } from "$lib/interfaces";
+    import type { AHSubscription, DataProduct } from "$lib/interfaces";
 
   let project: string = "";
   let datasetName: string = "";
   let product: string = "";
   let hubUrl: string = "";
   //let accessToken: string = "";
-  let productData: Product | undefined = undefined;
+  let productData: DataProduct | undefined = undefined;
   
   console.log($page.url);
 
@@ -33,7 +33,7 @@
   }
 
   function submit() {
-    productData = appService.products.products.find(productItem => productItem.name === product);
+    productData = appService.products.find(productItem => productItem.id === product);
 
     fetch("https://analyticshub.googleapis.com/v1beta1/projects/apigee-test38/locations/eu/dataExchanges/" + productData?.hubMarketplaceId + "/listings/" + productData?.hubListingId + ":subscribe", {
       method: 'POST',
@@ -53,7 +53,7 @@
     }).then((response) => {
       if (response.ok && response.status === 200) {
         // Subscription was successfully created.
-        const productData = appService.products.products.find(productItem => productItem.name === product);
+        const productData = appService.products.products.find(productItem => productItem.id === product);
         fetch("/api/bigquery?email=" + appService.currentUser?.email + "&project=" + project + "&dataset=" + datasetName + "&product=" + product + "&marketplaceId=" + productData?.hubMarketplaceId + "&listingId=" + productData?.hubListingId + "&createdAt=" + (new Date()).toLocaleString(), {
           method: 'POST',
           headers: {
@@ -203,7 +203,7 @@
                   <select name="hubListing" id="hubListing" bind:value={product}>
                     {#each appService.products.products as product}
                       {#if product.type?.includes("ah")}
-                        <option value={product.name}>{product.name}</option>
+                        <option value={product.id}>{product.name}</option>
                       {/if}
                     {/each}
                   </select>

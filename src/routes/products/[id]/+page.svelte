@@ -48,7 +48,7 @@
 
   function loadProduct() {
     if (products.length > 0 && !product) {
-      product = products.find(prod => prod.name === data.productId);
+      product = products.find(prod => prod.id === data.productId);
     }
   }
 
@@ -56,9 +56,9 @@
     if (appService.apiApps && appService.apiApps.apps) {
       var newAppSubscriptions = appSubscriptions;
       for (let app of appService.apiApps.apps) {
-        let productName: string = "";
-        if (product && product.name) productName = product.name;
-        if (app.apiProducts && app.apiProducts.includes(productName)) {
+        let productId: string = "";
+        if (product && product.id) productId = product.id;
+        if (app.apiProducts && app.apiProducts.includes(productId)) {
           newAppSubscriptions.push(app.name);
           if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
         }
@@ -91,7 +91,6 @@
 
 <div class="product_overview">
   <div class="product_overview_icon">
-
     {#if product?.imageUrl}
       <img height="62px" alt="Product" src={product?.imageUrl} />
     {:else}
@@ -99,7 +98,11 @@
     {/if}
   </div>
   <div class="product_overview_details">
-    <h2>{product?.name}</h2>
+    <h2>{product?.name} 
+      {#if appService?.currentUser?.roles.includes("admin")}
+        <a style="font-size: 14px; position: relative; left: 10px; top: -2px; color: blue;" href={"/user/account/products/" + product?.id}>Edit</a>
+      {/if}
+    </h2>
     <div class="product_overview_owner">{product?.audiences?.map((x) => capitalizeFirstLetter(x)).join(", ")}</div>
     <div class="product_overview_description">
       {product?.description}
@@ -107,10 +110,10 @@
 
     <div class="product_overview_buy">
       {#if product?.protocols.includes("API") || product?.protocols.includes("Event")}
-        <a href={"/apps/api/new?product=" + product?.name} class="rounded_button_filled">Subscribe to API</a>
+        <a href={"/apps/api/new?product=" + product?.id} class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if product?.audiences.includes("Analytics hub")}
-        <a href={"/apps/bigquery/new?product=" + product?.name} class="rounded_button_filled">
+        <a href={"/apps/bigquery/new?product=" + product?.id} class="rounded_button_filled">
           <svg width="25" height="25" style="position: relative; top: 7px; left: -6px;" class="sobti"
           ><g fill="none" fill-rule="evenodd"
             ><path
@@ -131,7 +134,7 @@
         </a>
       {/if}
       {#if product?.protocols.includes("Data sync")}
-        <a href={"/apps/buckets/new?product=" + product?.name} class="rounded_button_filled">Enable data sync</a>
+        <a href={"/apps/buckets/new?product=" + product?.id} class="rounded_button_filled">Enable data sync</a>
       {/if}      
       <button class="rounded_button_outlined" on:click|stopPropagation={()=>{previewDataOpen=!previewDataOpen}}>Preview data</button>
     </div>
@@ -182,8 +185,8 @@
           bg-color = "#fafafa"
           nav-bg-color = '#f3f3f3'
           primary-color = "#3367d6"
-          api-key-name = 'apikey'
-          api-key-location = 'query'
+          api-key-name = 'x-api-key'
+          api-key-location = 'header'
           api-key-value = {apiKey}
           allow-authentication ='true'
           allow-server-selection = 'false'

@@ -19,8 +19,8 @@
     });
   });
 
-  function openProduct(product: string) {
-    goto("/user/account/products/" + product);
+  function openProduct(productId: string) {
+    goto("/user/account/products/" + productId);
   }
 
   function deleteProduct(productId: string) {
@@ -75,7 +75,7 @@
             </thead>
             <tbody>
               {#each Object.values(products) as prod, i}
-                <tr on:click={() => openProduct(prod.name)}>
+                <tr on:click={() => openProduct(prod.id)}>
                   <td>{prod.name}</td>
                   <td>{prod.ownerEmail}</td>
                   <td>{prod.source}</td>

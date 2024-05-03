@@ -90,7 +90,7 @@
                 <h4>Product subscriptions</h4>
                 {#each products as product}
                 <div class="form_list_line">
-                  {#if product.name === product_input}
+                  {#if product.id === product_input}
                     <input id={product.id} name={product.id} checked type="checkbox" /><label for={product.id}>{product.name}</label>
                   {:else}
                     <input id={product.id} name={product.id} type="checkbox" /><label for={product.id}>{product.name}</label>

@@ -69,9 +69,8 @@ function generateSpec(name: string, path: string, payload: string): Promise<stri
       },
       method: "POST",
       body: JSON.stringify({
-        prompt: `Can you generate an OpenAPI spec in json format with the name ${name} for an API that has one GET operation 
-        on the ${path} path, uses the server https://${apigeeHost}, is authorized with an API key in the x-api-key header, and returns 
-        the following data structure:
+        prompt: `Generate an OpenAPI spec in json format with the name ${name} at the server https://${apigeeHost}. It should have one GET operation 
+        at the ${path} path, be authorized with an API key in the x-api-key header, and return the following data structure:
         
         ${payload}`
       })
