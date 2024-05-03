@@ -88,7 +88,7 @@
                   <select name="product" id="product" bind:value={product}>
                       {#each appService.products as product}
                         {#if product.protocols?.includes("Data sync")}
-                          <option value={product.productName}>{product.productName}</option>
+                          <option value={product.name}>{product.name}</option>
                         {/if}
                       {/each}
                   </select>

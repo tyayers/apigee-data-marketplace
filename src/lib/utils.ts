@@ -1,5 +1,10 @@
 import type { DisplayOptions } from "$lib/interfaces";
 
+// Capitalize first letter
+export function capitalizeFirstLetter(value: string): string { 
+	return value.charAt(0).toUpperCase() + value.slice(1); 
+}
+
 // Generates a random string of a given length. Defaults to 6 characters.
 export const generateRandomString = (length=6)=>Math.random().toString(20).substring(2, length + 2);
 

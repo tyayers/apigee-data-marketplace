@@ -17,7 +17,7 @@
 
   function submit() {
     product.createdAt = new Date().toString();
-    product.id = product.productName.toLowerCase().replace(" ", "_") + "_" + product.id;
+    product.id = product.name.toLowerCase().replaceAll(" ", "_") + "_" + product.id;
     if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
     
     fetch("/api/products", {

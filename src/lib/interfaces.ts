@@ -45,10 +45,11 @@ export class Product {
 export class DataProduct {
   id: string;
   ownerEmail: string;
-  productName: string;
-  productDescription: string;
+  name: string;
+  description: string;
   imageUrl: string = "/data_icon.png";
   specUrl: string = "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/esg-analytics.yaml";
+  specContents: string = "";
   pricing: {tier: string, price: string, range: string}[] = [
     {
       "tier": "Starter",
@@ -68,8 +69,8 @@ export class DataProduct {
   constructor(id: string, email: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[], categories: string[]) {
     this.id = id;
     this.ownerEmail = email;
-    this.productName = name;
-    this.productDescription = description;
+    this.name = name;
+    this.description = description;
     this.status = status;
     this.source = source;
     this.entity = entity;

@@ -24,7 +24,6 @@
     document.addEventListener("userUpdated", () => {
       if (appService.currentUser) {
         currentUser = appService.currentUser;
-        products = appService.products;
         reloadProducts();
       }
     });
@@ -50,26 +49,26 @@
 
   function reloadProducts() {
     let tempTypes = types;
-    if (products.length > 0) {
+    if (products.length > 0 && currentUser?.developerData) {
       for (let prod of products) {
         if (prod.status == "Published") {
-          productsByName[prod.productName] = prod;
+          productsByName[prod.name] = prod;
           for (let type of prod.protocols) {
             if (!tempTypes.includes(type)) tempTypes.push(type);
           }
             
           for (let category of prod.categories) {
             let pieces = category.split(" - ");
-            if (!productCategories[prod.productName]) {
-              productCategories[prod.productName] = [];
+            if (!productCategories[prod.name]) {
+              productCategories[prod.name] = [];
             }
-            productCategories[prod.productName].push(category);
-            if (! productCategories[prod.productName].includes(pieces[0])) productCategories[prod.productName].push(pieces[0]);
+            productCategories[prod.name].push(category);
+            if (! productCategories[prod.name].includes(pieces[0])) productCategories[prod.name].push(pieces[0]);
 
             if (! catProducts[pieces[0]]) catProducts[pieces[0]] = [];
-            if (! catProducts[pieces[0]].includes(prod.productName)) catProducts[pieces[0]].push(prod.productName);
+            if (! catProducts[pieces[0]].includes(prod.name)) catProducts[pieces[0]].push(prod.name);
             if (! catSubProducts[category]) catSubProducts[category] = [];
-            catSubProducts[category].push(prod.productName);
+            catSubProducts[category].push(prod.name);
 
             if (! categories[pieces[0]])
               categories[pieces[0]] = [];

@@ -24,17 +24,26 @@
   }
 
   function deleteProduct(productId: string) {
-    fetch("/api/products/" + productId, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-    .then((response) => {
-      let index = appService.products.findIndex(x => x.id == productId); 
-      appService.products.splice(index, 1);
-      products = appService.products;
-    });
+    appService
+      .ShowDialog(
+        "Are you sure you want to delete this product?",
+        "Delete",
+        0
+      )
+      .then((result) => {
+        if (result === "ok") {
+          fetch("/api/products/" + productId, {
+            method: "DELETE",
+            headers: {
+              "content-type": "application/json",
+            },
+          }).then((response) => {
+            let index = appService.products.findIndex((x) => x.id == productId);
+            appService.products.splice(index, 1);
+            products = appService.products;
+          });
+        }
+      });
   }
 </script>
 
@@ -66,8 +75,8 @@
             </thead>
             <tbody>
               {#each Object.values(products) as prod, i}
-                <tr on:click={() => openProduct(prod.productName)}>
-                  <td>{prod.productName}</td>
+                <tr on:click={() => openProduct(prod.name)}>
+                  <td>{prod.name}</td>
                   <td>{prod.ownerEmail}</td>
                   <td>{prod.source}</td>
                   {#if prod.createdAt}
@@ -76,11 +85,15 @@
                     <td></td>
                   {/if}
                   <td>
-                  {#if prod.status == "draft"}
-                    <span style="color: orange; font-weight: bold;">Draft</span>
-                  {:else}
-                    <span style="color: green; font-weight: bold;">Published</span>
-                  {/if}
+                    {#if prod.status == "Draft"}
+                      <span style="color: orange; font-weight: bold;"
+                        >Draft</span
+                      >
+                    {:else}
+                      <span style="color: green; font-weight: bold;"
+                        >Published</span
+                      >
+                    {/if}
                   </td>
                   <td style="white-space: pre;">
                     <button>
@@ -96,8 +109,7 @@
                       >
                     </button>
                     <button
-                      on:click|stopPropagation={() =>
-                        deleteProduct(prod.id)}
+                      on:click|stopPropagation={() => deleteProduct(prod.id)}
                     >
                       <svg
                         width="18px"

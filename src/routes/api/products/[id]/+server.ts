@@ -1,6 +1,13 @@
 import type { DataProduct } from "$lib/interfaces";
 import { Firestore } from "@google-cloud/firestore";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { GoogleAuth } from "google-auth-library";
+
+const projectId: string = import.meta.env.VITE_PROJECT_ID;
+
+const auth = new GoogleAuth({
+  scopes: 'https://www.googleapis.com/auth/cloud-platform'
+});
 
 // Create a new client
 const firestore = new Firestore();
@@ -54,9 +61,29 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 
   await document.delete();
 
+  // Now delete API product
+  deleteAPIProduct(id);
+
   if (resultProduct) {
 	  return json(resultProduct);
   }
   else
     error(404, "Product not found.");
+}
+
+function deleteAPIProduct(id: string) {
+  auth.getAccessToken().then((token) => {
+    fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then((response) => {
+      // console.log(response.status + " " + response.statusText);
+      return response.json();
+    }).catch((error) => {
+      console.log("Error in product delete:");
+      console.error(error);
+    });
+  });
 }

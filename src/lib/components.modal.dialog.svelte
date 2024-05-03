@@ -21,13 +21,14 @@
 
 <div class="modal_background">
   <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div class="modal_dialog" on:click|stopPropagation={onClick}>
     <div class="modal_message">
       {message}
     </div>
     <div class="modal_controls">
-      <button class="rounded_button_filled" on:click={onOk}>{submitButtonText}</button>
       <button class="rounded_button_outlined" on:click={onCancel}>Cancel</button>
+      <button class="rounded_button_filled" on:click={onOk}>{submitButtonText}</button>
     </div>
   </div>
 </div>
@@ -89,6 +90,6 @@
   .modal_controls {
     position: absolute;
     bottom: 40px;
-    left: 60px;
+    right: 60px;
   }
 </style>

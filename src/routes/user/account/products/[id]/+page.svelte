@@ -24,7 +24,7 @@
 
   function loadProduct() {
     if (products.length > 0 && !product) {
-      product = products.find(prod => prod.productName === data.productId);
+      product = products.find(prod => prod.name === data.productId);
     }
   }
 

@@ -9,6 +9,7 @@ gcloud services enable integrations.googleapis.com
 gcloud services enable connectors.googleapis.com
 gcloud services enable cloudkms.googleapis.com
 gcloud services enable identitytoolkit.googleapis.com
+gcloud services enable aiplatform.googleapis.com
 
 # Sleep 5 seconds to let the API be initialized...
 sleep 5
@@ -33,6 +34,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/bigquery.dataViewer"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="user:$ADMIN_EMAIL" \
@@ -82,3 +87,6 @@ sed -i "/VITE_PROJECT_ID=/c\VITE_PROJECT_ID=$PROJECT_ID" .env.local
 sed -i "/VITE_APIGEE_ENV=/c\VITE_APIGEE_ENV=$APIGEE_ENV" .env.local
 sed -i "/VITE_FIREBASE_APIKEY=/c\VITE_FIREBASE_APIKEY=$FIREBASE_APIKEY" .env.local
 sed -i "/VITE_FIREBASE_AUTHDOMAIN=/c\VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN" .env.local
+
+echo "Creating Apigee KVM..."
+apigeecli kvms create -e $APIGEE_ENV -n marketplace-kvm -o $PROJECT_ID -t $(gcloud auth print-access-token)

@@ -30,7 +30,7 @@
 
   function setProductChecks() {
     for (let product of products) {
-      apiProductChecks[product.productName] = false;
+      apiProductChecks[product.name] = false;
     }
 
     if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
@@ -291,7 +291,7 @@
                   <h4>Product subscriptions</h4>
                   {#each products as product}
                     <div class="product_list_line">
-                      <input type="checkbox" id={product.productName} name={product.productName} bind:checked={apiProductChecks[product.productName]}/><label for={product.productName}>{product.productName}</label>
+                      <input type="checkbox" id={product.name} name={product.name} bind:checked={apiProductChecks[product.name]}/><label for={product.name}>{product.name}</label>
                     </div>
                   {/each}
                 </div>

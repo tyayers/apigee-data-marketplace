@@ -37,7 +37,6 @@
 		"apigee-templater-module": "^3.0.0",
 		"apigee-x-module": "^2.0.0",
 		"firebase": "^10.8.0",
-		"fs": "^0.0.1-security",
 		"google-auth-library": "^9.9.0",
 		"rapidoc": "^9.3.4"
 	}

@@ -5,6 +5,8 @@
   import { onMount } from "svelte";
 	import type { PageServerData } from "./$types";
   import type { DataProduct } from "$lib/interfaces";
+  import {capitalizeFirstLetter} from "$lib/utils";
+
   export let data: PageServerData;
 
   let products: DataProduct[] = appService.products;
@@ -46,7 +48,7 @@
 
   function loadProduct() {
     if (products.length > 0 && !product) {
-      product = products.find(prod => prod.productName === data.productId);
+      product = products.find(prod => prod.name === data.productId);
     }
   }
 
@@ -55,7 +57,7 @@
       var newAppSubscriptions = appSubscriptions;
       for (let app of appService.apiApps.apps) {
         let productName: string = "";
-        if (product && product.productName) productName = product.productName;
+        if (product && product.name) productName = product.name;
         if (app.apiProducts && app.apiProducts.includes(productName)) {
           newAppSubscriptions.push(app.name);
           if (!apiKey && app.credentials && app.credentials.length > 0) apiKey = app.credentials[0].consumerKey;
@@ -97,18 +99,18 @@
     {/if}
   </div>
   <div class="product_overview_details">
-    <h2>{product?.productName}</h2>
-    <div class="product_overview_owner">{product?.audiences?.join(", ")}</div>
+    <h2>{product?.name}</h2>
+    <div class="product_overview_owner">{product?.audiences?.map((x) => capitalizeFirstLetter(x)).join(", ")}</div>
     <div class="product_overview_description">
-      {product?.productDescription}
+      {product?.description}
     </div>
 
     <div class="product_overview_buy">
       {#if product?.protocols.includes("API") || product?.protocols.includes("Event")}
-        <a href={"/apps/api/new?product=" + product?.productName} class="rounded_button_filled">Subscribe to API</a>
+        <a href={"/apps/api/new?product=" + product?.name} class="rounded_button_filled">Subscribe to API</a>
       {/if}
       {#if product?.audiences.includes("Analytics hub")}
-        <a href={"/apps/bigquery/new?product=" + product?.productName} class="rounded_button_filled">
+        <a href={"/apps/bigquery/new?product=" + product?.name} class="rounded_button_filled">
           <svg width="25" height="25" style="position: relative; top: 7px; left: -6px;" class="sobti"
           ><g fill="none" fill-rule="evenodd"
             ><path
@@ -129,7 +131,7 @@
         </a>
       {/if}
       {#if product?.protocols.includes("Data sync")}
-        <a href={"/apps/buckets/new?product=" + product?.productName} class="rounded_button_filled">Enable data sync</a>
+        <a href={"/apps/buckets/new?product=" + product?.name} class="rounded_button_filled">Enable data sync</a>
       {/if}      
       <button class="rounded_button_outlined" on:click|stopPropagation={()=>{previewDataOpen=!previewDataOpen}}>Preview data</button>
     </div>
@@ -160,7 +162,7 @@
     <div class="product_tab_content_inner">
       <h3>Overview</h3>
       <div class="product_tab_content_text">
-        {product?.productDescription}
+        {product?.description}
       </div>
       <h3>SLA</h3>
       <div class="product_tab_content_text">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<APIProxy revision="6" name="UsersAPI-v1">
+<APIProxy revision="6" name="MP-UsersAPI-v1">
   <DisplayName/>
   <Description>API for managing users.</Description>
   <CreatedAt>1714469913184</CreatedAt>

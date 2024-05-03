@@ -70,14 +70,14 @@
 
   <div class="input_field_panel">
     <!-- svelte-ignore a11y-autofocus -->
-    <input class="input_field" type="text" name="name" id="name" required bind:value={product.productName} autocomplete="off" autofocus title="none" />
+    <input class="input_field" type="text" name="name" id="name" required bind:value={product.name} autocomplete="off" autofocus title="none" />
     <label for="name" class='input_field_placeholder'>
       Name
     </label>
   </div>
 
   <div class="input_field_panel">
-    <input class="input_field" required type="text" name="description" id="description" bind:value={product.productDescription} autocomplete="off" title="none" />
+    <input class="input_field" required type="text" name="description" id="description" bind:value={product.description} autocomplete="off" title="none" />
     <label for="description" class='input_field_placeholder'>
       Description
     </label>

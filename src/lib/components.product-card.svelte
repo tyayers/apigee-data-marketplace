@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-    import { resolveRoute } from "$app/paths";
-    import type { DataProduct } from "./interfaces";
+  import type { DataProduct } from "./interfaces";
+  import {capitalizeFirstLetter} from "./utils";
 
   export let data: DataProduct | undefined = undefined;
 
   function OpenProduct() {
-    goto("/products/" + data?.productName);
+    goto("/products/" + data?.name);
   }
 
   function getTypeClass(type: string) {
@@ -33,12 +33,12 @@
         <img height="32px" alt="Product" src="https://static-00.iconduck.com/assets.00/bigquery-icon-512x512-fxxj0xd6.png" />
       {/if}
     </div>
-    {data.productName}
+    {data.name}
     <div class="product-owner-box">
-      {data.audiences?.join(", ")}
+      { data.audiences?.map((x) => capitalizeFirstLetter(x)).join(", ")}
     </div>
     <div class="product-description-box">
-      {data.productDescription}
+      {data.description}
     </div>
     <div class="tags_box">
       {#each data.protocols as type}
