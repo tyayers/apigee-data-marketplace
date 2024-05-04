@@ -3,8 +3,30 @@
   import InputSelect from '$lib/components.input.select.svelte';
   import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
+  import { JSONEditor, Mode } from 'svelte-jsoneditor';
+  import { create } from 'mutative';
+  import { text } from '@sveltejs/kit';
+  import { onMount } from 'svelte';
 
   export let product: DataProduct;
+
+  onMount(async () => {
+    if (product.samplePayload && payloadEditor) {
+      let payloadContent = {
+        text: product.samplePayload
+      }
+      payloadEditor.set(payloadContent);
+      payloadEditor.refresh();
+    }
+
+    if (product.specContents && specEditor) {
+      let specContent = {
+        text: product.specContents
+      };
+      specEditor.set(specContent);
+      specEditor.refresh();
+    }
+  });
 
   let categoryData: string[] = [
     "ESG - Environmental", "ESG - Social", "ESG - Governance",
@@ -16,6 +38,9 @@
 
   let samplePayloadData: any = {};
   if (product.samplePayload) samplePayloadData = JSON.parse(product.samplePayload);
+
+  let payloadEditor;
+  let specEditor;
 
   function onProtocolChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];
@@ -74,6 +99,11 @@
         response.json().then((payload: any) => {
           product.samplePayload = JSON.stringify(payload);
           samplePayloadData = payload;
+          let payloadContent = {
+            json: payload
+          }
+          payloadEditor.set(payloadContent);
+          payloadEditor.refresh();
         });
       });
     });
@@ -89,9 +119,28 @@
     }).then((response) => {
       return response.json();
     }).then((newProduct: DataProduct) => {
-      product.specPrompt = newProduct.specPrompt;
+      // product.specPrompt = newProduct.specPrompt;
       product.specContents = newProduct.specContents;
+      let specContent = {
+        text: newProduct.specContents
+      }
+      specEditor.set(specContent);
+      specEditor.refresh();
     });
+  }
+
+  // function onPayloadChange(updatedContent: any) {
+  //   if (updatedContent && updatedContent.text)
+  //     product.samplePayload = updatedContent.text;
+  //   else if (updatedContent && updatedContent.json)
+  //     product.samplePayload = JSON.stringify(updatedContent.json);
+  // }
+
+  function onSpecChange(updatedContent: any) {
+    if (updatedContent && updatedContent.text)
+      product.specContents = updatedContent.text;
+    else if (updatedContent && updatedContent.json)
+      product.specContents = JSON.stringify(updatedContent.json);
   }
 </script>
 
@@ -188,18 +237,19 @@
     <h4 style="margin-block-end: 0px;">Payload</h4>
     <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
     <div style="overflow-y: auto; height: 92%;">
-      <andypf-json-viewer expanded="3" show-copy="true" show-toolbar="true" data={samplePayloadData}></andypf-json-viewer>
+      <!-- <andypf-json-viewer expanded="3" show-copy="true" show-toolbar="true" data={samplePayloadData}></andypf-json-viewer> -->
+      <JSONEditor bind:this={payloadEditor} />
     </div>
   </div>
 
   <div class="product_payload">
-    <h4>API Spec</h4>
-    <button on:click={refreshSpec} style="position: relative; top: -40px; left: 82px;">Regenerate</button>
+    <h4 style="margin-block-end: 0px;">API Spec</h4>
+    <button on:click={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
     <div style="overflow-y: auto; height: 92%;">
-      <textarea style="width: 97%; height: 96%;">
+      <!-- <textarea style="width: 97%; height: 96%;">
         {product.specContents}
-      </textarea>
-      
+      </textarea> -->
+      <JSONEditor bind:this={specEditor} mode={Mode.text} onChange="{onSpecChange}" />
     </div>
   </div>
 
