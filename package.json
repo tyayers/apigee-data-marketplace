@@ -38,7 +38,6 @@
 		"apigee-x-module": "^2.0.0",
 		"firebase": "^10.8.0",
 		"google-auth-library": "^9.9.0",
-		"mutative": "^1.0.5",
 		"rapidoc": "^9.3.4",
 		"svelte-jsoneditor": "^0.23.2"
 	}
