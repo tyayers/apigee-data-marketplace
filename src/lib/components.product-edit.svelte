@@ -14,6 +14,9 @@
     "Trading - Research", "Trading - Statistics", "Trading - Classes"
   ];
 
+  let samplePayloadData: any = {};
+  if (product.samplePayload) samplePayloadData = JSON.parse(product.samplePayload);
+
   function onProtocolChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];
 
@@ -58,6 +61,38 @@
       product = newProductCopy;
     }
   }
+
+  function refreshPayload() {
+    fetch("/api/products/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
+    }).then((response) => {
+      fetch("/api/products/generate?entity=" + product.entity).then((response) => {
+        response.json().then((payload: any) => {
+          product.samplePayload = JSON.stringify(payload);
+          samplePayloadData = payload;
+        });
+      });
+    });
+  }
+
+  function refreshSpec() {
+    fetch("/api/products/generate/spec", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
+    }).then((response) => {
+      return response.json();
+    }).then((newProduct: DataProduct) => {
+      product.specPrompt = newProduct.specPrompt;
+      product.specContents = newProduct.specContents;
+    });
+  }
 </script>
 
 <div class="right_content_tip">
@@ -66,90 +101,130 @@
   <a href="/home" target="_blank">Learn more <svg class="right_content_tip_learnmore" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M13.85 5H14V4h-4v1h2.15l-5.36 5.364.848.848L13 5.85V8h1V4h-1v.15l.15-.15.85.85-.15.15zM8 4H4.995A1 1 0 004 4.995v8.01a1 1 0 00.995.995h8.01a1 1 0 00.995-.995V10h-1v3H5V5h3V4z"></path></svg></a>
 </div>
 
-<form method="POST">
+<div class="product_box">
+  <div class="product_left_details">
+    <div class="input_field_panel">
+      <!-- svelte-ignore a11y-autofocus -->
+      <input class="input_field" type="text" name="name" id="name" required bind:value={product.name} autocomplete="off" autofocus title="none" />
+      <label for="name" class='input_field_placeholder'>
+        Name
+      </label>
+    </div>
 
-  <div class="input_field_panel">
-    <!-- svelte-ignore a11y-autofocus -->
-    <input class="input_field" type="text" name="name" id="name" required bind:value={product.name} autocomplete="off" autofocus title="none" />
-    <label for="name" class='input_field_placeholder'>
-      Name
-    </label>
-  </div>
+    <div class="input_field_panel">
+      <input class="input_field" required type="text" name="description" id="description" bind:value={product.description} autocomplete="off" title="none" />
+      <label for="description" class='input_field_placeholder'>
+        Description
+      </label>
+    </div>
 
-  <div class="input_field_panel">
-    <input class="input_field" required type="text" name="description" id="description" bind:value={product.description} autocomplete="off" title="none" />
-    <label for="description" class='input_field_placeholder'>
-      Description
-    </label>
-  </div>
+    <div class="input_field_panel">
+      <input class="input_field" required type="text" name="entity" id="entity" bind:value={product.entity} autocomplete="off" title="none" />
+      <label for="entity" class='input_field_placeholder'>
+        Entity name
+      </label>
+    </div>
 
-  <div class="input_field_panel">
-    <input class="input_field" required type="text" name="entity" id="entity" bind:value={product.entity} autocomplete="off" title="none" />
-    <label for="entity" class='input_field_placeholder'>
-      Entity name
-    </label>
-  </div>
+    <div class="form_list">
+      <h4>Data source</h4>
+      <div class="select_dropdown">
+        <select name="source" id="source" bind:value={product.source}>
+          <option value="BigQuery">BigQuery</option>
+          <option value="API">API</option>
+          <option value="AlloyDB">AlloyDB</option>
+          <option value="Cloud Spanner">Cloud Spanner</option>
+          <option value="Snowflake">Snowflake</option>
+          <option value="Databricks">Databricks</option>
+        </select>
+      </div>
+    </div>
 
-  <div class="form_list">
-    <h4>Data source</h4>
-    <div class="select_dropdown">
-      <select name="source" id="source" bind:value={product.source}>
-        <option value="BigQuery">BigQuery</option>
-        <option value="API">API</option>
-        <option value="AlloyDB">AlloyDB</option>
-        <option value="Cloud Spanner">Cloud Spanner</option>
-        <option value="Snowflake">Snowflake</option>
-        <option value="Databricks">Databricks</option>
-      </select>
+    <div class="input_field_panel">
+      <textarea name="query" id="query" required class="input_field" bind:value={product.query} rows="10"></textarea>
+      <label for="query" class='input_field_placeholder'>
+        Query, table or backend URL
+      </label>
+    </div>
+
+    <div class="form_list">
+      <h4>Categories</h4>
+
+      <TagCloud data={product.categories} onRemove={removeCategory} />
+
+      <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
+
+    </div>
+
+    <div class="form_list">
+      <h4>Protocols</h4>
+      {#each protocols as protocol}
+        <div class="form_list_line">
+          <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={product.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
+        </div>
+      {/each}
+    </div>          
+
+    <div class="form_list">
+      <h4>Audiences</h4>
+      {#each audiences as aud}
+        <div class="form_list_line">
+          <input id={aud.name} name={aud.name} disabled={!aud.active} checked={product.audiences.includes(aud.name)} on:change={onAudienceChange} type="checkbox" /><label for={aud.name}>{aud.displayName}</label>
+        </div>
+      {/each}      
+    </div>
+
+    <div class="form_list">
+      <h4>Status</h4>
+      <div class="select_dropdown">
+        <select name="status" id="status" bind:value={product.status}>
+          <option value="Draft">Draft</option>
+          <option value="Published">Published</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <div class="input_field_panel">
-    <textarea name="query" id="query" required class="input_field" bind:value={product.query} rows="10"></textarea>
-    <label for="query" class='input_field_placeholder'>
-      Query, table or backend URL
-    </label>
-  </div>
-
-  <div class="form_list">
-    <h4>Categories</h4>
-
-    <TagCloud data={product.categories} onRemove={removeCategory} />
-
-    <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
-
-  </div>
-
-  <div class="form_list">
-    <h4>Protocols</h4>
-    {#each protocols as protocol}
-      <div class="form_list_line">
-        <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={product.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
-      </div>
-    {/each}
-  </div>          
-
-  <div class="form_list">
-    <h4>Audiences</h4>
-    {#each audiences as aud}
-      <div class="form_list_line">
-        <input id={aud.name} name={aud.name} disabled={!aud.active} checked={product.audiences.includes(aud.name)} on:change={onAudienceChange} type="checkbox" /><label for={aud.name}>{aud.displayName}</label>
-      </div>
-    {/each}      
-  </div>
-
-  <div class="form_list">
-    <h4>Status</h4>
-    <div class="select_dropdown">
-      <select name="status" id="status" bind:value={product.status}>
-        <option value="Draft">Draft</option>
-        <option value="Published">Published</option>
-      </select>
+  <div class="product_payload">
+    <h4 style="margin-block-end: 0px;">Payload</h4>
+    <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
+    <div style="overflow-y: auto; height: 92%;">
+      <andypf-json-viewer expanded="3" show-copy="true" show-toolbar="true" data={samplePayloadData}></andypf-json-viewer>
     </div>
   </div>
 
-</form>
+  <div class="product_payload">
+    <h4>API Spec</h4>
+    <button on:click={refreshSpec} style="position: relative; top: -40px; left: 82px;">Regenerate</button>
+    <div style="overflow-y: auto; height: 92%;">
+      <textarea style="width: 97%; height: 96%;">
+        {product.specContents}
+      </textarea>
+      
+    </div>
+  </div>
 
+</div>
 <style>
+
+.product_box {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  margin-top: 34px;
+}
+
+.product_left_details {
+  width: 572px;
+}
+
+.product_payload {
+  border: 1px solid lightgray;
+  width: 600px;
+  margin-right: 40px;
+  min-height: 600px;
+  max-height: 800px;
+  padding-left: 10px;
+}
 
 </style>

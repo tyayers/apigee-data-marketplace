@@ -46,11 +46,17 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     // Create the API product
     createProduct(newProduct.id, newProduct.name, "/" + newProduct.entity);
     // Create an OpenAPI spec with Gemini
-    let response =  await fetch(`https://${apigeeHost}/v1/test/data/` + newProduct.entity);
-    let testPayload: string = await response.text();
+    if (!newProduct.samplePayload) {
+      let response =  await fetch(`https://${apigeeHost}/v1/test/data/` + newProduct.entity);
+      newProduct.samplePayload = await response.text();
+    }
+    
     newProduct.specUrl = `/api/products/${newProduct.id}/spec`;
-    newProduct.specContents = await generateSpec(newProduct.name, "/v1/data/" + newProduct.entity, testPayload);
-    newProduct.specContents = newProduct.specContents.replaceAll("```json", "").replaceAll("```", "");
+    
+    if (!newProduct.specContents) {
+      newProduct.specContents = await generateSpec(newProduct.name, "/v1/data/" + newProduct.entity, newProduct.samplePayload);
+      newProduct.specContents = newProduct.specContents.replaceAll("```json", "").replaceAll("```", "");
+    }
   }
 
   // Persist defnition to Firestore...
@@ -89,7 +95,7 @@ function generateSpec(name: string, path: string, payload: string): Promise<stri
 }
 
 function setKVMEntry(KVMName: string, keyName: string, keyValue: string) {
-    auth.getAccessToken().then((token) => {
+  auth.getAccessToken().then((token) => {
     fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/keyvaluemaps/${KVMName}/entries`, {
       method: "POST",
       headers: {

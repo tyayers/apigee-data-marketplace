@@ -19,11 +19,13 @@
     product.createdAt = new Date().toString();
     product.id = product.name.toLowerCase().replaceAll(" ", "_") + "_" + product.id;
     if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
-    if (product.categories.length == 0) product.categories.push("Uncategorized");
-    
+        
+    let newProduct: DataProduct = product;
+    if (newProduct.categories.length == 0) newProduct.categories.push("Uncategorized");
+
     fetch("/api/products", {
       method: 'POST',
-      body: JSON.stringify(product),
+      body: JSON.stringify(newProduct),
       headers: {
         'content-type': 'application/json',
       },

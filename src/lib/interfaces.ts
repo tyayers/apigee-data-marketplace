@@ -50,6 +50,8 @@ export class DataProduct {
   imageUrl: string = "/data_icon.png";
   specUrl: string = "https://raw.githubusercontent.com/tyayers/apigee-data-marketplace/main/specs/esg-analytics.yaml";
   specContents: string = "";
+  specPrompt: string = "Generate an OpenAPI spec in json format with the name ${name} at the server https://${apigeeHost}. It should have one GET operation at the ${path} path, be authorized with an API key in the x-api-key header, and return the following data structure:";
+  samplePayload: string = "";
   pricing: {tier: string, price: string, range: string}[] = [
     {
       "tier": "Starter",
