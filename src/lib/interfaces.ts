@@ -174,5 +174,5 @@ export class UsageDataEnvironment {
 
 export class UsageDataDimension {
   name: string = "";
-  metrics: {name: string, values: {value: string, timesteamp: number}[]}[] = [];
+  metrics: {name: string, values: {value: string, timestamp: number}[]}[] = [];
 }

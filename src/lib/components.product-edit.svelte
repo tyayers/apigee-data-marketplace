@@ -4,7 +4,6 @@
   import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
   import { JSONEditor, Mode } from 'svelte-jsoneditor';
-  import { create } from 'mutative';
   import { text } from '@sveltejs/kit';
   import { onMount } from 'svelte';
 
@@ -39,8 +38,8 @@
   let samplePayloadData: any = {};
   if (product.samplePayload) samplePayloadData = JSON.parse(product.samplePayload);
 
-  let payloadEditor;
-  let specEditor;
+  let payloadEditor: {set(content: any): void, refresh(): void};
+  let specEditor: {set(content: any): void, refresh(): void};
 
   function onProtocolChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];

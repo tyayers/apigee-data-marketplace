@@ -5,6 +5,8 @@ import { product_index } from "../products_new";
 import { GoogleAuth } from "google-auth-library";
 
 const apiHost = import.meta.env.VITE_API_HOST;
+const projectId = import.meta.env.VITE_PROJECT_ID;
+const apigeeEnvironment = import.meta.env.VITE_APIGEE_ENV;
 
 export class GoogleCloudDataService {
 
@@ -187,7 +189,7 @@ export class GoogleCloudDataService {
 
       this.auth.getAccessToken().then((token) => {
         // Calling Applint GetOrCreateUserFlow
-        fetch("https://integrations.googleapis.com/v1/projects/apigee-test38/locations/europe-west1/integrations/-:execute", {
+        fetch(`https://integrations.googleapis.com/v1/projects/${projectId}/locations/europe-west1/integrations/-:execute`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -222,16 +224,26 @@ export class GoogleCloudDataService {
     });
   }
 
-  public getUsageData(): Promise<UsageData> {
+  public getUsageData(email: string): Promise<UsageData> {
     return new Promise<UsageData>((resolve, reject) => {
       this.auth.getAccessToken().then((token) => {
-        fetch("https://apigee.googleapis.com/v1/organizations/apigee-test38/environments/eval/stats/developer_app?select=sum(message_count)&timeRange=02/01/2024+00:00~02/29/2024+23:59&timeUnit=month", {
+
+        let endDate = new Date();
+        let startDate = new Date(new Date(endDate).setDate(endDate.getDate() - 90));
+        let startDateString: string = (startDate.getMonth() + 1).toString() + "/" + startDate.getDate().toString() + "/" + startDate.getFullYear().toString();
+        let endDateString: string = (endDate.getMonth() + 1).toString() + "/" + endDate.getDate().toString() + "/" + endDate.getFullYear().toString();
+
+        //let timeRange = "02/01/2024+00:00~02/28/2024+23:59"
+        let timeRange = startDateString + "+00:00~" + endDateString + "+23:59";
+
+        fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/stats/developer_app?select=sum(message_count)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`, {
           headers: {
             "Authorization": "Bearer " + token
-          }          
+          }
         }).then((response) => {
           return response.json();
         }).then((data: UsageData) => {
+          // console.log(JSON.stringify(data));
           resolve(data);
         }).catch((error) => {
           console.error(error);

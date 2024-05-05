@@ -1,29 +1,42 @@
 <script lang="ts">
-    import { appService } from "$lib/app-service";
-    import { UsageData, type User, type BucketSubscription } from "$lib/interfaces";
-    import { onMount } from "svelte";
+  import { appService } from "$lib/app-service";
+  import { UsageData, type User, type BucketSubscription } from "$lib/interfaces";
+  import { onMount } from "svelte";
 
-    let currentUser: User | undefined = appService.currentUser;
-    let usageData: UsageData | undefined = undefined;
-    let appUsage: {[key: string]: string} | undefined = undefined;
+  let currentUser: User | undefined = appService.currentUser;
+  let usageData: UsageData | undefined = undefined;
+  let appUsage: {[key: string]: any} | undefined = undefined;
+  const formatter = new Intl.DateTimeFormat('en', { month: 'short' });
+  let currentDate = new Date();
+  let monthNames: string[] = [];
 
 	onMount(() => {
-        document.addEventListener("userUpdated", () => {
-            currentUser = appService?.currentUser;
-        });
+    // Set the month names
+    let monthOneNumber: number = currentDate.getMonth() + 1;
+    let monthTwoNumber: number = monthOneNumber - 1;
+    if (monthTwoNumber === 0) monthTwoNumber = 12;
+    let monthThreeNumber: number = monthTwoNumber - 1;
+    if (monthThreeNumber === 0) monthThreeNumber = 12;
+    monthNames.push(formatter.format(new Date(currentDate.getFullYear(), monthThreeNumber - 1)));
+    monthNames.push(formatter.format(new Date(currentDate.getFullYear(), monthTwoNumber - 1)));
+    monthNames.push(formatter.format(currentDate));
 
-        document.addEventListener("appsUpdated", () => {
-            updateUsageData();
-        });
+    document.addEventListener("userUpdated", () => {
+        currentUser = appService?.currentUser;
+    });
 
+    document.addEventListener("appsUpdated", () => {
         updateUsageData();
+    });
+
+    updateUsageData();
 	});
 
     function updateUsageData(force: boolean = false) {
-        if (!usageData || force) {
+        if ((!usageData && currentUser) || force) {
             usageData = undefined;
             appUsage = undefined;
-            fetch("/api/usage").then((result) => {
+            fetch("/api/usage?email=" + currentUser?.email).then((result) => {
                 return result.json();
             }).then((data: any) => {
                 usageData = data.usage;
@@ -31,15 +44,29 @@
             });  
         }
 
-        if (appService.apiApps && usageData && usageData.environments && usageData.environments.length > 0 && usageData.environments[0].dimensions.length > 0) {
-            let newAppUsage: {[key: string]: string} = {};
-            for (let dim of usageData.environments[0].dimensions) {
-                let myApp = appService.apiApps?.app.find((app) => app.name === dim.name);
+        console.log(JSON.stringify(usageData));
 
-                if (myApp && dim.metrics.length > 0) {
-                    newAppUsage[myApp.name] = dim.metrics[0].values[0].value;
+        if (appService.apiApps && usageData && usageData.environments && usageData.environments.length > 0 && usageData.environments[0].dimensions) {
+            let newAppUsage: { [key: string]: any} = {};
+
+            for (let dim of usageData.environments[0].dimensions) {
+                //let myApp = appService.apiApps?.apps.find((app) => app.name === dim.name);
+                if (!newAppUsage[dim.name]) {
+                  newAppUsage[dim.name] = {};
+                  newAppUsage[dim.name][monthNames[0]] = 0;
+                  newAppUsage[dim.name][monthNames[1]] = 0;
+                  newAppUsage[dim.name][monthNames[2]] = 0;
+                }
+
+                if (dim.metrics.length > 0) {
+                  for (let metric of dim.metrics[0].values) {
+                    let dateObj = new Date(metric.timestamp);
+                    newAppUsage[dim.name][formatter.format(dateObj)] = metric.value;
+                  }
                 }
             }
+
+            console.log(JSON.stringify(newAppUsage));
 
             appUsage = newAppUsage;
             google.charts.load('current', {packages: ['corechart', 'bar', 'geochart']});
@@ -50,40 +77,54 @@
     function drawBasic() {
 
         if (appUsage) {
-            var data = google.visualization.arrayToDataTable([
-            ['Month'].concat(Object.keys(appUsage)),
-            ['Dec',  0,      0],
-            ['Jan'].concat([3, 50]),
-            ['Feb'].concat(Object.values(appUsage))
-            ]);
+          let graphAppData: any[][] = [
+            ["Month"]
+          ];
+          for (const [key, value] of Object.entries(appUsage)) {
+            if (!graphAppData[0].includes(key)) graphAppData[0].push(key);
 
-            var options = {
-            title: 'App usage',
-            curveType: 'function',
-            legend: { position: 'bottom' }
-            };
+            for (let name of monthNames) {
+              let monthIndex = graphAppData.findIndex(x => x[0] == name);
+              if (monthIndex === -1) {
+                graphAppData.push([name]);
+                monthIndex = graphAppData.length - 1;
+              }
 
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+              graphAppData[monthIndex].push(parseInt(value[name]));
+            }
+          }
+          
+          console.log(JSON.stringify(graphAppData));
 
-            var data = google.visualization.arrayToDataTable([
-            ['Country', 'Traffic'],
-            ['Germany', 900],
-            ['United States', 100],
-            ['Brazil', 400],
-            ['Canada', 500],
-            ['France', 600],
-            ['Italy', 700],
-            ['India', 900],
-            ['Japan', 400],
-            ['Singapore', 400]
-            ]);
+          var data = google.visualization.arrayToDataTable(graphAppData);
 
-            var options = {};
+          var options = {
+          title: 'App usage',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+          };
 
-            var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+          chart.draw(data, options);
 
-            chart.draw(data, options);
+          var data = google.visualization.arrayToDataTable([
+          ['Country', 'Traffic'],
+          ['Germany', 900],
+          ['United States', 100],
+          ['Brazil', 400],
+          ['Canada', 500],
+          ['France', 600],
+          ['Italy', 700],
+          ['India', 900],
+          ['Japan', 400],
+          ['Singapore', 400]
+          ]);
+
+          var options = {};
+
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+          chart.draw(data, options);
         }
     }
 
@@ -125,6 +166,8 @@
         <div>
             <div class="left_menu_page_right_header">
                 <span>App usage</span>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <span on:click={() => {updateUsageData(true)}} class="back_button" style="width: 26px; height: 20px; padding-left: 0px; margin-left: 14px;" title="Refresh">
                     <svg style="margin-left: 7px; fill: var(--primary-color);" aria-hidden="true"><path fill-rule="evenodd" d="M13.95 4.05A7 7 0 1015.93 10H13.9A5 5 0 014 9a5 5 0 018.536-3.536L10 8h6V2l-2.05 2.05z"></path></svg>
                 </span>
@@ -138,15 +181,15 @@
                         {#each Object.keys(appUsage) as appName}
                             <div style="text-align: center;" class="app_card">
                                 <div style="font-size: 16px; margin-bottom: 20px; margin-top: 14px;">{appName}</div>
-                                <div style="width: 100%; font-size: 24px;">{appUsage[appName] + " calls"}</div>
+                                <div style="width: 100%; font-size: 24px;">{appUsage[appName][monthNames[2]] + " calls"}</div>
                             </div>
                         {/each}
                     </div>
 
-                    <h4>Last 3 months (WIP)</h4>
+                    <h4>Last 3 months</h4>
                     <div id="chart_div"></div>
 
-                    <h4>User geomap (WIP)</h4>
+                    <h4>User geomap</h4>
                     <div id="regions_div" style="width: 900px; height: 500px;"></div>
                 {:else}
                     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
