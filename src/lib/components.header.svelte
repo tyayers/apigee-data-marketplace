@@ -18,7 +18,7 @@
   });
 
   function goToPublish() {
-    goto("/user/account/products/new");
+    goto("/admin/products/new");
 
     //First, we initialize our event
     const event = new Event('cancelEvent');
@@ -38,7 +38,7 @@
   }
 
   function goToMyApps() {
-    goto("/apps");
+    goto("/user/apps");
 
     setTimeout(() => {
       //First, we initialize our event
@@ -49,13 +49,22 @@
   }
 
   function goToAccount() {
-    goto("/user/account");
+    goto("/user");
 
     //First, we initialize our event
     const event = new Event('cancelEvent');
     // Next, we dispatch the event.
     document.dispatchEvent(event);
   }
+
+  function goToAdmin() {
+    goto("/admin");
+
+    //First, we initialize our event
+    const event = new Event('cancelEvent');
+    // Next, we dispatch the event.
+    document.dispatchEvent(event);
+  }  
 
 </script>
 
@@ -105,9 +114,11 @@
             </div>
             <div class="panel">
               
-              <button class="result" on:click={goToAccount} style="width: 97%;">Account</button>
+              {#if currentUser?.roles.includes("admin")}
+                <button class="result" on:click={goToAdmin} style="width: 97%;">Admin</button>
+              {/if}
               <button class="result" on:click={signOut}>Sign out</button>
-              <button class="result" on:click={goToMyApps}>My subscriptions</button>
+              <button class="result" on:click={goToAccount}>My account</button>
               
             </div>
           </div>

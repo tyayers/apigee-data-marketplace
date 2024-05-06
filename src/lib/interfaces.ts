@@ -52,6 +52,8 @@ export class DataProduct {
   specContents: string = "";
   specPrompt: string = "Generate an OpenAPI spec in json format with the name ${name} at the server https://${apigeeHost}. It should have one GET operation at the ${path} path, be authorized with an API key in the x-api-key header, and return the following data structure:";
   samplePayload: string = "";
+  analyticsHubMarketplaceId: string = "";
+  analyticsHubListingId: string = "";
   pricing: {tier: string, price: string, range: string}[] = [
     {
       "tier": "Starter",
@@ -175,4 +177,14 @@ export class UsageDataEnvironment {
 export class UsageDataDimension {
   name: string = "";
   metrics: {name: string, values: {value: string, timestamp: number}[]}[] = [];
+}
+
+export class IdentityConfig {
+  id: string;
+  roles: string[];
+
+  constructor(id: string, roles: string[]) {
+    this.id = id;
+    this.roles = roles;
+  }
 }

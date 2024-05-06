@@ -1,14 +1,12 @@
 <script lang="ts">
+  export let selectedName: string = "";
 
-export let selectedName: string = "";
+  function getClassName(baseClassName: string, name: string) {
+    if (name === selectedName)
+      baseClassName += " " + baseClassName + "_selected";
 
-function getClassName(baseClassName: string, name: string) {
-  if (name === selectedName)
-    baseClassName += " " + baseClassName + "_selected";
-
-  return baseClassName;
-}
-
+    return baseClassName;
+  }
 </script>
 
 <div class="left_menu_page_left">
@@ -27,7 +25,7 @@ function getClassName(baseClassName: string, name: string) {
     <span class="left_menu_page_left_title">My account</span>
   </div>
   <div class="left_menu_page_left_list">
-    <a href="/user/account" class={getClassName("side_menu_button", "profile")}>
+    <a href="/user" class={getClassName("side_menu_button", "profile")}>
       <svg
         class={getClassName("side_menu_button_logo", "profile")}
         width="20px"
@@ -43,38 +41,58 @@ function getClassName(baseClassName: string, name: string) {
           d="M12 2.084V5.44a2.56 2.56 0 0 0 0 5.12V12c-1.335 0-4 .824-4 2.46v1.265c.065.094.126.19.195.283A7.433 7.433 0 0 0 12 18.738v2.827a11.062 11.062 0 0 1-8-10.667v-5.48l8-3.334z"
         ></path></svg
       >
-      <span class={getClassName("side_menu_button_name", "profile")}>My profile</span>
+      <span class={getClassName("side_menu_button_name", "profile")}
+        >Profile</span
+      >
     </a>
-    <a
-      href="/user/account/products"
-      class={getClassName("side_menu_button", "products")}
-    >
+    <a href="/user/apps/api" class={getClassName("side_menu_button", "apiapps")}>
       <svg
-        class={getClassName("side_menu_button_logo", "products")}
+        class={getClassName("side_menu_button_logo", "apiapps")}
         width="20px"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g><g id="SVGRepo_iconCarrier">
-          <path
-            d="M16.5276 2H7.47201C6.26919 2 5.66778 2 5.18448 2.2987C4.70117 2.5974 4.43221 3.13531 3.8943 4.21114L2.49068 7.75929C2.16639 8.57905 1.88266 9.54525 2.42854 10.2375C2.79476 10.7019 3.36244 11 3.99978 11C5.10435 11 5.99978 10.1046 5.99978 9C5.99978 10.1046 6.89522 11 7.99978 11C9.10435 11 9.99978 10.1046 9.99978 9C9.99978 10.1046 10.8952 11 11.9998 11C13.1044 11 13.9998 10.1046 13.9998 9C13.9998 10.1046 14.8952 11 15.9998 11C17.1044 11 17.9998 10.1046 17.9998 9C17.9998 10.1046 18.8952 11 19.9998 11C20.6371 11 21.2048 10.7019 21.5711 10.2375C22.117 9.54525 21.8333 8.57905 21.509 7.75929L20.1054 4.21114C19.5674 3.13531 19.2985 2.5974 18.8152 2.2987C18.3319 2 17.7305 2 16.5276 2Z"
-          ></path>
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M20 21.25H22C22.4142 21.25 22.75 21.5858 22.75 22C22.75 22.4142 22.4142 22.75 22 22.75H2C1.58579 22.75 1.25 22.4142 1.25 22C1.25 21.5858 1.58579 21.25 2 21.25H4L4 12.5C4.74363 12.5 5.43309 12.2681 6 11.8727C6.56692 12.2681 7.25638 12.5 8 12.5C8.74363 12.5 9.43309 12.2681 10 11.8727C10.5669 12.2681 11.2564 12.5 12 12.5C12.7436 12.5 13.4331 12.2681 14 11.8727C14.5669 12.2681 15.2564 12.5 16 12.5C16.7436 12.5 17.4331 12.2681 18 11.8727C18.5669 12.2681 19.2564 12.5 20 12.5L20 21.25ZM9.5 21.25H14.5V18.5C14.5 17.5654 14.5 17.0981 14.299 16.75C14.1674 16.522 13.978 16.3326 13.75 16.2009C13.4019 16 12.9346 16 12 16C11.0654 16 10.5981 16 10.25 16.2009C10.022 16.3326 9.83261 16.522 9.70096 16.75C9.5 17.0981 9.5 17.5654 9.5 18.5V21.25Z"
-          ></path>
-        </g></svg
+        viewBox="0 0 18 18"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M9.874 10H12v2h3v-2h1V8H9.874A4.002 4.002 0 0 0 2 9a4 4 0 0 0 7.874 1zM6 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
+          fill-rule="evenodd"
+        ></path></svg
       >
-      <span class={getClassName("side_menu_button_name", "products")}
-        >Published products</span
+      <span class={getClassName("side_menu_button_name", "apiapps")}
+        >API subscriptions</span
       >
     </a>
-    <a href="/user/account/usage" class={getClassName("side_menu_button", "usage")}>
+    <a href="/user/apps/bigquery" class={getClassName("side_menu_button", "bigqueryapps")}>
+      <svg
+        class={getClassName("side_menu_button_logo", "bigqueryapps")}
+        width="20px"
+        viewBox="0 0 18 18"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M7.9 8.76L6 7.58a1.09 1.09 0 000-.26 1 1 0 10-.33.75l2 1.17a.28.28 0 00.15 0A.31.31 0 008 9.15a.29.29 0 00-.1-.39zM5 7.78a.46.46 0 010-.92.46.46 0 010 .92z"
+        ></path><path
+          d="M6.9 14.12A5.12 5.12 0 1112 9a5.13 5.13 0 01-5.1 5.12zM6.9 5a4 4 0 104 4 4 4 0 00-4-4z"
+        ></path><path
+          d="M14.83 11.66a1.4 1.4 0 00-.83.27L9.68 9.45a1.72 1.72 0 000-.9L14 6.07A1.39 1.39 0 1013.43 5a.68.68 0 000 .14L9.08 7.59a1.85 1.85 0 100 2.82l4.37 2.5a.68.68 0 000 .14 1.4 1.4 0 101.4-1.39z"
+        ></path></svg
+      >
+      <span class={getClassName("side_menu_button_name", "bigqueryapps")}>Analytics Hub subscriptions</span>
+    </a>
+    <a href="/user/apps/buckets" class={getClassName("side_menu_button", "bucketapps")}>
+      <svg
+        class={getClassName("side_menu_button_logo", "bucketapps")}
+        width="20px"
+        viewBox="0 0 18 18"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M7.027 11h6.978c.55 0 .995.443.995 1v1c0 .553-.456 1-.995 1H7.027v1.758L2 12.378 7.027 9v2zM11 4H3.995C3.455 4 3 4.447 3 5v1c0 .557.446 1 .995 1H11v1.79l5.027-3.396L11 2v2z"
+          fill-rule="evenodd"
+        ></path></svg
+      >
+      <span class={getClassName("side_menu_button_name", "bucketapps")}>Data sync subscriptions</span>
+    </a>    
+    <a href="/user/usage" class={getClassName("side_menu_button", "usage")}>
       <!-- <svg class="side_menu_button_logo side_menu_button_logo_selected" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.9 8.76L6 7.58a1.09 1.09 0 000-.26 1 1 0 10-.33.75l2 1.17a.28.28 0 00.15 0A.31.31 0 008 9.15a.29.29 0 00-.1-.39zM5 7.78a.46.46 0 010-.92.46.46 0 010 .92z"></path><path d="M6.9 14.12A5.12 5.12 0 1112 9a5.13 5.13 0 01-5.1 5.12zM6.9 5a4 4 0 104 4 4 4 0 00-4-4z"></path><path d="M14.83 11.66a1.4 1.4 0 00-.83.27L9.68 9.45a1.72 1.72 0 000-.9L14 6.07A1.39 1.39 0 1013.43 5a.68.68 0 000 .14L9.08 7.59a1.85 1.85 0 100 2.82l4.37 2.5a.68.68 0 000 .14 1.4 1.4 0 101.4-1.39z"></path></svg>             -->
       <svg
         style="position: relative; top: -2px"
@@ -93,7 +111,11 @@ function getClassName(baseClassName: string, name: string) {
       >
       <span class={getClassName("side_menu_button_name", "usage")}>Usage</span>
     </a>
-    <a href="#test" class={getClassName("side_menu_button", "credits")}>
+    <a
+      href="/user/credits"
+      style="pointer-events: none; cursor: not-allowed;"
+      class={getClassName("side_menu_button", "credits")}
+    >
       <svg
         class={getClassName("side_menu_button_logo", "credits")}
         width="20px"
@@ -111,9 +133,11 @@ function getClassName(baseClassName: string, name: string) {
           ></circle></g
         ></svg
       >
-      <span class={getClassName("side_menu_button_name", "credits")}>Credits</span>
+      <span class={getClassName("side_menu_button_name", "credits")}
+        >Credits</span
+      >
     </a>
-    <a href="/user/account/billing" class={getClassName("side_menu_button", "billing")}>
+    <a href="/user/billing" class={getClassName("side_menu_button", "billing")}>
       <svg
         style="position: relative; top: -2px"
         class={getClassName("side_menu_button_logo", "billing")}
@@ -134,7 +158,9 @@ function getClassName(baseClassName: string, name: string) {
           opacity=".9"
         ></path><path d="M14 15h1v1h-1zm3 0h1v1h-1z" opacity=".6"></path></svg
       >
-      <span class={getClassName("side_menu_button_name", "billing")}>Billing</span>
+      <span class={getClassName("side_menu_button_name", "billing")}
+        >Billing</span
+      >
     </a>
   </div>
 </div>

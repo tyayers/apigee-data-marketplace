@@ -100,7 +100,7 @@
   <div class="product_overview_details">
     <h2>{product?.name} 
       {#if appService?.currentUser?.roles.includes("admin")}
-        <a style="font-size: 14px; position: relative; left: 10px; top: -2px; color: blue;" href={"/user/account/products/" + product?.id}>Edit</a>
+        <a style="font-size: 14px; position: relative; left: 10px; top: -2px; color: blue;" href={"/admin/products/" + product?.id}>Edit</a>
       {/if}
     </h2>
     <div class="product_overview_owner">{product?.audiences?.map((x) => capitalizeFirstLetter(x)).join(", ")}</div>
@@ -112,7 +112,7 @@
       {#if product?.protocols.includes("API") || product?.protocols.includes("Event")}
         <a href={"/apps/api/new?product=" + product?.id} class="rounded_button_filled">Subscribe to API</a>
       {/if}
-      {#if product?.audiences.includes("Analytics hub")}
+      {#if product?.protocols.includes("Analytics Hub")}
         <a href={"/apps/bigquery/new?product=" + product?.id} class="rounded_button_filled">
           <svg width="25" height="25" style="position: relative; top: 7px; left: -6px;" class="sobti"
           ><g fill="none" fill-rule="evenodd"

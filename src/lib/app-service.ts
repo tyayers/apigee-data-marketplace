@@ -38,6 +38,7 @@ export class AppService {
   reloadFlag: boolean = false;
   // products: Products = new Products();
   products: DataProduct[] = [];
+  googleAccessToken: string = "";
   testMode: boolean = false;
 
   constructor() {

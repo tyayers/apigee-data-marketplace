@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
   import type { User, DataProduct } from "$lib/interfaces";
-  import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
+  import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
@@ -20,7 +20,7 @@
   });
 
   function openProduct(productId: string) {
-    goto("/user/account/products/" + productId);
+    goto("/admin/products/" + productId);
   }
 
   function deleteProduct(productId: string) {
@@ -48,13 +48,13 @@
 </script>
 
 <div class="left_menu_page">
-  <MenuLeftAccount selectedName="products" />
+  <MenuLeftAdmin selectedName="products" />
 
   <div class="left_menu_page_right">
     <div>
       <div class="left_menu_page_right_header">
         <span>Products</span><a
-          href="/user/account/products/new"
+          href="/admin/products/new"
           class="text_button left_menu_page_right_header_button"
           >+ Add product</a
         >

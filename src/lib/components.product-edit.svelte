@@ -43,7 +43,7 @@
 
   function onProtocolChange(e: any) {
     let name: string = e.target.attributes[1]["nodeValue"];
-
+    
     if (e.target.checked) {
       if (! product.protocols.includes(name))
         product.protocols.push(name);
@@ -53,6 +53,8 @@
       if (index >= 0)
         product.protocols.splice(index, 1);
     }
+
+    product = product;
   }
 
   function onAudienceChange(e: any) {
@@ -127,13 +129,6 @@
       specEditor.refresh();
     });
   }
-
-  // function onPayloadChange(updatedContent: any) {
-  //   if (updatedContent && updatedContent.text)
-  //     product.samplePayload = updatedContent.text;
-  //   else if (updatedContent && updatedContent.json)
-  //     product.samplePayload = JSON.stringify(updatedContent.json);
-  // }
 
   function onSpecChange(updatedContent: any) {
     if (updatedContent && updatedContent.text)
@@ -210,7 +205,25 @@
           <input id={protocol.name} name={protocol.name} disabled={!protocol.active} checked={product.protocols.includes(protocol.name)} on:change={onProtocolChange} type="checkbox" /><label for={protocol.name}>{protocol.displayName}</label>
         </div>
       {/each}
-    </div>          
+    </div>
+
+    {#if product.protocols.includes("Analytics Hub")}
+      <div class="form_list">
+        <h4>Analytics Hub configuration</h4>
+        <div class="input_field_panel">
+          <input class="input_field" required type="text" name="analyticsHubMarketplaceId" id="analyticsHubMarketplaceId" bind:value={product.analyticsHubMarketplaceId} autocomplete="off" title="none" />
+          <label for="analyticsHubMarketplaceId" class='input_field_placeholder'>
+            Marketplace Id
+          </label>
+        </div>
+        <div class="input_field_panel">
+          <input class="input_field" required type="text" name="analyticsHubListingId" id="analyticsHubListingId" bind:value={product.analyticsHubListingId} autocomplete="off" title="none" />
+          <label for="analyticsHubListingId" class='input_field_placeholder'>
+            Listing Id
+          </label>
+        </div>        
+      </div>
+    {/if}
 
     <div class="form_list">
       <h4>Audiences</h4>
@@ -235,7 +248,7 @@
   <div class="product_payload">
     <h4 style="margin-block-end: 0px;">Payload</h4>
     <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
-    <div style="overflow-y: auto; height: 92%;">
+    <div style="overflow-y: auto; height: 90%;">
       <!-- <andypf-json-viewer expanded="3" show-copy="true" show-toolbar="true" data={samplePayloadData}></andypf-json-viewer> -->
       <JSONEditor bind:this={payloadEditor} />
     </div>
@@ -244,7 +257,7 @@
   <div class="product_payload">
     <h4 style="margin-block-end: 0px;">API Spec</h4>
     <button on:click={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
-    <div style="overflow-y: auto; height: 92%;">
+    <div style="overflow-y: auto; height: 90%;">
       <!-- <textarea style="width: 97%; height: 96%;">
         {product.specContents}
       </textarea> -->

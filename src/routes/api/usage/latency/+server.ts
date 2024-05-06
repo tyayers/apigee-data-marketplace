@@ -8,7 +8,11 @@ let auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
 });
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, setHeaders }) => {
+  setHeaders({
+		'cache-control': 'max-age=300'
+	});
+
   const email = url.searchParams.get('email') ?? '';
 
   let token: string | null | undefined = await auth.getAccessToken();

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
   import { appService } from '$lib/app-service';
   import { DataProduct } from '$lib/interfaces';
-  import MenuLeftAccount from '$lib/components-menus-left/menus-left.account.svelte';
+  import MenuLeftAdmin from '$lib/components-menus-left/menus-left.admin.svelte';
   import ProductEditor from '$lib/components.product-edit.svelte';
   import type { PageData } from './$types';
   import { onMount } from 'svelte';
@@ -43,20 +43,20 @@
     }).then((data: DataProduct) => {
       let index = appService.products.findIndex(x => x.id == data.id);
       appService.products[index] = data;
-      goto("/user/account/products");
+      goto("/admin/products");
     }).catch((error) => {
       console.error(error);
     });
   }
 
   function back() {
-    goto("/user/account/products");
+    goto("/admin/products");
   }
 
 </script>
 
 <div class="left_menu_page">
-  <MenuLeftAccount selectedName="products" />
+  <MenuLeftAdmin selectedName="products" />
 
   <div class="left_menu_page_right">
     <div>

@@ -15,13 +15,13 @@ export let protocols: DisplayOptions[] = [
     active: true
   },
   {
-    name: "Event",
-    displayName: "Event stream",
+    name: "Analytics Hub",
+    displayName: "Analytics Hub",
     active: true
   },
   {
-    name: "Analytics Hub",
-    displayName: "Analytics Hub",
+    name: "Event",
+    displayName: "Event stream",
     active: true
   },
   {
