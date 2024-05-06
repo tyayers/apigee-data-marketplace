@@ -80,20 +80,13 @@ export class AppService {
             this.currentUser.photoUrl = photoURL;
             this.currentUser.providerId = provider;
 
-            // Use AppIntegration to create developer
-            fetch("/api/users?email=" + email + "&username=" + userName, {
-              method: 'POST',
-              headers: {
-                  'content-type': 'application/json',
-              },
-            }).then((response) => {
-                return response.json();
-            }).then((data: User) => {
+            // Get user data
+            this.GetUser(email, userName).then((data: User) => {
               this.currentUser = data;
               this.currentUser.photoUrl = photoURL;
               this.currentUser.providerId = provider;
 
-              if (data.developerData) {
+              if (this.currentUser && this.currentUser.status == "approved") {
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);
 
@@ -129,7 +122,7 @@ export class AppService {
               else {
                 // Developer is not yet registered, send to wait page...
                 goto("/user/approval");
-                if (this.currentUser) this.currentUser.status = "approval";
+                // if (this.currentUser) this.currentUser.status = "approval";
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);
               }
@@ -160,6 +153,37 @@ export class AppService {
         goto("/home");
       }
     }
+  }
+
+  GetUser(email: string, userName: string): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
+      fetch("/api/users?email=" + email).then((response) => {
+        if (response.status == 404) {
+          this.CreateUser(email, userName).then((user: User) => {
+            resolve(user);
+          })
+        }
+        else
+          return response.json();
+      }).then((data: User) => {
+        resolve(data);
+      });
+    });
+  }
+
+  CreateUser(email: string, userName: string): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
+      fetch("/api/users?email=" + email + "&userName=" + userName, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((response) => {
+        return response.json();
+      }).then((data: User) => {
+        resolve(data);
+      });
+    });
   }
 
   SignInWithGoogle(): void {

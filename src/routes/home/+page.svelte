@@ -49,7 +49,7 @@
 
   function reloadProducts() {
     let tempTypes = types;
-    if (products.length > 0 && currentUser?.developerData) {
+    if (products.length > 0 && currentUser?.status == "approved") {
       for (let prod of products) {
         if (prod.status == "Published") {
           productsByName[prod.name] = prod;
@@ -186,7 +186,7 @@
   </a>
 </div>
 
-{#if currentUser && currentUser.developerData}
+{#if currentUser && currentUser?.status == "approved"}
 <div class="home_content">
   <div class="banner">
     <div class="banner_title">{"Welcome to " + appService.siteName}

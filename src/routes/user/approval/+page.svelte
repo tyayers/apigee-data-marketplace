@@ -1,21 +1,16 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { appService } from "$lib/app-service";
-  import type { Developer } from "$lib/interfaces";
+  import type { Developer, User } from "$lib/interfaces";
     import { onMount } from "svelte";
 
 	onMount(() => {
     setInterval(() => {
       if (appService.currentUser) {
-        fetch("/api/users?email=" + appService.currentUser.email, {
-          method: 'GET',
-          headers: {
-              'content-type': 'application/json',
-          },
-        }).then((response) => {
+        fetch("/api/users?email=" + appService.currentUser.email).then((response) => {
             return response.json();
-        }).then((data: Developer) => {
-          if (data && appService.currentUser && data.email == appService.currentUser.email) {
+        }).then((data: User) => {
+          if (data && appService.currentUser && data.email == appService.currentUser.email && data.status === "approved") {
             appService.reloadFlag = true;
             goto("/home");
           }

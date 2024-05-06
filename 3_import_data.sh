@@ -21,6 +21,9 @@ curl -i -X POST "https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databa
                   "stringValue": "admin"
                 },
                 {
+                  "stringValue": "publisher"
+                },
+                {
                   "stringValue": "internal"
                 },
                 {
