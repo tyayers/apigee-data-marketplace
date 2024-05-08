@@ -271,6 +271,8 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row-reverse;
+    align-items: flex-end;
+    height: 73px;
     /* padding-bottom: 20px; */
     /* font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif; */
   }
@@ -323,4 +325,5 @@
   .result:hover {
     background-color: #f1f1f1;
   }
+
 </style>

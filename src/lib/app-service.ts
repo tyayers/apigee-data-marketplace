@@ -90,34 +90,7 @@ export class AppService {
                 const event = new Event('userUpdated');
                 document.dispatchEvent(event);
 
-                // Get developer app data
-                fetch("/api/apiapps?email=" + this.currentUser?.email, {
-                  method: 'GET',
-                  headers: {
-                      'content-type': 'application/json',
-                  },
-                }).then((response) => {
-                    return response.json();
-                }).then((data: any) => {
-                  this.apiApps = data;
-                  if (this.apiApps && this.apiApps.apps) {
-                    for (let app of this.apiApps.apps) {
-                      if (!app.apiProducts) app.apiProducts = [];
-                      if (app.credentials) {
-                        for (let cred of app.credentials) {
-                          if (cred.apiProducts) {
-                            for (let prod of cred.apiProducts) {
-                              if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                  const event = new Event('appsUpdated');
-                  document.dispatchEvent(event);              
-                });
-
+                this.GetUserApps();
               }
               else {
                 // Developer is not yet registered, send to wait page...
@@ -183,6 +156,36 @@ export class AppService {
       }).then((data: User) => {
         resolve(data);
       });
+    });
+  }
+
+  GetUserApps(): void {
+    // Get developer app data
+    fetch("/api/apiapps?email=" + this.currentUser?.email, {
+      method: 'GET',
+      headers: {
+          'content-type': 'application/json',
+      },
+    }).then((response) => {
+        return response.json();
+    }).then((data: any) => {
+      this.apiApps = data;
+      if (this.apiApps && this.apiApps.apps) {
+        for (let app of this.apiApps.apps) {
+          if (!app.apiProducts) app.apiProducts = [];
+          if (app.credentials) {
+            for (let cred of app.credentials) {
+              if (cred.apiProducts) {
+                for (let prod of cred.apiProducts) {
+                  if (!app.apiProducts.includes(prod.apiproduct)) app.apiProducts.push(prod.apiproduct)
+                }
+              }
+            }
+          }
+        }
+      }
+      const event = new Event('appsUpdated');
+      document.dispatchEvent(event);              
     });
   }
 

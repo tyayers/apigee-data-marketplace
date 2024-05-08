@@ -104,15 +104,21 @@ export class Developer {
 export class APIApp {
   appId: string = "";
   name: string = "";
-  description?: string = "";
+  description: string = "";
+  apiProducts: string[] = [];
   createdAt: string = "";
   createdAtDate?: string = "";
   callbackUrl?: string;
-  apiProducts?: string[];
   status?: string;
   credentials?: APIAppCredential[];
   attributes?: KeyValue[];
   error?: Error;
+
+  constructor(name: string, description: string, apiProducts: string[]) {
+    this.name = name;
+    this.description = description;
+    this.apiProducts = apiProducts;
+  }
 }
 
 export class APIAppCredential {
@@ -187,4 +193,33 @@ export class IdentityConfig {
     this.id = id;
     this.roles = roles;
   }
+}
+
+export class MonetizationRatePlans {
+  ratePlans: MonetizationRatePlan[] = [];
+}
+
+export class MonetizationRatePlan {
+  name: string = "";
+  apiProduct: string;
+  displayName: string;
+  description: string = "";
+  billingPeriod: string = "MONTHLY"; // can also be WEEKLY
+  currencyCode: string = "USD";
+  setupFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: 0};
+  fixedRecurringFee: {currencyCode: string, units: string, nanos: number} = {currencyCode: "USD", units: "0", nanos: 0};
+  consumptionPricingType: string = "BANDED"; // can also be FIXED_PER_UNIT
+  consumptionPricingRates: {start: string, end: string, fee: MonetizationRatePlanMoney}[] = [];
+  state: string = "PUBLISHED" // can also be DRAFT
+
+  constructor(apiProduct: string, displayName: string) {
+    this.apiProduct = apiProduct;
+    this.displayName = displayName;
+  }
+}
+
+export class MonetizationRatePlanMoney {
+  currencyCode: string = "USD";
+  units: string = "0";
+  nanos: number = 0;
 }

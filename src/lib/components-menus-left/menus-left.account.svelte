@@ -111,7 +111,7 @@
       >
       <span class={getClassName("side_menu_button_name", "usage")}>Usage</span>
     </a>
-    <a
+    <!-- <a
       href="/user/credits"
       style="pointer-events: none; cursor: not-allowed;"
       class={getClassName("side_menu_button", "credits")}
@@ -136,7 +136,7 @@
       <span class={getClassName("side_menu_button_name", "credits")}
         >Credits</span
       >
-    </a>
+    </a> -->
     <a href="/user/billing" class={getClassName("side_menu_button", "billing")}>
       <svg
         style="position: relative; top: -2px"

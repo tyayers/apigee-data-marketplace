@@ -98,7 +98,7 @@
               return response.json();
             })
             .then((data: AHSubscription) => {
-              goto("/apps/bigquery");
+              goto("/user/apps/bigquery");
             });
         } else if (response.status === 409) {
           appService.ShowDialog(

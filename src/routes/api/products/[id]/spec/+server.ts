@@ -30,9 +30,6 @@ export const GET: RequestHandler = async ({ url, params }) => {
 
   let specText2 = resultProduct?.specContents;
 
-  console.log(specText2);
-
-
   let response: Response = new Response(specText2);
   response.headers.set("Content-Type", "application/yaml");
   response.headers.set("Access-Control-Allow-Origin", "*");

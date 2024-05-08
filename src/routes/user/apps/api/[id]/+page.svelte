@@ -161,7 +161,7 @@
 
       setDescription();
 
-      appService.ShowSnackbar("App updated.")
+      appService.ShowSnackbar("App updated.");
 
       if (appService.currentUser?.email) {
         fetch("/api/apiapps/" + appData.name + "?email=" + appService.currentUser.email, {
@@ -175,11 +175,11 @@
         // appService.UpdateApp(appService.currentUser?.email, appData);
     }
 
-    goto("/apps/api");
+    goto("/user/apps/api");
   }
 
   function back() {
-    history.back();
+    goto("/user/apps/api");
   }
 </script>
 
@@ -194,7 +194,7 @@
               <button class="back_button" on:click={back}>
                 <svg data-icon-name="arrowBackIcon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill-rule="evenodd" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path></svg>
               </button>            
-              <span>Credentials</span>
+              <span>Subscription</span>
           </div>
 
           <div class="left_menu_page_right_content">
@@ -280,7 +280,7 @@
 
                 <div class="controls">
                   <button type="button" class="rounded_button_filled" on:click={submit}>Save</button>
-                  <button on:click={() => history.back()} type="button" class="rounded_button_outlined">Cancel</button>
+                  <button on:click={back} type="button" class="rounded_button_outlined">Cancel</button>
                 </div>
 
               </form>

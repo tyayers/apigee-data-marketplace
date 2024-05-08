@@ -30,7 +30,7 @@
         return response.json();
     }).then((data: BucketSubscription) => {
         console.log(data);
-        goto("/apps/buckets");
+        goto("/user/apps/buckets");
     });
   }
 

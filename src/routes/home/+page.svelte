@@ -187,71 +187,71 @@
 </div>
 
 {#if currentUser && currentUser?.status == "approved"}
-<div class="home_content">
-  <div class="banner">
-    <div class="banner_title">{"Welcome to " + appService.siteName}
-      <div class="banner_subtitle">
-        {"The " + appService.siteName + " has all data products, APIs and service ecosystem access."}
-      </div>
+  <div class="home_content">
+    <div class="banner">
+      <div class="banner_title">{"Welcome to " + appService.siteName}
+        <div class="banner_subtitle">
+          {"The " + appService.siteName + " has all data products, APIs and service ecosystem access."}
+        </div>
 
-      <div class="banner_search">
-        <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
-        <input class="banner_search_input" bind:value={searchText} placeholder="Search for data & API products" />
+        <div class="banner_search">
+          <svg class="banner_search_icon" width="4%" height="100%" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M11.18 9.747l4.502 4.503-1.414 1.414-4.5-4.5a5 5 0 1 1 1.41-1.418zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill-rule="evenodd"></path></svg>
+          <input class="banner_search_input" bind:value={searchText} placeholder="Search for data & API products" />
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="product_showcase">
-    
-    <div class="product_filter">
-      <div class="product_filter_box">
-        <div class="product_filter_search">
-          <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
-          <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
-        </div>
-        <div class="product_filter_header">
-          <h4>Type</h4>
-        </div>
-        {#each types as type}
-          <div class="product_filter_checkbox">
-            <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{type}</label>
+    <div class="product_showcase">
+      
+      <div class="product_filter">
+        <div class="product_filter_box">
+          <div class="product_filter_search">
+            <svg class="product_filter_search_icon" data-icon-name="filterIcon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill-rule="evenodd" d="M2 4h14v2H2V4zm2 4h10v2H4V8zm2 4h6v2H6v-2z"></path></svg>
+            <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
           </div>
-        {/each}
-        {#each Object.keys(categories) as cat}
           <div class="product_filter_header">
-            <h4>{cat}</h4>
+            <h4>Type</h4>
           </div>
-          {#each categories[cat] as subcat}
-            {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
-              <div class="product_filter_checkbox">
-                <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + " - ", "")}</label>
-              </div>
-            {/if}
+          {#each types as type}
+            <div class="product_filter_checkbox">
+              <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{type}</label>
+            </div>
           {/each}
+          {#each Object.keys(categories) as cat}
+            <div class="product_filter_header">
+              <h4>{cat}</h4>
+            </div>
+            {#each categories[cat] as subcat}
+              {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
+                <div class="product_filter_checkbox">
+                  <input type="checkbox" id={subcat} name={subcat} on:change={onCatChange} /><label for={subcat}>{subcat.replace(cat + " - ", "")}</label>
+                </div>
+              {/if}
+            {/each}
+          {/each}
+        </div>
+      </div>
+      <div class="product_list">
+        {#each Object.keys(catProducts) as catName}
+          {#if catProducts[catName].length > 0}
+            <div class="product_list_header">
+              {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase())}
+                <h3>{catName} products</h3>
+              {/if}
+            </div>
+            {#each catProducts[catName] as prodName, i}
+              {#if searchText === "" || prodName.toLowerCase().includes(searchText.toLowerCase())}
+                <ProductCard data={productsByName[prodName]} />
+              {/if}
+            {/each}
+          {/if}
         {/each}
       </div>
-    </div>
-    <div class="product_list">
-      {#each Object.keys(catProducts) as catName}
-        {#if catProducts[catName].length > 0}
-          <div class="product_list_header">
-            {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase())}
-              <h3>{catName} products</h3>
-            {/if}
-          </div>
-          {#each catProducts[catName] as prodName, i}
-            {#if searchText === "" || prodName.toLowerCase().includes(searchText.toLowerCase())}
-              <ProductCard data={productsByName[prodName]} />
-            {/if}
-          {/each}
-        {/if}
-      {/each}
-    </div>
 
+    </div>
   </div>
-</div>
 {:else}
-<div class="ring_lower lds-ring"><div></div><div></div><div></div><div></div></div>
+  <div class="ring_lower lds-ring"><div></div><div></div><div></div><div></div></div>
 {/if}
 
 <style>

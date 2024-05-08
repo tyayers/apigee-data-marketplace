@@ -74,5 +74,49 @@
         >Roles</span
       >
     </a>
+    <a
+      href="/admin/monetization"
+      class={getClassName("side_menu_button", "monetization")}
+    >
+      <svg
+        class={getClassName("side_menu_button_logo", "monetization")}
+        width="20px"
+        viewBox="0 0 20 20"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M16.61 12.73a1.49 1.49 0 001.31-.73l2.85-5.1a1.49 1.49 0 00-1.31-2.23H7l-.87-1.9H3v1.5h2.21L8.76 12l-1.15 2.35A1.5 1.5 0 009 16.5h10.79V15H9l1.1-2.27zm2.85-6.6l-2.85 5.1h-6.54l-2.34-5.1z"
+          fill="currentColor"
+        ></path><g opacity=".8" fill="currentColor"
+          ><circle cx="8.61" cy="19.4" r="1.87"></circle><circle
+            cx="17.92"
+            cy="19.4"
+            r="1.87"
+          ></circle></g
+        ></svg
+      >
+      <span class={getClassName("side_menu_button_name", "monetization")}
+        >Monetization</span
+      >
+    </a>    
+    <a href="/admin/slas" class={getClassName("side_menu_button", "usage")}>
+      <!-- <svg class="side_menu_button_logo side_menu_button_logo_selected" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.9 8.76L6 7.58a1.09 1.09 0 000-.26 1 1 0 10-.33.75l2 1.17a.28.28 0 00.15 0A.31.31 0 008 9.15a.29.29 0 00-.1-.39zM5 7.78a.46.46 0 010-.92.46.46 0 010 .92z"></path><path d="M6.9 14.12A5.12 5.12 0 1112 9a5.13 5.13 0 01-5.1 5.12zM6.9 5a4 4 0 104 4 4 4 0 00-4-4z"></path><path d="M14.83 11.66a1.4 1.4 0 00-.83.27L9.68 9.45a1.72 1.72 0 000-.9L14 6.07A1.39 1.39 0 1013.43 5a.68.68 0 000 .14L9.08 7.59a1.85 1.85 0 100 2.82l4.37 2.5a.68.68 0 000 .14 1.4 1.4 0 101.4-1.39z"></path></svg>             -->
+      <svg
+        style="position: relative; top: -2px"
+        class={getClassName("side_menu_button_logo", "usage")}
+        width="20px"
+        viewBox="0 0 18 18"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M10.83 16.33h2.33v1.85h-2.33zM5.5 12.76L7.88 9.6a.55.55 0 01.37-.22.63.63 0 01.42.12l2.12 1.72 2.8-2.94a.54.54 0 01.4-.17.54.54 0 01.4.17l4.33 4.48H22V6a.74.74 0 00-.74-.74H2.74A.74.74 0 002 6v6.81z"
+          opacity=".6"
+        ></path><path
+          d="M18.48 13.87a.56.56 0 01-.4-.17L14 9.47l-2.74 2.89a.57.57 0 01-.76.05l-2.08-1.68-2.2 2.92a.56.56 0 01-.45.22H2v1.71a.75.75 0 00.74.75h18.52a.75.75 0 00.74-.75v-1.71zM9 18.18h6a.29.29 0 01.3.3.29.29 0 01-.3.3H9a.29.29 0 01-.3-.3.29.29 0 01.3-.3z"
+          opacity=".8"
+        ></path></svg
+      >
+      <span class={getClassName("side_menu_button_name", "usage")}>SLAs</span>
+    </a>
   </div>
 </div>
