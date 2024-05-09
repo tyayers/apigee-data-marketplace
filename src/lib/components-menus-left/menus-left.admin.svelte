@@ -25,6 +25,52 @@
     <span class="left_menu_page_left_title">Admin</span>
   </div>
   <div class="left_menu_page_left_list">
+    <a href="/admin/users" class={getClassName("side_menu_button", "users")}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class={getClassName("side_menu_button_logo", "users")}
+        width="20px"
+        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g><g id="SVGRepo_iconCarrier">
+          <path
+            d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </g></svg
+      >
+      <span class={getClassName("side_menu_button_name", "users")}>Users</span>
+    </a>
+    <a href="/admin/roles" class={getClassName("side_menu_button", "roles")}>
+      <svg
+        class={getClassName("side_menu_button_logo", "roles")}
+        width="20px"
+        fill-rule="evenodd"
+        height="100%"
+        viewBox="0 0 24 24"
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        ><path
+          d="M12 2.084V5.44a2.56 2.56 0 0 1 0 5.12V12c1.335 0 4 .824 4 2.46v1.265c-.065.094-.126.19-.195.283A7.433 7.433 0 0 1 12 18.738v2.827a11.062 11.062 0 0 0 8-10.667v-5.48l-8-3.334z"
+          opacity=".8"
+        ></path><path
+          d="M12 2.084V5.44a2.56 2.56 0 0 0 0 5.12V12c-1.335 0-4 .824-4 2.46v1.265c.065.094.126.19.195.283A7.433 7.433 0 0 0 12 18.738v2.827a11.062 11.062 0 0 1-8-10.667v-5.48l8-3.334z"
+        ></path></svg
+      >
+      <span class={getClassName("side_menu_button_name", "roles")}>Roles</span>
+    </a>
     <a
       href="/admin/products"
       class={getClassName("side_menu_button", "products")}
@@ -54,26 +100,6 @@
         >Products</span
       >
     </a>
-    <a href="/admin/roles" class={getClassName("side_menu_button", "roles")}>
-      <svg
-        class={getClassName("side_menu_button_logo", "roles")}
-        width="20px"
-        fill-rule="evenodd"
-        height="100%"
-        viewBox="0 0 24 24"
-        preserveAspectRatio="xMidYMid meet"
-        focusable="false"
-        ><path
-          d="M12 2.084V5.44a2.56 2.56 0 0 1 0 5.12V12c1.335 0 4 .824 4 2.46v1.265c-.065.094-.126.19-.195.283A7.433 7.433 0 0 1 12 18.738v2.827a11.062 11.062 0 0 0 8-10.667v-5.48l-8-3.334z"
-          opacity=".8"
-        ></path><path
-          d="M12 2.084V5.44a2.56 2.56 0 0 0 0 5.12V12c-1.335 0-4 .824-4 2.46v1.265c.065.094.126.19.195.283A7.433 7.433 0 0 0 12 18.738v2.827a11.062 11.062 0 0 1-8-10.667v-5.48l8-3.334z"
-        ></path></svg
-      >
-      <span class={getClassName("side_menu_button_name", "roles")}
-        >Roles</span
-      >
-    </a>
     <a
       href="/admin/monetization"
       class={getClassName("side_menu_button", "monetization")}
@@ -98,12 +124,12 @@
       <span class={getClassName("side_menu_button_name", "monetization")}
         >Monetization</span
       >
-    </a>    
-    <a href="/admin/slas" class={getClassName("side_menu_button", "usage")}>
+    </a>
+    <a href="/admin/slas" class={getClassName("side_menu_button", "slas")}>
       <!-- <svg class="side_menu_button_logo side_menu_button_logo_selected" width="20px" viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M7.9 8.76L6 7.58a1.09 1.09 0 000-.26 1 1 0 10-.33.75l2 1.17a.28.28 0 00.15 0A.31.31 0 008 9.15a.29.29 0 00-.1-.39zM5 7.78a.46.46 0 010-.92.46.46 0 010 .92z"></path><path d="M6.9 14.12A5.12 5.12 0 1112 9a5.13 5.13 0 01-5.1 5.12zM6.9 5a4 4 0 104 4 4 4 0 00-4-4z"></path><path d="M14.83 11.66a1.4 1.4 0 00-.83.27L9.68 9.45a1.72 1.72 0 000-.9L14 6.07A1.39 1.39 0 1013.43 5a.68.68 0 000 .14L9.08 7.59a1.85 1.85 0 100 2.82l4.37 2.5a.68.68 0 000 .14 1.4 1.4 0 101.4-1.39z"></path></svg>             -->
       <svg
         style="position: relative; top: -2px"
-        class={getClassName("side_menu_button_logo", "usage")}
+        class={getClassName("side_menu_button_logo", "slas")}
         width="20px"
         viewBox="0 0 18 18"
         preserveAspectRatio="xMidYMid meet"
@@ -116,7 +142,7 @@
           opacity=".8"
         ></path></svg
       >
-      <span class={getClassName("side_menu_button_name", "usage")}>SLAs</span>
+      <span class={getClassName("side_menu_button_name", "slas")}>SLAs</span>
     </a>
   </div>
 </div>

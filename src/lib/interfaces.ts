@@ -195,6 +195,24 @@ export class IdentityConfig {
   }
 }
 
+export class SLA {
+  id: string;
+  name: string;
+  description: string;
+  metric: string;
+  limit: number;
+  percent: number;
+
+  constructor(id: string, name: string, description: string, metric: string = "Latency", limit: number = 500, percent: number = 99.5) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.metric = metric;
+    this.limit = limit;
+    this.percent = percent;
+  }
+}
+
 export class MonetizationRatePlans {
   ratePlans: MonetizationRatePlan[] = [];
 }

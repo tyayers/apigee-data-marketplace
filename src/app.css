@@ -466,7 +466,7 @@ button {
 .left_menu_page_right_header {
   display: flex;
   align-items: center;
-  height: 45px;
+  height: 47px;
   border-bottom: solid 2px rgba(242, 242, 242, 1);
 }
 
@@ -510,10 +510,12 @@ button {
   position: relative;
   left: 30px;
   fill: #333;
+  /* stroke: #333; */
 }
 
 .side_menu_button_logo_selected {
   fill: #3367d6;
+  /* stroke: #3367d6; */
   left: 27px;
 }
 
