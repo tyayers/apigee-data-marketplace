@@ -205,11 +205,13 @@ export class MonetizationRatePlan {
   displayName: string;
   description: string = "";
   billingPeriod: string = "MONTHLY"; // can also be WEEKLY
+  paymentFundingModel: string = "POSTPAID"; // can also be PREPAID
   currencyCode: string = "USD";
   setupFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: 0};
-  fixedRecurringFee: {currencyCode: string, units: string, nanos: number} = {currencyCode: "USD", units: "0", nanos: 0};
-  consumptionPricingType: string = "BANDED"; // can also be FIXED_PER_UNIT
-  consumptionPricingRates: {start: string, end: string, fee: MonetizationRatePlanMoney}[] = [];
+  fixedRecurringFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: 0};
+  fixedFeeFrequency: number = 0;
+  consumptionPricingType: string = "FIXED_PER_UNIT"; // can also be BANDED
+  consumptionPricingRates: MonetizationRatePlanRate[] = [];
   state: string = "PUBLISHED" // can also be DRAFT
 
   constructor(apiProduct: string, displayName: string) {
@@ -220,6 +222,12 @@ export class MonetizationRatePlan {
 
 export class MonetizationRatePlanMoney {
   currencyCode: string = "USD";
-  units: string = "0";
+  units: string = "";
   nanos: number = 0;
+}
+
+export class MonetizationRatePlanRate {
+  start: string = "";
+  end: string = "";
+  fee: MonetizationRatePlanMoney = { currencyCode: "USD", units: "", nanos: 0 };
 }

@@ -54,7 +54,7 @@
     <div>
       <div class="left_menu_page_right_header">
         <span>Monetization plans</span><a
-          href="/admin/products/new"
+          href="/admin/monetization/new"
           class="text_button left_menu_page_right_header_button"
           style="margin-left: 20px;"
           >+ Add plan</a
