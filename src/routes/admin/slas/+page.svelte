@@ -14,8 +14,8 @@
       }
       else if (response.status === 200)
         return response.json();
-    }).then((slas: SLA[]) => {
-      slas = slas;
+    }).then((slaResults: SLA[]) => {
+      slas = slaResults;
     });
   });
 

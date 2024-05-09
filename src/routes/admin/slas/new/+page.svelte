@@ -4,8 +4,9 @@
   import MenuLeftAdmin from '$lib/components-menus-left/menus-left.admin.svelte';
   import SLAEdit from '$lib/components.sla-edit.svelte';
   import { goto } from "$app/navigation";
+  import { generateRandomString } from "$lib/utils";
 
-  let sla: SLA = new SLA("", "", "");
+  let sla: SLA = new SLA(generateRandomString(4), "", "");
 
   onMount(() => {
     
@@ -16,6 +17,24 @@
   }
 
   function submit() {
+    // sla.createdAt = new Date().toString();
+    sla.id = sla.name.toLowerCase().replaceAll(" ", "_") + "_" + sla.id;
+    //if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
+    
+    fetch("/api/admin/slas", {
+      method: 'POST',
+      body: JSON.stringify(sla),
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).then((response) => {
+        return response.json();
+    }).then((data: SLA) => {
+      // appService.products.push(data);
+      goto("/admin/slas");
+    }).catch((error) => {
+      console.error(error);
+    });
 
   }
 </script>
