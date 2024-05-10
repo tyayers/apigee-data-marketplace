@@ -20,8 +20,10 @@
       let pieces: string[] = value.split(".");
       if (pieces.length == 2) {
         amount.units = pieces[0];
-        amount.nanos = parseInt(pieces[1]);
+        amount.nanos = pieces[1];
       }
+      else if (pieces.length == 1)
+        amount.units = pieces[0];
     }
   }
 </script>

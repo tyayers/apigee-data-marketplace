@@ -21,7 +21,7 @@
     sla.id = sla.name.toLowerCase().replaceAll(" ", "_") + "_" + sla.id;
     //if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
     
-    fetch("/api/admin/slas", {
+    fetch("/api/slas", {
       method: 'POST',
       body: JSON.stringify(sla),
       headers: {

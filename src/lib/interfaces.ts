@@ -54,6 +54,7 @@ export class DataProduct {
   samplePayload: string = "";
   analyticsHubMarketplaceId: string = "";
   analyticsHubListingId: string = "";
+  monetizationId: string = "";
   pricing: {tier: string, price: string, range: string}[] = [
     {
       "tier": "Starter",
@@ -218,34 +219,36 @@ export class MonetizationRatePlans {
 }
 
 export class MonetizationRatePlan {
-  name: string = "";
-  apiProduct: string;
+  name?: string = "";
+  apiproduct: string;
   displayName: string;
   description: string = "";
   billingPeriod: string = "MONTHLY"; // can also be WEEKLY
   paymentFundingModel: string = "POSTPAID"; // can also be PREPAID
   currencyCode: string = "USD";
-  setupFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: 0};
-  fixedRecurringFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: 0};
+  setupFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: "0"};
+  fixedRecurringFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: "0"};
   fixedFeeFrequency: number = 0;
   consumptionPricingType: string = "FIXED_PER_UNIT"; // can also be BANDED
   consumptionPricingRates: MonetizationRatePlanRate[] = [];
   state: string = "PUBLISHED" // can also be DRAFT
-
+  startTime: number = 0;
+  endTime: number = 0;
   constructor(apiProduct: string, displayName: string) {
-    this.apiProduct = apiProduct;
+    this.apiproduct = apiProduct;
     this.displayName = displayName;
+    this.consumptionPricingRates.push(new MonetizationRatePlanRate());
   }
 }
 
 export class MonetizationRatePlanMoney {
   currencyCode: string = "USD";
-  units: string = "";
-  nanos: number = 0;
+  units: string = "0";
+  nanos: string = "0";
 }
 
 export class MonetizationRatePlanRate {
-  start: string = "";
-  end: string = "";
-  fee: MonetizationRatePlanMoney = { currencyCode: "USD", units: "", nanos: 0 };
+  start: string = "0";
+  end: string = "0";
+  fee: MonetizationRatePlanMoney = { currencyCode: "USD", units: "", nanos: "0" };
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import type { User, DataProduct } from "$lib/interfaces";
+  import type { User, DataProduct, MonetizationRatePlan } from "$lib/interfaces";
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import { onMount } from "svelte";
 
@@ -17,10 +17,17 @@
       currentUser = appService.currentUser;
       products = appService.products;
     });
+
+    // fetch("/api/monetization").then((response) => {
+    //   if (response.status == 200)
+    //     return response.json();
+    // }).then((results: MonetizationRatePlan[]) => {
+    //   console.log(results);
+    // });
   });
 
   function openProduct(productId: string) {
-    goto("/admin/products/" + productId);
+    goto("/admin/monetization/" + productId);
   }
 
   function deleteProduct(productId: string) {

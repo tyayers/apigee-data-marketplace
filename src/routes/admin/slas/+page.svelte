@@ -8,7 +8,7 @@
   let slas: SLA[] = [];
 
   onMount(() => {
-    fetch("/api/admin/slas").then((response) => {
+    fetch("/api/slas").then((response) => {
       if (response.status === 404) {
         console.log(response.statusText);
       }

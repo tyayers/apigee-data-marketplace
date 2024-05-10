@@ -7,7 +7,7 @@
   let identityConfig: IdentityConfig;
 
   onMount(() => {
-    fetch("/api/admin/identity").then((response) => {
+    fetch("/api/identity").then((response) => {
       if (response.status === 404) {
         console.log(response.statusText);
       }
