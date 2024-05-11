@@ -37,7 +37,7 @@ export class AppService {
   apiApps: APIApps | undefined = undefined;
   reloadFlag: boolean = false;
   // products: Products = new Products();
-  products: DataProduct[] = [];
+  products: DataProduct[] | undefined = undefined;
   googleAccessToken: string = "";
   testMode: boolean = false;
 
@@ -54,7 +54,7 @@ export class AppService {
         console.log(result);
         this.products = result;
         document.dispatchEvent(new Event("productsUpdated"));
-      })
+      });
 
       if (!this.testMode) {
         this.auth.onAuthStateChanged((u: FirebaseUser | null) => {

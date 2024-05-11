@@ -4,25 +4,25 @@
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import { onMount } from "svelte";
 
-  let identityConfig: IdentityConfig;
+  let users: User[] | undefined = undefined;
 
   onMount(() => {
-    fetch("/api/identity").then((response) => {
+    fetch("/api/identity/users").then((response) => {
       if (response.status === 404) {
         console.log(response.statusText);
       }
       else if (response.status === 200)
         return response.json();
-    }).then((config: IdentityConfig) => {
-      identityConfig = config;
+    }).then((data: User[]) => {
+      users = data;
     });
   });
 
-  function openRole(role: string) {
+  function openUser(role: string) {
 
   }
 
-  function deleteRole(role: string) {
+  function deleteUser(role: string) {
 
   }
 
@@ -43,18 +43,22 @@
       </div>
 
       <div class="left_menu_page_right_content">
-        {#if identityConfig}
-          <table class="flat_table" style="max-width: 564px;">
+        {#if users}
+          <table class="flat_table">
             <thead>
               <tr>
-                <th style="width: 80%;">Name</th>
+                <th>Username</th>
+                <th>Email</th> 
+                <th>Roles</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {#each identityConfig.roles as role, i}
-                <tr on:click={() => openRole(role)}>
-                  <td>{role}</td>
+              {#each users as user, i}
+                <tr on:click={() => openUser(user.email)}>
+                  <td>{user.userName}</td>
+                  <td>{user.email}</td>
+                  <td>{user.roles.join(", ")}</td>
                   <td style="white-space: pre;">
                     <button>
                       <svg
@@ -69,7 +73,7 @@
                       >
                     </button>
                     <button
-                      on:click|stopPropagation={() => deleteRole(role)}
+                      on:click|stopPropagation={() => deleteUser(user.email)}
                     >
                       <svg
                         width="18px"

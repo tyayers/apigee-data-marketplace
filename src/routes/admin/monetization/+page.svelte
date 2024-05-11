@@ -1,7 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import type { User, DataProduct, MonetizationRatePlan } from "$lib/interfaces";
+  import type {
+    User,
+    DataProduct,
+    MonetizationRatePlan,
+  } from "$lib/interfaces";
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import { onMount } from "svelte";
 
@@ -17,40 +21,28 @@
       currentUser = appService.currentUser;
       products = appService.products;
     });
-
-    // fetch("/api/monetization").then((response) => {
-    //   if (response.status == 200)
-    //     return response.json();
-    // }).then((results: MonetizationRatePlan[]) => {
-    //   console.log(results);
-    // });
   });
 
   function openProduct(productId: string) {
     goto("/admin/monetization/" + productId);
   }
 
-  function deleteProduct(productId: string) {
-    appService
-      .ShowDialog(
-        "Are you sure you want to delete this product?",
-        "Delete",
-        0
-      )
-      .then((result) => {
-        if (result === "ok") {
+  function deleteProduct(productId: string, monetizationName: string) {
+    if (productId && monetizationName) {
+      fetch(`/api/products/${productId}/monetization/${monetizationName}`, {
+        method: "DELETE"
+      }).then((response) => {
+        let tempProduct = products?.find(prod => prod.id === productId);
+        if (tempProduct) {
+          tempProduct.monetizationId = "";
           fetch("/api/products/" + productId, {
-            method: "DELETE",
-            headers: {
-              "content-type": "application/json",
-            },
-          }).then((response) => {
-            let index = appService.products.findIndex((x) => x.id == productId);
-            appService.products.splice(index, 1);
-            products = appService.products;
+            method: "PUT",
+            body: JSON.stringify(tempProduct)
           });
         }
+        products = products;
       });
+    }
   }
 </script>
 
@@ -63,8 +55,7 @@
         <span>Monetization plans</span><a
           href="/admin/monetization/new"
           class="text_button left_menu_page_right_header_button"
-          style="margin-left: 20px;"
-          >+ Add plan</a
+          style="margin-left: 20px;">+ Add plan</a
         >
       </div>
 
@@ -87,16 +78,20 @@
                   <td>{prod.name}</td>
                   <td>{prod.ownerEmail}</td>
                   <td>{prod.source}</td>
-                  {#if prod.createdAt}
-                    <td>{prod.createdAt}</td>
+                  {#if prod.monetizationId}
+                    <td>{prod.monetizationId}</td>
                   {:else}
                     <td></td>
                   {/if}
-                  <td>
-                    <span style="color: orange; font-weight: bold;"
-                        >No</span
-                      >
-                  </td>
+                  {#if prod.monetizationId}
+                    <td>
+                      <span style="color: green; font-weight: bold;">Yes</span>
+                    </td>
+                  {:else}
+                    <td>
+                      <span style="color: orange; font-weight: bold;">No</span>
+                    </td>
+                  {/if}
                   <td style="white-space: pre;">
                     <button>
                       <svg
@@ -111,7 +106,7 @@
                       >
                     </button>
                     <button
-                      on:click|stopPropagation={() => deleteProduct(prod.id)}
+                      on:click|stopPropagation={() => deleteProduct(prod.id, prod.monetizationId)}
                     >
                       <svg
                         width="18px"

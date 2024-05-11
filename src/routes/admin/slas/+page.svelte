@@ -4,8 +4,9 @@
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
+  import { goto } from "$app/navigation";
 
-  let slas: SLA[] = [];
+  let slas: SLA[] | undefined = undefined;
 
   onMount(() => {
     fetch("/api/slas").then((response) => {
@@ -19,8 +20,8 @@
     });
   });
 
-  function openSLA(role: string) {
-
+  function openSLA(id: string) {
+    goto("/admin/slas/" + id);
   }
 
   function deleteSLA(role: string) {
