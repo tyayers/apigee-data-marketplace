@@ -306,8 +306,8 @@
             bg-color = "#fafafa"
             nav-bg-color = '#f3f3f3'
             primary-color = "#3367d6"
-            api-key-name = 'apikey'
-            api-key-location = 'query'
+            api-key-name = 'x-api-key'
+            api-key-location = 'header'
             api-key-value = {apiKey}
             allow-authentication ='true'
             allow-server-selection = 'false'

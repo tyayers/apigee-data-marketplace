@@ -8,7 +8,7 @@
   import { goto } from '$app/navigation';
 
   let currentUser: User | undefined = appService.currentUser;
-  let products: DataProduct[] = appService.products;
+  let products: DataProduct[] | undefined = appService.products;
   let productsByName: {[key: string]: DataProduct} = {};
   let productCategories: {[key: string]: string[]} = {};
   let catProducts: {[key: string]: string[]} = {};
@@ -49,7 +49,7 @@
 
   function reloadProducts() {
     let tempTypes = types;
-    if (products.length > 0 && currentUser?.status == "approved") {
+    if (products && products.length > 0 && currentUser?.status == "approved") {
       for (let prod of products) {
         if (prod.status == "Published") {
           productsByName[prod.name] = prod;

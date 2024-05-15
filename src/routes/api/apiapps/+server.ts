@@ -24,10 +24,11 @@ export const POST: RequestHandler = async ({ url, request }) => {
 	}
 	
   await utilsServer.dataService.createApiApp(email.toString(), newApp.name, newApp.description, newApp.apiProducts);
-  // Now create Apigee subscription for monetization
-  for (let product of newApp.apiProducts)
-    await utilsServer.dataService.createApigeeSubscription(email, product);
 
+  // Now create Apigee subscription for monetization
+  for (let product of newApp.apiProducts) {
+    await utilsServer.dataService.createApigeeSubscription(email, product);
+  }
 
 	return json(newApp);
 };

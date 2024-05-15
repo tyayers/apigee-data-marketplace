@@ -256,7 +256,7 @@ export class GoogleCloudDataService {
   public createApigeeSubscription(email: string, product: string): Promise<any> {
     return new Promise<UsageData>((resolve, reject) => {
       this.auth.getAccessToken().then((token) => {
-        fetch("https://apigee.googleapis.com/v1/organizations/apigee-test38/developers/" + email + "/subscriptions", {
+        fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/subscriptions`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

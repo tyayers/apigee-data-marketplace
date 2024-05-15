@@ -7,3 +7,6 @@ This approach has the advantage that unified identity, access management, integr
 Click here to open a Codelab for the deployment.
 
 [Open Deployment Codelab](https://tyayers.github.io/apigee-data-marketplace/codelabs/apigee-data-marketplace)
+
+## Open source libraries used
+- [Rapidoc](https://rapidocweb.com/) - very nice Open API spec documentation web element that is used for API docs.
