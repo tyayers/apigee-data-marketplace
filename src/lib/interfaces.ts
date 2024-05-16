@@ -55,17 +55,12 @@ export class DataProduct {
   analyticsHubMarketplaceId: string = "";
   analyticsHubListingId: string = "";
   monetizationId: string = "";
-  pricing: {tier: string, price: string, range: string}[] = [
-    {
-      "tier": "Starter",
-      "price": "Free",
-      "range": "20 API calls or file downloads per month"
-    }
-  ];
+  monetizationData?: MonetizationRatePlan;
   status: string;
   source: string;
   entity: string;
   query: string;
+  sla: SLA = new SLA("no_sla_5k3j", "no_sla_5k3j")
   createdAt: string;
   protocols: string[];
   audiences: string[];
@@ -199,18 +194,16 @@ export class IdentityConfig {
 export class SLA {
   id: string;
   name: string;
-  description: string;
-  metric: string;
-  limit: number;
-  percent: number;
+  description: string = "";
+  upTimeInPercent: string = "";
+  maxLatencyMS: string = ""
 
-  constructor(id: string, name: string, description: string, metric: string = "Latency", limit: number = 500, percent: number = 99.5) {
+  constructor(id: string, name: string, description: string = "", upTimeInPercent: string = "99.5", maxLatencyMS: string = "") {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.metric = metric;
-    this.limit = limit;
-    this.percent = percent;
+    this.upTimeInPercent = upTimeInPercent;
+    this.maxLatencyMS = maxLatencyMS;
   }
 }
 

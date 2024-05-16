@@ -52,11 +52,12 @@
   <div class="left_menu_page_right">
     <div>
       <div class="left_menu_page_right_header">
-        <span>Monetization plans</span><a
+        <span>Monetization products</span>
+        <!-- <a
           href="/admin/monetization/new"
           class="text_button left_menu_page_right_header_button"
           style="margin-left: 20px;">+ Add plan</a
-        >
+        > -->
       </div>
 
       <div class="left_menu_page_right_content">
@@ -65,10 +66,10 @@
             <thead>
               <tr>
                 <th>Product name</th>
+                <th>Monetization active</th>
+                <th>Plan Id</th>
                 <th>Owner</th>
                 <th>Data source</th>
-                <th>Plan Id</th>
-                <th>Monetization active</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -76,13 +77,6 @@
               {#each Object.values(products) as prod, i}
                 <tr on:click={() => openProduct(prod.id)}>
                   <td>{prod.name}</td>
-                  <td>{prod.ownerEmail}</td>
-                  <td>{prod.source}</td>
-                  {#if prod.monetizationId}
-                    <td>{prod.monetizationId}</td>
-                  {:else}
-                    <td></td>
-                  {/if}
                   {#if prod.monetizationId}
                     <td>
                       <span style="color: green; font-weight: bold;">Yes</span>
@@ -92,6 +86,13 @@
                       <span style="color: orange; font-weight: bold;">No</span>
                     </td>
                   {/if}
+                  {#if prod.monetizationId}
+                    <td>{prod.monetizationId}</td>
+                  {:else}
+                    <td></td>
+                  {/if}
+                  <td>{prod.ownerEmail}</td>
+                  <td>{prod.source}</td>
                   <td style="white-space: pre;">
                     <button>
                       <svg

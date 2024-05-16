@@ -61,6 +61,10 @@
       if (result.name) {
         console.log("Monetization name: " + result.name);
         product.monetizationId = result.name;
+        product.monetizationData = result;
+        // Update in appservice
+        let index = appService.products?.findIndex(x => x.id == product.id);
+        if (appService.products && index) appService.products[index] = result;
         fetch("/api/products/" + product.id, {
           method: "PUT",
           body: JSON.stringify(product)

@@ -28,7 +28,7 @@
   }
 
   function submit() {
-    fetch("/api/slas", {
+    fetch("/api/slas/" + data.slaId, {
       method: 'PUT',
       body: JSON.stringify(sla),
       headers: {

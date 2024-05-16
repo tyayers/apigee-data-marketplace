@@ -9,31 +9,22 @@ curl -i -X POST "https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databa
   "writes": [
     {
       "update": {
-        "name": "projects/$PROJECT_ID/databases/(default)/documents/data-marketplace-config/identity",
+        "name": "projects/$PROJECT_ID/databases/(default)/documents/data-marketplace-slas/no_sla_5k3j",
         "fields": {
           "id": {
-              "stringValue": "identity"
+              "stringValue": "no_sla_5k3j"
           },
-          "roles": {
-            "arrayValue": {
-              "values": [
-                {
-                  "stringValue": "admin"
-                },
-                {
-                  "stringValue": "publisher"
-                },
-                {
-                  "stringValue": "internal"
-                },
-                {
-                  "stringValue": "external"
-                },
-                {
-                  "stringValue": "partner"
-                }
-              ]
-            }
+          "name": {
+              "stringValue": "No SLA"
+          },
+          "description": {
+              "stringValue": "No SLA guaranteed."
+          },
+          "upTimeInPercent": {
+              "stringValue": ""
+          },
+          "maxLatencyMS": {
+              "stringValue": ""
           }
         }
       }

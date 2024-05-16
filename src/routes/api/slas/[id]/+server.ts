@@ -44,3 +44,29 @@ export const PUT: RequestHandler = async({ params, url, request}) => {
 
 	return json(newSLA);
 }
+
+export const DELETE: RequestHandler = async({ params, url, request}) => {
+  let id: string = "";
+  if (params.id) id = params.id;
+
+  console.log(id);
+  let sla: SLA | undefined = undefined;
+
+  const document = firestore.doc('data-marketplace-slas/' + id);
+  const doc = await document.get();
+
+  if (doc.exists) {
+    let docData = doc.data();
+    if (docData)
+      sla = docData as SLA;
+
+    await document.delete();
+  }
+
+  if (sla) {
+	  return json(sla);
+  }
+  else {
+    error(404, "SLA definition not found.");
+  }
+}

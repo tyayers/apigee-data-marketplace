@@ -8,7 +8,7 @@
   import { onMount } from 'svelte';
 
   export let data: PageData;
-  let products: DataProduct[] = appService.products;
+  let products: DataProduct[] | undefined = appService.products;
   let product: DataProduct | undefined;
   
   onMount(async () => {
@@ -23,7 +23,7 @@
   });
 
   function loadProduct() {
-    if (products.length > 0 && !product) {
+    if (products && products.length > 0 && !product) {
       product = products.find(prod => prod.id === data.productId);
     }
   }
@@ -41,8 +41,8 @@
     }).then((response) => {
         return response.json();
     }).then((data: DataProduct) => {
-      let index = appService.products.findIndex(x => x.id == data.id);
-      appService.products[index] = data;
+      let index = appService.products?.findIndex(x => x.id == data.id);
+      if (appService.products && index) appService.products[index] = data;
       goto("/admin/products");
     }).catch((error) => {
       console.error(error);

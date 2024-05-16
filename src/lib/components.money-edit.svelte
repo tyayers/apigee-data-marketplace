@@ -11,6 +11,8 @@
   onMount(async () => {
     if (amount.units)
       input = parseInt(amount.units) + parseFloat("0." + amount.nanos);
+    if (!amount.units && amount.nanos)
+      input = 0 + parseFloat("0." + amount.nanos);
   });
 
   function onChange(e: any) {

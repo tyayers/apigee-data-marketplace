@@ -9,26 +9,49 @@
   let slas: SLA[] | undefined = undefined;
 
   onMount(() => {
-    fetch("/api/slas").then((response) => {
-      if (response.status === 404) {
-        console.log(response.statusText);
-      }
-      else if (response.status === 200)
-        return response.json();
-    }).then((slaResults: SLA[]) => {
-      slas = slaResults;
-    });
+    fetch("/api/slas")
+      .then((response) => {
+        if (response.status === 404) {
+          console.log(response.statusText);
+        } else if (response.status === 200) return response.json();
+      })
+      .then((slaResults: SLA[]) => {
+        slas = slaResults;
+      });
   });
 
   function openSLA(id: string) {
     goto("/admin/slas/" + id);
   }
 
-  function deleteSLA(role: string) {
-
+  function deleteSLA(slaId: string) {
+    appService
+      .ShowDialog(
+        "Are you sure that you want to delete the SLA definition?",
+        "Delete", 0
+      )
+      .then((result) => {
+        if (result == "ok") {
+          fetch("/api/slas/" + slaId, {
+            method: "DELETE",
+            headers: {
+              "content-type": "application/json",
+            },
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data: SLA) => {
+              let index = slas?.findIndex(x => x.id == slaId);
+              if (index && index >= 0)
+                slas?.splice(index, 1);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      });
   }
-
-
 </script>
 
 <div class="left_menu_page">
@@ -40,8 +63,7 @@
         <span>SLAs</span><a
           href="/admin/slas/new"
           class="text_button left_menu_page_right_header_button"
-          style="margin-left: 18px;"
-          >+ Add SLA definition</a
+          style="margin-left: 18px;">+ Add SLA definition</a
         >
       </div>
 
@@ -52,9 +74,8 @@
               <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Metric</th>
-                <th>Limit</th>
-                <th>Percent</th>
+                <th>Uptime (%)</th>
+                <th>Maximum latency (ms)</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -63,9 +84,8 @@
                 <tr on:click={() => openSLA(sla.id)}>
                   <td>{sla.name}</td>
                   <td>{sla.description}</td>
-                  <td>{sla.metric}</td>
-                  <td>{sla.limit}</td>
-                  <td>{sla.percent + " %"}</td>
+                  <td>{sla.upTimeInPercent}</td>
+                  <td>{sla.maxLatencyMS}</td>
                   <td style="white-space: pre;">
                     <button>
                       <svg
@@ -79,9 +99,7 @@
                         ></path></svg
                       >
                     </button>
-                    <button
-                      on:click|stopPropagation={() => deleteSLA(sla.id)}
-                    >
+                    <button on:click|stopPropagation={() => deleteSLA(sla.id)}>
                       <svg
                         width="18px"
                         viewBox="0 0 18 18"
@@ -111,7 +129,5 @@
   </div>
 </div>
 
-
 <style>
-
 </style>

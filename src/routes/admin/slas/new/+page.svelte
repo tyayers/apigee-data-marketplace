@@ -18,7 +18,7 @@
 
   function submit() {
     // sla.createdAt = new Date().toString();
-    sla.id = sla.name.toLowerCase().replaceAll(" ", "_") + "_" + sla.id;
+    sla.id = sla.name.toLowerCase().replaceAll(" ", "_").replace("%", "") + "_" + sla.id;
     //if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
     
     fetch("/api/slas", {

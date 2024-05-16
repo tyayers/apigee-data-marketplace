@@ -105,7 +105,7 @@
           <div class="arrow" />
           <div class="menu">
             <div class="menu_profile">
-              <img class="panel_profile_image" src={currentUser.photoUrl}  onerror="this.src='/avatar.png';" alt="Profile"/>
+              <img class="panel_profile_image" src={currentUser.photoUrl} onerror="this.src='/avatar.png';" alt="Profile"/>
               <div class="profile_info">
                 <div class="profile_info_primary">{currentUser.userName}</div>
                 <div class="profile_info_secondary" title={currentUser.email}>{currentUser.email}</div>

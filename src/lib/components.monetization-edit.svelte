@@ -11,36 +11,6 @@
 
   });
 
-  function onProtocolChange(e: any) {
-    // let name: string = e.target.attributes[1]["nodeValue"];
-    
-    // if (e.target.checked) {
-    //   if (! product.protocols.includes(name))
-    //     product.protocols.push(name);
-    // }
-    // else {
-    //   let index = product.protocols.indexOf(name);
-    //   if (index >= 0)
-    //     product.protocols.splice(index, 1);
-    // }
-
-    // product = product;
-  }
-
-  function onAudienceChange(e: any) {
-    // let name: string = e.target.attributes[1]["nodeValue"];
-
-    // if (e.target.checked) {
-    //   if (! product.audiences.includes(name))
-    //     product.audiences.push(name);
-    // }
-    // else {
-    //   let index = product.audiences.indexOf(name);
-    //   if (index >= 0)
-    //     product.audiences.splice(index, 1);
-    // }
-  }
-
 </script>
 
 <div class="right_content_tip">

@@ -23,7 +23,7 @@
       </span>
 
       <span class="band_input input_field_panel">
-        <input class="input_field" type="text" name={i + "_end"} id={i + "_end"} required bind:value={band.start} autocomplete="off" title="none" />
+        <input class="input_field" type="text" name={i + "_end"} id={i + "_end"} required bind:value={band.end} autocomplete="off" title="none" />
         <label for={i + "_end"} class='input_field_placeholder'>
           End
         </label>

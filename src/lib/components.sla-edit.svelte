@@ -65,27 +65,17 @@
       </label>
     </div>
 
-    <div class="form_list">
-      <h4>Metric</h4>
-      <div class="select_dropdown">
-        <select name="paymentFundingModel" id="paymentFundingModel" bind:value={sla.metric}>
-          <option value="Latency">Latency</option>
-          <option value="Error count">Error count</option>
-        </select>
-      </div>
-    </div>
-
     <div class="input_field_panel">
-      <input class="input_field" required type="text" name="limit" id="limit" bind:value={sla.limit} autocomplete="off" title="none" />
+      <input class="input_field" required type="text" name="limit" id="limit" bind:value={sla.upTimeInPercent} autocomplete="off" title="none" />
       <label for="description" class='input_field_placeholder'>
-        Limit
+        Uptime in percent
       </label>
     </div>
 
     <div class="input_field_panel">
-      <input class="input_field" required type="text" name="percent" id="percent" bind:value={sla.percent} autocomplete="off" title="none" />
+      <input class="input_field" required type="text" name="percent" id="percent" bind:value={sla.maxLatencyMS} autocomplete="off" title="none" />
       <label for="percent" class='input_field_placeholder'>
-        Percent
+        Maximum average latency in ms
       </label>
     </div>
   </div> 

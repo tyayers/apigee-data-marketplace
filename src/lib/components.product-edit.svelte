@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DataProduct, DisplayOptions } from '$lib/interfaces';
+  import { DataProduct, DisplayOptions, SLA } from '$lib/interfaces';
   import InputSelect from '$lib/components.input.select.svelte';
   import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
@@ -8,6 +8,7 @@
   import { onMount } from 'svelte';
 
   export let product: DataProduct;
+  let slas: SLA[] = [];
 
   onMount(async () => {
     if (product.samplePayload && payloadEditor) {
@@ -25,6 +26,21 @@
       specEditor.set(specContent);
       specEditor.refresh();
     }
+
+    // fetch SLAs
+    fetch("/api/slas")
+      .then((response) => {
+        if (response.status === 404) {
+          console.log(response.statusText);
+        } else if (response.status === 200) return response.json();
+      })
+      .then((slaResults: SLA[]) => {
+        slas = slaResults;
+        let sla = slas.find(o => o.id === product.sla.id);
+        if (sla) product.sla = sla;
+      });
+
+    console.log(product);
   });
 
   let categoryData: string[] = [
@@ -232,6 +248,17 @@
           <input id={aud.name} name={aud.name} disabled={!aud.active} checked={product.audiences.includes(aud.name)} on:change={onAudienceChange} type="checkbox" /><label for={aud.name}>{aud.displayName}</label>
         </div>
       {/each}      
+    </div>
+
+    <div class="form_list">
+      <h4 on:click={() => {console.log(product.sla)}}>SLA</h4>
+      <div class="select_dropdown">
+        <select name="sla" id="sla" bind:value={product.sla}>
+          {#each slas as sla}
+            <option value={sla}>{sla.name}</option>
+          {/each}
+        </select>
+      </div>
     </div>
 
     <div class="form_list">

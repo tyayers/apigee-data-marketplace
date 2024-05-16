@@ -32,7 +32,7 @@
     }).then((response) => {
         return response.json();
     }).then((data: DataProduct) => {
-      appService.products.push(data);
+      appService.products?.push(data);
       goto("/admin/products");
     }).catch((error) => {
       console.error(error);
