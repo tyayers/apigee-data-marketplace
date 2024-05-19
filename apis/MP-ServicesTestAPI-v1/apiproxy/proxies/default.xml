@@ -5,15 +5,6 @@
   <PreFlow name="PreFlow">
     <Request>
       <Step>
-        <Name>CORS-SetCors</Name>
-      </Step>
-      <Step>
-        <Name>VA-VerifyKey</Name>
-      </Step>
-      <Step>
-        <Name>AM-RemoveKey</Name>
-      </Step>
-      <Step>
         <Name>EV-ExtractName</Name>
       </Step>
       <Step>
@@ -36,7 +27,7 @@
     </Response>
   </PostClientFlow>
   <HTTPProxyConnection>
-    <BasePath>/v1/data</BasePath>
+    <BasePath>/v1/test/services</BasePath>
   </HTTPProxyConnection>
   <RouteRule name="default">
     <TargetEndpoint>default</TargetEndpoint>

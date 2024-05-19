@@ -84,6 +84,8 @@
 
       {#if currentUser.roles.includes("publisher") || currentUser.roles.includes("admin")}
         <button style="position: relative; top: -14px; left: -28px;" on:click={goToPublish} class="rounded_button_outlined">Publish data</button>
+      {:else}
+        <button style="position: relative; top: -14px; left: -28px;" on:click={goToAccount} class="rounded_button_outlined">My account</button>
       {/if}
 
       <button style="position: relative; top: -4px; left: -10px;" class="back_button">

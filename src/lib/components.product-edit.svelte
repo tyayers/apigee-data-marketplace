@@ -6,6 +6,7 @@
   import { JSONEditor, Mode } from 'svelte-jsoneditor';
   import { text } from '@sveltejs/kit';
   import { onMount } from 'svelte';
+  import { appService } from './app-service';
 
   export let product: DataProduct;
   let slas: SLA[] = [];
@@ -112,7 +113,7 @@
       },
       body: JSON.stringify(product)
     }).then((response) => {
-      fetch("/api/products/generate?entity=" + product.entity).then((response) => {
+      fetch(`/api/products/generate?entity=${product.entity}&type=${product.source}`).then((response) => {
         response.json().then((payload: any) => {
           product.samplePayload = JSON.stringify(payload);
           samplePayloadData = payload;
@@ -127,23 +128,27 @@
   }
 
   function refreshSpec() {
-    fetch("/api/products/generate/spec", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(product)
-    }).then((response) => {
-      return response.json();
-    }).then((newProduct: DataProduct) => {
-      // product.specPrompt = newProduct.specPrompt;
-      product.specContents = newProduct.specContents;
-      let specContent = {
-        text: newProduct.specContents
-      }
-      specEditor.set(specContent);
-      specEditor.refresh();
-    });
+    if (product.samplePayload) {
+      fetch("/api/products/generate/spec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(product)
+      }).then((response) => {
+        return response.json();
+      }).then((newProduct: DataProduct) => {
+        // product.specPrompt = newProduct.specPrompt;
+        product.specContents = newProduct.specContents;
+        let specContent = {
+          text: newProduct.specContents
+        }
+        specEditor.set(specContent);
+        specEditor.refresh();
+      });
+    } else {
+      appService.ShowDialog("A sample payload is needed to generate an API spec. Please either load or enter a payload into the 'Payload' field.", "OK", 0);
+    }
   }
 
   function onSpecChange(updatedContent: any) {
@@ -283,7 +288,7 @@
 
   <div class="product_payload">
     <h4 style="margin-block-end: 0px;">API Spec</h4>
-    <button on:click={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
+    <button on:click|stopPropagation={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
     <div style="overflow-y: auto; height: 90%;">
       <!-- <textarea style="width: 97%; height: 96%;">
         {product.specContents}

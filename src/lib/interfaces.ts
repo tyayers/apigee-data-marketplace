@@ -45,6 +45,7 @@ export class Product {
 export class DataProduct {
   id: string;
   ownerEmail: string;
+  ownerName: string = "";
   name: string;
   description: string;
   imageUrl: string = "/data_icon.png";
@@ -66,9 +67,10 @@ export class DataProduct {
   audiences: string[];
   categories: string[];
 
-  constructor(id: string, email: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[], categories: string[]) {
+  constructor(id: string, email: string, ownerName: string, name: string, description: string, status: string, source: string, entity: string, query: string, createdAt: string, protocols: string[], audiences: string[], categories: string[]) {
     this.id = id;
     this.ownerEmail = email;
+    this.ownerName = ownerName;
     this.name = name;
     this.description = description;
     this.status = status;

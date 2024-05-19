@@ -21,7 +21,7 @@ SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --format 'value(status.
 gcloud run deploy $SERVICE_NAME --image "$REGION-docker.pkg.dev/$PROJECT_ID/docker-registry/$SERVICE_NAME" \
     --platform managed --region $REGION --allow-unauthenticated --min-instances=1 \
     --service-account=mpservice@$PROJECT_ID.iam.gserviceaccount.com \
-    --set-env-vars ORIGIN="$SERVICE_URL,VITE_SITE_NAME=$SITE_NAME,VITE_API_HOST=$APIGEE_ENVGROUP_HOST,VITE_PROJECT_ID=$PROJECT_ID,VITE_APIGEE_ENV=$APIGEE_ENV,VITE_FIREBASE_APIKEY=$FIREBASE_APIKEY,VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN"
+    --set-env-vars "ORIGIN=$SERVICE_URL,VITE_ORIGIN=$SERVICE_URL,VITE_SITE_NAME=$SITE_NAME,VITE_API_HOST=$APIGEE_ENVGROUP_HOST,VITE_PROJECT_ID=$PROJECT_ID,VITE_APIGEE_ENV=$APIGEE_ENV,VITE_FIREBASE_APIKEY=$FIREBASE_APIKEY,VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN"
 
 duration=$SECONDS
 echo "Total deployment finished in $((duration / 60)) minutes and $((duration % 60)) seconds."

@@ -27,7 +27,6 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
   let timeRange = startDateString + "+00:00~" + endDateString + "+23:59";
 
   let analyticsUrl = `https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/stats/developer_app?select=sum(x_apigee_mintng_rate)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`;
-  console.log(analyticsUrl);
 
   let response = await fetch(analyticsUrl, {
     headers: {

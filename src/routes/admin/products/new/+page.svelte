@@ -6,7 +6,7 @@
   import ProductEditor from '$lib/components.product-edit.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
 
-  let product: DataProduct = new DataProduct(generateRandomString(4), "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal"], []);
+  let product: DataProduct = new DataProduct(generateRandomString(4), "", "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal"], []);
   let categoryData: string[] = [
     "ESG - Environmental", "ESG - Social", "ESG - Governance",
     "Investment - Research", "Investment - Statistics", "Investment - Management",
@@ -18,8 +18,11 @@
   function submit() {
     product.createdAt = new Date().toString();
     product.id = product.name.toLowerCase().replaceAll(" ", "_") + "_" + product.id;
-    if (appService.currentUser) product.ownerEmail = appService.currentUser.email;
-        
+    if (appService.currentUser) {
+      product.ownerEmail = appService.currentUser.email;
+      product.ownerName = appService.currentUser.firstName + " " + appService.currentUser.lastName;
+    }
+    
     let newProduct: DataProduct = product;
     if (newProduct.categories.length == 0) newProduct.categories.push("Uncategorized");
 

@@ -36,7 +36,7 @@
     </Response>
   </PostClientFlow>
   <HTTPProxyConnection>
-    <BasePath>/v1/data</BasePath>
+    <BasePath>/v1/services</BasePath>
   </HTTPProxyConnection>
   <RouteRule name="default">
     <TargetEndpoint>default</TargetEndpoint>

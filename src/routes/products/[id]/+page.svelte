@@ -10,7 +10,7 @@
 
   export let data: PageServerData;
 
-  let products: DataProduct[] = appService.products;
+  let products: DataProduct[] | undefined = appService.products;
   let product: DataProduct | undefined = undefined;
   
   let selectedProductTab = "overview";
@@ -50,7 +50,7 @@
   });
 
   function loadProduct() {
-    if (products.length > 0 && !product) {
+    if (products && products.length > 0 && !product) {
       product = products.find(prod => prod.id === data.productId);
     }
   }
@@ -233,7 +233,7 @@
           levels.
         </div>
         <div>
-          <table class="flat_table" style="max-width: 900px; color: #555;">
+          <!-- <table class="flat_table" style="max-width: 900px; color: #555;">
             <thead>
                 <tr>
                     <th>Level</th>
@@ -252,7 +252,7 @@
                 {/each}
               {/if}
             </tbody>
-          </table>
+          </table> -->
         </div>
       </div>
       {:else if selectedProductTab == "support"}

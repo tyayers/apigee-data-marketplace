@@ -2,11 +2,9 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
 import { DataProduct } from '$lib/interfaces';
-import type {APIProduct, ProxyDeployment, ProxyRevision} from 'apigee-x-module';
 import { ApigeeService } from 'apigee-x-module';
 import type {ApigeeTemplateService} from 'apigee-templater-module';
 import { ApigeeTemplater, ApigeeTemplateInput, RunPoint } from 'apigee-templater-module';
-import FormData from 'form-data';
 import { GoogleAuth } from 'google-auth-library';
 
 const auth = new GoogleAuth({
@@ -16,11 +14,15 @@ const auth = new GoogleAuth({
 // Create a new client
 const firestore = new Firestore();
 // Create Apigee services
-const apigeeTemplater: ApigeeTemplateService = new ApigeeTemplater();
-const apigeeService: ApigeeService = new ApigeeService();
+// const apigeeTemplater: ApigeeTemplateService = new ApigeeTemplater();
+// const apigeeService: ApigeeService = new ApigeeService();
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
 const apigeeHost: string = import.meta.env.VITE_API_HOST;
 const apigeeEnvironment: string = import.meta.env.VITE_APIGEE_ENV;
+let marketplaceHost: string = import.meta.env.VITE_ORIGIN;
+if (!marketplaceHost) marketplaceHost = "https://marketplace.apigee.com"
+let apigeeHubLocation: string = import.meta.env.VITE_APIGEE_HUB_LOCATION;
+if (!apigeeHubLocation) apigeeHubLocation = "europe-west1";
 
 export const GET: RequestHandler = async ({ url }) => {
 
@@ -37,26 +39,32 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 export const POST: RequestHandler = async({ params, url, request}) => {
-
   let newProduct: DataProduct = await request.json();
+  let proxyName: string = newProduct.source === "BigQuery" ? "MP-DataAPI-v1" : "MP-ServicesAPI-v1";
+  let callPath: string = newProduct.source === "BigQuery" ? "/data" : "/services";
 
-  if (newProduct.protocols.includes("API") && newProduct.source === "BigQuery") {
+  if (newProduct.protocols.includes("API") && (newProduct.source === "BigQuery" || newProduct.source === "API")) {
     // Set KVM entry for the data proxy to BigQuery
     setKVMEntry("marketplace-kvm", newProduct.entity, newProduct.query);
     // Create the API product
-    createProduct(newProduct.id, newProduct.name, "/" + newProduct.entity);
+    createProduct(newProduct.id, newProduct.name, "/" + newProduct.entity, proxyName);
     // Create an OpenAPI spec with Gemini
     if (!newProduct.samplePayload) {
-      let response =  await fetch(`https://${apigeeHost}/v1/test/data/` + newProduct.entity);
+      let response =  await fetch(`https://${apigeeHost}/v1/test${callPath}/` + newProduct.entity);
       newProduct.samplePayload = await response.text();
     }
     
     newProduct.specUrl = `/api/products/${newProduct.id}/spec`;
     
     if (!newProduct.specContents) {
-      newProduct.specContents = await generateSpec(newProduct.name, "/v1/data/" + newProduct.entity, newProduct.samplePayload);
+      newProduct.specContents = await generateSpec(newProduct.name, `/v1${callPath}/${newProduct.entity}`, newProduct.samplePayload);
       newProduct.specContents = newProduct.specContents.replaceAll("```json", "").replaceAll("```", "");
     }
+
+    await apiHubRegister(newProduct);
+    await apiHubCreateDeployment(newProduct);
+    await apiHubCreateVersion(newProduct);
+    await apiHubCreateVersionSpec(newProduct);
   }
 
   // Persist defnition to Firestore...
@@ -64,6 +72,145 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   newDoc.set(newProduct);
 
 	return json(newProduct);
+}
+
+async function apiHubRegister(product: DataProduct) {
+  let token = await auth.getAccessToken();
+  // First let's register the API
+  let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis?api_id=${product.id}`;
+  console.log(hubUrl);
+  let response = await fetch(hubUrl, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"      
+    },
+    body: JSON.stringify({
+      display_name: product.name,
+      description: product.description,
+      documentation: {
+        externalUri: marketplaceHost + "/products/" + product.id
+      },
+      owner: {
+        displayName: product.ownerName,
+        email: product.ownerEmail
+      }
+    })
+  });
+
+  console.log(response.status + " - " + response.statusText);
+  let result: any = await response.json();
+  console.log(result);
+}
+
+async function apiHubCreateDeployment(product: DataProduct) {
+  let token = await auth.getAccessToken();
+  // Now create deployment
+  let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/deployments?deploymentId=${product.id}`;
+  console.log(hubUrl);
+  let response = await fetch(hubUrl, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"      
+    },
+    body: JSON.stringify({
+      name: `projects/${projectId}/locations/${apigeeHubLocation}/deployments/${product.id}`,
+      displayName: product.name,
+      description: product.description,
+      documentation: {
+        externalUri: marketplaceHost + "/products/" + product.id
+      },
+      deploymentType: {
+        attribute: "projects/apigee-test74/locations/europe-west1/attributes/system-deployment-type",
+        enumValues: {
+          values: [
+            {
+              id: "apigee",
+              displayName: "Apigee",
+              description: "Apigee",
+              immutable: true
+            }
+          ]
+        }
+      },
+      resourceUri: "https://console.cloud.google.com/apigee/proxies/MP-DataAPI-v1/overview?product_id=" + product.id,
+      endpoints: [
+        `https://${apigeeHost}/v1/data/${product.entity}`
+      ]
+    })
+  });
+
+  console.log(response.status + " - " + response.statusText);
+  let result = await response.json();
+  console.log(result);  
+}
+
+async function apiHubCreateVersion(product: DataProduct) {
+  let token = await auth.getAccessToken();
+  // Now create new version
+  let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis/${product.id}/versions?version_id=${product.id}`;
+  console.log(hubUrl);
+  let response = await fetch(hubUrl, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"      
+    },
+    body: JSON.stringify({
+      display_name: product.name,
+      description: product.description,
+      documentation: {
+        externalUri: marketplaceHost + "/products/" + product.id
+      },
+      deployments: [
+        `projects/${projectId}/locations/${apigeeHubLocation}/deployments/${product.id}`
+      ]
+    })
+  });
+
+  console.log(response.status + " - " + response.statusText);
+  let result = await response.json();
+  console.log(result);
+}
+
+async function apiHubCreateVersionSpec(product: DataProduct) {
+  let token = await auth.getAccessToken();
+  // Now create spec
+  let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis/${product.id}/versions/${product.id}/specs?specId=${product.id}`;
+  console.log(hubUrl);
+  let response = await fetch(hubUrl, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"      
+    },
+    body: JSON.stringify({
+      name: `projects/${projectId}/locations/${apigeeHubLocation}/apis/${product.id}/versions/${product.id}/specs/${product.id}`,
+      displayName: product.name,
+      specType: {
+        attribute: `projects/${projectId}/locations/${apigeeHubLocation}/attributes/system-spec-type`,
+        enumValues: {
+          values: [
+            {
+              id: "openapi",
+              displayName: "OpenAPI Spec",
+              description: "OpenAPI Spec",
+              immutable: true
+            }
+          ]
+        }
+      },
+      contents: {
+        contents: btoa(product.specContents),
+        mimeType: "application/json"
+      }
+    })
+  });
+
+  console.log(response.status + " - " + response.statusText);
+  let result = await response.json();
+  console.log(result);
 }
 
 function generateSpec(name: string, path: string, payload: string): Promise<string> {
@@ -115,7 +262,7 @@ function setKVMEntry(KVMName: string, keyName: string, keyValue: string) {
   });
 }
 
-function createProduct(name: string, displayName: string, path: string): Promise<void> {
+function createProduct(name: string, displayName: string, path: string, proxyName: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     auth.getAccessToken().then((token) => {
       fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts`, {
@@ -132,7 +279,7 @@ function createProduct(name: string, displayName: string, path: string): Promise
           operationGroup: {
             operationConfigs: [
               {
-                apiSource: "MP-DataAPI-v1",
+                apiSource: proxyName,
                 operations: [
                   {
                     resource: path,

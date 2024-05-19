@@ -14,8 +14,11 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   let newProduct: DataProduct = await request.json();
 
+  console.log(JSON.stringify(newProduct));
+
   let payload = newProduct.samplePayload.replaceAll("\"", "'");
-  newProduct.specPrompt = newProduct.specPrompt.replaceAll("${name}", newProduct.name).replaceAll("${apigeeHost}", apigeeHost).replaceAll("${path}", "/v1/data/" + newProduct.entity);
+  let callPath: string = newProduct.source === "BigQuery" ? "data" : "services"
+  newProduct.specPrompt = newProduct.specPrompt.replaceAll("${name}", newProduct.name).replaceAll("${apigeeHost}", apigeeHost).replaceAll("${path}", `/v1/${callPath}/` + newProduct.entity);
 
   let prompt: string = newProduct.specPrompt;
   console.log(prompt);
@@ -39,9 +42,10 @@ function generateSpec(prompt: string): Promise<string> {
         prompt: prompt
       })
     }).then((response) => {
+      console.log(response.status + " - " + response.statusText)
       return response.json();
     }).then((result: {answer: string}) => {
-      console.log(result.answer);
+      console.log("Gen AI result: " + result.answer);
       resolve(result.answer);
     }).catch((error) => {
       console.error("Error in genai request: ");
