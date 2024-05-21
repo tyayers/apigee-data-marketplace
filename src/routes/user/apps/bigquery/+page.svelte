@@ -1,11 +1,11 @@
 <script lang="ts">
   import { appService } from "$lib/app-service";
-  import type { AHSubscription, User } from "$lib/interfaces";
+  import type { AnalyticsHubSubscription, User } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
-  let hubSubscriptions: AHSubscription[] | undefined = undefined;
+  let hubSubscriptions: AnalyticsHubSubscription[] | undefined = undefined;
 
   onMount(() => {
     document.addEventListener("userUpdated", () => {
@@ -26,13 +26,13 @@
       .then((response) => {
         return response.json();
       })
-      .then((data: AHSubscription[]) => {
+      .then((data: AnalyticsHubSubscription[]) => {
         console.log(data);
         hubSubscriptions = data;
       });
   }
 
-  function deleteSubscription(sub: AHSubscription) {
+  function deleteSubscription(sub: AnalyticsHubSubscription) {
     appService
       .ShowDialog(
         "Are you sure you want to delete this subscription dataset?",

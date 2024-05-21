@@ -3,6 +3,9 @@ import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
 import { utilsServer } from '$lib/utils.server';
 import { GoogleAuth } from 'google-auth-library';
+import { User } from '$lib/interfaces';
+
+const apiHost = import.meta.env.VITE_API_HOST;
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -43,6 +46,41 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	let userData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
+	// let userData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
+  let userData = await getOrCreateUser(email, firstName, lastName, userName);
+  
 	return json(userData);
 };
+
+async function getOrCreateUser(email: string, firstName: string, lastName: string, userName: string): Promise<User | undefined> {
+  let response = await fetch("https://" + apiHost + "/v1/users", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: email,
+      userName: userName,
+      firstName: firstName,
+      lastName: lastName
+    }),
+  });
+    
+  if (response.status == 200) {
+    let data: any = await response.json();
+    let appUser: User = new User(data.userData.email, data.userData.firstName, data.userData.lastName, data.userData.userName);
+    appUser.developerData = data.developerData;
+    if (data.userData) {
+      appUser.roles = data.userData.roles;
+      appUser.status = data.userData.status;
+    }
+
+    return appUser;
+  }
+  else {
+    console.error(`Error getting user ${email}.`);
+    console.error(`Response ${response.status} - ${response.statusText}`);
+  }
+
+  return;
+}

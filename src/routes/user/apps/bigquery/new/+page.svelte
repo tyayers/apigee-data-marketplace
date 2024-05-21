@@ -5,7 +5,7 @@
   import type { PageData } from "./$types";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
-  import type { AHSubscription, DataProduct } from "$lib/interfaces";
+  import type { AnalyticsHubSubscription, DataProduct } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
 
   let project: string = "";
@@ -97,7 +97,7 @@
             .then((response) => {
               return response.json();
             })
-            .then((data: AHSubscription) => {
+            .then((data: AnalyticsHubSubscription) => {
               goto("/user/apps/bigquery");
             });
         } else if (response.status === 409) {

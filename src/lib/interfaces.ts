@@ -99,7 +99,7 @@ export class Developer {
   attributes?: KeyValue[];
 }
 
-export class APIApp {
+export class ApiApp {
   appId: string = "";
   name: string = "";
   description: string = "";
@@ -108,7 +108,7 @@ export class APIApp {
   createdAtDate?: string = "";
   callbackUrl?: string;
   status?: string;
-  credentials?: APIAppCredential[];
+  credentials?: ApiAppCredential[];
   attributes?: KeyValue[];
   error?: Error;
 
@@ -119,24 +119,24 @@ export class APIApp {
   }
 }
 
-export class APIAppCredential {
+export class ApiAppCredential {
   consumerKey: string = "";
   consumerSecret: string = "";
   issuedAt: string = "";
   expiresAt: string = "";
   scopes?: string[];
-  apiProducts?: APIAppCredentialProduct[];
+  apiProducts?: ApiAppCredentialProduct[];
   status?: string;
   error?: Error;
 }
 
-export class APIAppCredentialProduct {
+export class ApiAppCredentialProduct {
   apiproduct: string = "";
   status?: string = "";
 }
 
-export class APIApps {
-  apps: APIApp[] = [];
+export class ApiApps {
+  apps: ApiApp[] = [];
 }
 
 export interface KeyValue {
@@ -150,7 +150,7 @@ export interface Error {
   status: string;
 }
 
-export class AHSubscription {
+export class AnalyticsHubSubscription {
   product: string = "";
   listingId: string = "";
   marketplaceId: string = "";
@@ -246,4 +246,36 @@ export class MonetizationRatePlanRate {
   start: string = "0";
   end: string = "0";
   fee: MonetizationRatePlanMoney = { currencyCode: "USD", units: "", nanos: "0" };
+}
+
+export interface ApigeeApps {
+  app: ApigeeApp[];
+  error?: Error;
+}
+
+export interface ApigeeApp {
+  appId: string;
+  name: string;
+  status?: string;
+  callbackUrl?: string;
+  createdAt?: string;
+  credentials?: ApigeeAppCredential[];
+  apiProducts?: string[];
+  error?: Error;
+  attributes: KeyValue[];
+}
+
+export interface ApigeeAppCredential {
+  consumerKey: string;
+  consumerSecret: string;
+  issuedAt: string;
+  expiresAt: string;
+  scopes?: string[];
+  status?: string;
+  apiProducts?: ApigeeAPIProductName[];
+}
+
+export interface ApigeeAPIProductName {
+  apiproduct: string;
+  status: string;
 }

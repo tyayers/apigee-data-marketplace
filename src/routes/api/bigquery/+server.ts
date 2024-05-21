@@ -3,7 +3,14 @@ import type { RequestHandler } from './$types';
 import { utilsServer } from '$lib/utils.server';
 import { Storage, type GetSignedUrlConfig } from '@google-cloud/storage'
 import { Firestore } from '@google-cloud/firestore';
-import { AHSubscription } from '$lib/interfaces';
+import { AnalyticsHubSubscription } from '$lib/interfaces';
+import { GoogleAuth } from "google-auth-library";
+
+const projectId: string = import.meta.env.VITE_PROJECT_ID;
+
+const auth = new GoogleAuth({
+  scopes: 'https://www.googleapis.com/auth/cloud-platform'
+});
 
 // Creates a client
 const storage = new Storage();
@@ -38,7 +45,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   const document = firestore.doc('data-marketplace-hub/' + email);
   const doc = await document.get();
-  let myData: { subscriptions: AHSubscription[] } = {
+  let myData: { subscriptions: AnalyticsHubSubscription[] } = {
     subscriptions: []
   };
 
@@ -48,7 +55,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     }
   }
 
-  var newSubscription: AHSubscription = {
+  var newSubscription: AnalyticsHubSubscription = {
     product: product,
     listingId: listingId,
     marketplaceId: marketplaceId,
@@ -65,7 +72,8 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   }
 
   // Now create Apigee subscription for monetization
-  await utilsServer.dataService.createApigeeSubscription(email, product);
+  // await utilsServer.dataService.createApigeeSubscription(email, product);
+  await createApigeeSubscription(email, product);
 
 	return json(newSubscription);
 }
@@ -77,7 +85,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 
   const document = firestore.doc('data-marketplace-hub/' + email);
   const doc = await document.get();
-  let myData: { subscriptions: AHSubscription[] } = {
+  let myData: { subscriptions: AnalyticsHubSubscription[] } = {
     subscriptions: []
   };
 
@@ -87,7 +95,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
     }
   }
 
-  let mySub: AHSubscription | undefined = myData.subscriptions.find(sub => sub.project === project && sub.dataset === dataset);
+  let mySub: AnalyticsHubSubscription | undefined = myData.subscriptions.find(sub => sub.project === project && sub.dataset === dataset);
   if (mySub) {
     let index = myData.subscriptions.indexOf(mySub);
     myData.subscriptions.splice(index, 1);
@@ -98,4 +106,20 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
   }
 
 	return json(mySub);
+}
+
+async function createApigeeSubscription(email: string, product: string): Promise<any> {
+  let token = await auth.getAccessToken();
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/subscriptions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      "apiproduct": product
+    })
+  });
+
+  return response.json();
 }

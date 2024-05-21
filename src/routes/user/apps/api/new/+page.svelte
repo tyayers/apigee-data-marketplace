@@ -4,7 +4,7 @@
   import { appService } from "$lib/app-service";
   import { onMount } from "svelte";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
-  import { APIApp, DataProduct } from "$lib/interfaces";
+  import { ApiApp, DataProduct } from "$lib/interfaces";
   import { protocols } from "$lib/utils";
 
   let name: string = "";
@@ -37,7 +37,7 @@
   }
 
   function submit() {
-    let newApp: APIApp = new APIApp(name, description, selectedProducts);
+    let newApp: ApiApp = new ApiApp(name, description, selectedProducts);
     fetch("/api/apiapps?email=" + appService.currentUser?.email, {
       method: "POST",
       headers: {

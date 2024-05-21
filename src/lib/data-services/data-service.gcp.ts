@@ -1,6 +1,6 @@
 import type { APIProducts, APIProduct, Apps, App, Developer as ApigeeDeveloper} from "apigee-x-module";
 import { ApigeeService } from "apigee-x-module";
-import { type APIApp, type APIApps, type Product, type Products, type Developer, type APIAppCredential, type AHSubscription, UsageData, User } from "../interfaces";
+import { type ApiApp, type ApiApps, type Product, type Products, type Developer, type ApiAppCredential, type AnalyticsHubSubscription, UsageData, User } from "../interfaces";
 import { product_index } from "../products_new";
 import { GoogleAuth } from "google-auth-library";
 
@@ -78,23 +78,23 @@ export class GoogleCloudDataService {
     });
   }
 
-  public getApiApps(email: string): Promise<APIApps> {
+  public getApiApps(email: string): Promise<ApiApps> {
     return new Promise((resolve, reject) => {
 
       this.apigeeService.getApps(email).then((apps: Apps) => {
-        resolve(apps as APIApps);
+        resolve(apps as ApiApps);
       }).catch((err: any) => {
         reject(err);
       });
     });
   }
 
-  public createApiApp(devEmail: string, appName: string, description: string, products: string[]): Promise<APIApp> {
+  public createApiApp(devEmail: string, appName: string, description: string, products: string[]): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
       console.log("writing app: " + devEmail + " " + products.join(", "));
       this.apigeeService.createApp(devEmail, appName, products, description).then((app) => {
         console.log(app);
-        resolve(app as APIApp);
+        resolve(app as ApiApp);
       }).catch((err: any) => {
         console.error(err);
         reject(err);
@@ -102,7 +102,7 @@ export class GoogleCloudDataService {
     });
   }
 
-  public updateApiApp(devEmail: string, app: APIApp): Promise<APIApp> {
+  public updateApiApp(devEmail: string, app: ApiApp): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
 
       let updatedApp: App = {
@@ -118,13 +118,13 @@ export class GoogleCloudDataService {
       this.apigeeService.updateApp(devEmail, updatedApp.name, updatedApp).then((app) => {
         // Now update all credentials
         if (updatedApp.credentials) {
-          var credPromises: Promise<APIAppCredential>[] = [];
+          var credPromises: Promise<ApiAppCredential>[] = [];
           for (let cred of updatedApp.credentials) {
-            let credUpdatePromise: Promise<APIAppCredential> = this.apigeeService.updateAppCredential(devEmail, updatedApp.name, cred);
+            let credUpdatePromise: Promise<ApiAppCredential> = this.apigeeService.updateAppCredential(devEmail, updatedApp.name, cred);
           }
 
           Promise.all(credPromises).then((results) => {
-            resolve(app as APIApp);
+            resolve(app as ApiApp);
           });
         }
       }).catch((err: any) => {
@@ -133,27 +133,27 @@ export class GoogleCloudDataService {
     });
   }
 
-  public getApiApp(devEmail: string, appId: string): Promise<APIApp> {
+  public getApiApp(devEmail: string, appId: string): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
       this.apigeeService.getApp(devEmail, appId).then((app) => {
-        resolve(app as APIApp);
+        resolve(app as ApiApp);
       }).catch((err) => {
         reject(err);
       });
     });
   }
 
-  deleteApiApp(devEmail: string, appId: string): Promise<APIApp> {
+  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
       this.apigeeService.deleteApp(devEmail, appId).then((app) => {
-        resolve(app as APIApp);
+        resolve(app as ApiApp);
       }).catch((err: any) => {
         reject(err);
       });
     });
   }
   
-  public addApiAppKey(devEmail: string, app: APIApp): Promise<APIApp> {
+  public addApiAppKey(devEmail: string, app: ApiApp): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
 
       let updatedApp: App = {
@@ -167,24 +167,24 @@ export class GoogleCloudDataService {
       };
 
       this.apigeeService.addAppCredential(devEmail, updatedApp.name, updatedApp).then((app) => {
-        resolve(app as APIApp);
+        resolve(app as ApiApp);
       }).catch((err: any) => {
         reject(err);
       });
     });
   }
 
-  deleteApiAppKey(devEmail: string, appId: string, keyId: string): Promise<APIAppCredential> {
+  deleteApiAppKey(devEmail: string, appId: string, keyId: string): Promise<ApiAppCredential> {
     return new Promise((resolve, reject) => {
       this.apigeeService.deleteAppCredential(devEmail, appId, keyId).then((key) => {
-        resolve(key as APIAppCredential);
+        resolve(key as ApiAppCredential);
       }).catch((err: any) => {
         reject(err);
       });
     });
   }
 
-  public createHubSubscription(project: string, datasetId: string, marketplaceId: string, listingId: string): Promise<AHSubscription> {
+  public createHubSubscription(project: string, datasetId: string, marketplaceId: string, listingId: string): Promise<AnalyticsHubSubscription> {
     return new Promise((resolve, reject) => {
 
       this.auth.getAccessToken().then((token) => {

@@ -14,7 +14,7 @@ import {
 } from "firebase/auth";
 import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { User, Developer, APIApps, DataProduct } from "./interfaces";
+import { User, Developer, ApiApps, DataProduct } from "./interfaces";
 
 let FirebaseAPIKey: string = import.meta.env.VITE_FIREBASE_APIKEY;
 let FirebaseAuthDomain: string = import.meta.env.VITE_FIREBASE_AUTHDOMAIN;
@@ -34,7 +34,7 @@ export class AppService {
   currentUser: User | undefined = undefined;
   currentUserLoaded: boolean = false;
   firebaseUser: FirebaseUser | undefined = undefined;
-  apiApps: APIApps | undefined = undefined;
+  apiApps: ApiApps | undefined = undefined;
   reloadFlag: boolean = false;
   // products: Products = new Products();
   products: DataProduct[] | undefined = undefined;

@@ -1,8 +1,13 @@
 <script lang="ts">
-	import { appService } from "$lib/app-service";
+  import { appService } from "$lib/app-service";
   import Header from "$lib/components.header.svelte";
-    import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+  import {
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+  } from "firebase/auth";
 
+  let firstName: string = "";
+  let lastName: string = "";
   let email: string = "";
   let password1: string = "";
   let password2: string = "";
@@ -11,22 +16,17 @@
     history.back();
   }
 
-  function submit(e: { key: string; }) {
-    if (e.key == "Escape")
-      cancel();
-    else if (e.key == "Enter")
-      registerWithEmail();
+  function submit(e: { key: string }) {
+    if (e.key == "Escape") cancel();
+    else if (e.key == "Enter") registerWithEmail();
   }
 
   function registerWithEmail() {
     if (email == "") {
       appService.ShowSnackbar("Email address is invalid.");
-    }
-    else if (password1 == "" || password1 != password2) {
+    } else if (password1 == "" || password1 != password2) {
       appService.ShowSnackbar("Passwords don't match.");
-    }
-    else
-      appService.RegisterWithEmail(email, password1);
+    } else appService.RegisterWithEmail(email, password1);
   }
 </script>
 
@@ -38,40 +38,95 @@
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
     <h2>Register with your email address</h2>
     <div class="so" on:keydown={submit}>
+      <div style="width: 100%; display: flex;">
+        <div class="input_field_panel" style="width: 50%;">
+          <input
+            class="input_field"
+            type="text"
+            id="firstName"
+            required
+            bind:value={firstName}
+            autocomplete="off"
+            title="none"
+            autofocus
+          />
+          <label for="firstName" class="input_field_placeholder">
+            First name
+          </label>
+        </div>
+        <div class="input_field_panel" style="width: 50%;">
+          <input
+            class="input_field"
+            type="text"
+            id="lastName"
+            required
+            bind:value={lastName}
+            autocomplete="off"
+            title="none"
+          />
+          <label for="lastName" class="input_field_placeholder">
+            Last name
+          </label>
+        </div>
+      </div>
 
       <div class="input_field_panel">
-        <input class="input_field" type="text" id="email" required bind:value={email} autocomplete="off" title="none" autofocus />
-        <label for="email" class='input_field_placeholder'>
-          Email
+        <input
+          class="input_field"
+          type="text"
+          id="email"
+          required
+          bind:value={email}
+          autocomplete="off"
+          title="none"
+        />
+        <label for="email" class="input_field_placeholder"> Email </label>
+      </div>
+
+      <div class="input_field_panel">
+        <input
+          class="input_field"
+          type="password"
+          id="password1"
+          required
+          bind:value={password1}
+          autocomplete="off"
+          title="none"
+        />
+        <label for="password1" class="input_field_placeholder">
+          Password
         </label>
       </div>
 
       <div class="input_field_panel">
-        <input class="input_field" type="password" id="password1" required bind:value={password1} autocomplete="off" title="none" />
-        <label for="password1" class='input_field_placeholder'>
-          Password
-        </label>
-      </div>      
-
-      <div class="input_field_panel">
-        <input class="input_field" type="password" id="password2" required bind:value={password2} autocomplete="off" title="none" />
-        <label for="password2" class='input_field_placeholder'>
+        <input
+          class="input_field"
+          type="password"
+          id="password2"
+          required
+          bind:value={password2}
+          autocomplete="off"
+          title="none"
+        />
+        <label for="password2" class="input_field_placeholder">
           Repeat password
         </label>
-      </div>     
-
+      </div>
     </div>
 
     <div class="controls">
-      <button on:click={registerWithEmail} class="rounded_button_filled">Register</button>
-      <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
+      <button on:click={registerWithEmail} class="rounded_button_filled"
+        >Register</button
+      >
+      <button on:click={() => history.back()} class="rounded_button_outlined"
+        >Cancel</button
+      >
     </div>
   </div>
-
 </div>
 
 <style>
-    .sc {
+  .sc {
     position: fixed;
     background-color: rgba(255, 255, 255, 0.95);
     top: 0px;
@@ -123,6 +178,4 @@
   .controls {
     margin-top: 24px;
   }
-
-
 </style>

@@ -1,5 +1,5 @@
 // import type { ApiProducts, ApiProduct, Apps, App } from "apigee-x-module";
-import type { APIApp, APIApps, User, Developer, Product, Products } from "$lib/interfaces";
+import type { ApiApp, ApiApps, User, Developer, Product, Products } from "$lib/interfaces";
 
 
 export class TestDataService {
@@ -53,7 +53,7 @@ export class TestDataService {
 
   private developers: { [key: string]: User } = {};
 
-  private apps: APIApps = {
+  private apps: ApiApps = {
     apps: [{
       appId: "test",
       name: "test",
@@ -96,15 +96,15 @@ export class TestDataService {
     };
   }
 
-  public getApiApps(email: string): Promise<APIApps> {
+  public getApiApps(email: string): Promise<ApiApps> {
     return new Promise((resolve, reject) => {
       resolve(this.apps);
     });
   }
 
-  public createApiApp(devEmail: string, appName: string, products: string[]): Promise<APIApp> {
+  public createApiApp(devEmail: string, appName: string, products: string[]): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
-      let newApp: APIApp = {
+      let newApp: ApiApp = {
         appId: appName,
         name: appName,
         description: appName,
@@ -118,7 +118,7 @@ export class TestDataService {
     });
   }
 
-  public getApiApp(devEmail: string, appId: string): Promise<APIApp> {
+  public getApiApp(devEmail: string, appId: string): Promise<ApiApp> {
     return new Promise((resolve, reject) => {
       for (let app of this.apps.apps) {
         if (app.appId === appId) {
@@ -132,7 +132,7 @@ export class TestDataService {
   getDeveloper(email: string): Promise<Developer> {
     throw new Error("Method not implemented.");
   }
-  deleteApiApp(devEmail: string, appId: string): Promise<APIApp> {
+  deleteApiApp(devEmail: string, appId: string): Promise<ApiApp> {
     throw new Error("Method not implemented.");
   }
 }

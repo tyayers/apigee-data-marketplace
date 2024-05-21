@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
-  import { APIApp, APIAppCredential } from "$lib/interfaces";
+  import { ApiApp, APIAppCredential } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import type { PageData } from "./$types";
   import { goto } from '$app/navigation';
@@ -9,7 +9,7 @@
   export let data: PageData;
 
   let products = appService.products;
-  let appData: APIApp | undefined = undefined;
+  let appData: ApiApp | undefined = undefined;
   //if (appService.apiApps) appService.apiApps?.apps.find((item) => APIAppame === data.appName);
   let apiProductChecks: {[key: string]: boolean} = {};
 
@@ -95,7 +95,7 @@
         },
       }).then((response) => {
           return response.json();
-      }).then((data: APIApp) => {
+      }).then((data: ApiApp) => {
         if (appService.apiApps && appData) {
           let index = appService.apiApps.apps.indexOf(data);
           appService.apiApps.apps[index] = data;

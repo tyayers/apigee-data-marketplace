@@ -1,12 +1,12 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import { APIApp, APIApps, User } from "$lib/interfaces";
+  import { ApiApp, ApiApps, User } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
-  let appData: APIApps | undefined = appService.apiApps;
+  let appData: ApiApps | undefined = appService.apiApps;
   updateApps();
 
   onMount(() => {
@@ -31,7 +31,7 @@
     goto("/user/apps/api/" + appId);
   }
 
-  function deleteApp(app: APIApp) {
+  function deleteApp(app: ApiApp) {
     appService
       .ShowDialog("Do you really want to delete this app?", "Delete", 0)
       .then((result) => {
@@ -53,7 +53,7 @@
                 .then((response) => {
                   return response.json();
                 })
-                .then((data: APIApp) => {
+                .then((data: ApiApp) => {
                   let index = appService.apiApps?.apps.indexOf(data);
                   if (index) {
                     let newAppData = appService.apiApps;

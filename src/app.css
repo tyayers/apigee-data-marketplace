@@ -160,6 +160,7 @@ button {
   margin-top: 24px;
   max-width: 524px;
   width: 100%;
+  padding: 2px;
 }
 
 .input_field {
