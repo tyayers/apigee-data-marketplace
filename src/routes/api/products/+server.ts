@@ -78,7 +78,6 @@ async function apiHubRegister(product: DataProduct) {
   let token = await auth.getAccessToken();
   // First let's register the API
   let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis?api_id=${product.id}`;
-  console.log(hubUrl);
   let response = await fetch(hubUrl, {
     method: "POST",
     headers: {
@@ -98,16 +97,13 @@ async function apiHubRegister(product: DataProduct) {
     })
   });
 
-  console.log(response.status + " - " + response.statusText);
   let result: any = await response.json();
-  console.log(result);
 }
 
 async function apiHubCreateDeployment(product: DataProduct) {
   let token = await auth.getAccessToken();
   // Now create deployment
   let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/deployments?deploymentId=${product.id}`;
-  console.log(hubUrl);
   let response = await fetch(hubUrl, {
     method: "POST",
     headers: {
@@ -141,16 +137,13 @@ async function apiHubCreateDeployment(product: DataProduct) {
     })
   });
 
-  console.log(response.status + " - " + response.statusText);
   let result = await response.json();
-  console.log(result);  
 }
 
 async function apiHubCreateVersion(product: DataProduct) {
   let token = await auth.getAccessToken();
   // Now create new version
   let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis/${product.id}/versions?version_id=${product.id}`;
-  console.log(hubUrl);
   let response = await fetch(hubUrl, {
     method: "POST",
     headers: {
@@ -169,16 +162,13 @@ async function apiHubCreateVersion(product: DataProduct) {
     })
   });
 
-  console.log(response.status + " - " + response.statusText);
   let result = await response.json();
-  console.log(result);
 }
 
 async function apiHubCreateVersionSpec(product: DataProduct) {
   let token = await auth.getAccessToken();
   // Now create spec
   let hubUrl = `https://apihub.googleapis.com/v1/projects/${projectId}/locations/${apigeeHubLocation}/apis/${product.id}/versions/${product.id}/specs?specId=${product.id}`;
-  console.log(hubUrl);
   let response = await fetch(hubUrl, {
     method: "POST",
     headers: {
@@ -208,9 +198,7 @@ async function apiHubCreateVersionSpec(product: DataProduct) {
     })
   });
 
-  console.log(response.status + " - " + response.statusText);
   let result = await response.json();
-  console.log(result);
 }
 
 function generateSpec(name: string, path: string, payload: string): Promise<string> {
@@ -230,11 +218,8 @@ function generateSpec(name: string, path: string, payload: string): Promise<stri
     }).then((response) => {
       return response.json();
     }).then((result: {answer: string}) => {
-      console.log(result.answer);
       resolve(result.answer);
     }).catch((error) => {
-      console.error("Error in genai request: ");
-      console.error(error);
       reject("Error in calling Gen AI API.");
     })
     
@@ -254,9 +239,7 @@ function setKVMEntry(KVMName: string, keyName: string, keyValue: string) {
         value: keyValue
       })
     }).then((response) => {
-      // console.log(response.status + " " + response.statusText);
     }).catch((error) => {
-      console.log("Error in KVM key create:");
       console.error(error);
     });
   });
@@ -293,42 +276,14 @@ function createProduct(name: string, displayName: string, path: string, proxyNam
       }).then((response) => {
         return response.json();
       }).then((result: any) => {
-        // console.log(result);
         resolve();
       }).catch((error) => {
-        console.log("Error in product create:");
         console.error(error);
         reject();
       });
     });
   });
 }
-
-// function importProxy(name: string, path: string): Promise<ProxyRevision> {
-//   return new Promise<ProxyRevision>((resolve, reject) => {
-//     auth.getAccessToken().then((token) => {
-//       const formData = new FormData();
-//       let buffer = fs.readFileSync(path);
-//       formData.append('file', buffer, name + ".zip");
-      
-//       fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apis?name=${name}&action=import`, {
-//         method: "POST",
-//         headers: {
-//           "Authorization": `Bearer ${token}`,
-//           ...formData.getHeaders()
-//         },
-//         body: formData.getBuffer()
-//       }).then((response) => {
-//         return response.json();
-//       }).then((result: ProxyRevision) => {
-//         resolve(result);
-//       }).catch((error) => {
-//         console.log("Error in proxy import:");
-//         console.error(error);
-//       });
-//     });
-//   });
-// }
 
 function createAPITemplate(product: DataProduct): ApigeeTemplateInput {
   let result: ApigeeTemplateInput = {

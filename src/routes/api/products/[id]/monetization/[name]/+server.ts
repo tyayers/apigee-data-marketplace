@@ -27,11 +27,9 @@ export const GET: RequestHandler = async ({ url, params }) => {
   });
 
   if (response.status == 200) {
-    console.log("Monetization plan get successful.");
     return json(await response.json());
   }
   else {
-    console.log("Error getting monetization plan: " + response.status + " " + response.statusText);
     return error(response.status as NumericRange<400, 599>, response.statusText);
   }
 };
@@ -62,11 +60,9 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
   });
 
   if (response.status == 200) {
-    console.log("Monetization plan DELETE successful.");
     return json(await response.json());
   }
   else {
-    console.log("Error deleting monetization plan: " + response.status + " " + response.statusText);
     return error(response.status as NumericRange<400, 599>, response.statusText);
   }
 }

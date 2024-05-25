@@ -49,7 +49,6 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
   let id: string = "";
   if (params.id) id = params.id;
 
-  console.log(id);
   let sla: SLA | undefined = undefined;
 
   const document = firestore.doc('data-marketplace-slas/' + id);

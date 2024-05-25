@@ -9,7 +9,6 @@
   onMount(() => {
     fetch("/api/identity").then((response) => {
       if (response.status === 404) {
-        console.log(response.statusText);
       }
       else if (response.status === 200)
         return response.json();

@@ -15,8 +15,6 @@
   //let accessToken: string = "";
   let productData: DataProduct | undefined = undefined;
 
-  console.log($page.url);
-
   var urlProduct = $page.url.searchParams.get("product");
   if (urlProduct) product = urlProduct;
 

@@ -27,11 +27,9 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   });
 
   if (response.status == 201) {
-    console.log("Monetization plan creation successful.");
     return json(await response.json());
   }
   else {
-    console.log("Error creating monetization plan: " + response.status + " " + response.statusText);
     return json({
       status: response.status,
       statusText: response.statusText

@@ -27,7 +27,6 @@
         return response.json();
       })
       .then((data: AnalyticsHubSubscription[]) => {
-        console.log(data);
         hubSubscriptions = data;
       });
   }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { appService } from "$lib/app-service";
-  import { ApiApp, APIAppCredential } from "$lib/interfaces";
+  import { ApiApp, ApiAppCredential } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import type { PageData } from "./$types";
   import { goto } from '$app/navigation';
@@ -30,8 +30,10 @@
 	});
 
   function setProductChecks() {
-    for (let product of products) {
-      apiProductChecks[product.name] = false;
+    if (products) {
+      for (let product of products) {
+        apiProductChecks[product.name] = false;
+      }
     }
 
     if (appData && appData.credentials && appData.credentials.length > 0 && appData.credentials[0].apiProducts) {
@@ -109,7 +111,7 @@
     }
   }
 
-  function deleteKey(key: APIAppCredential) {
+  function deleteKey(key: ApiAppCredential) {
     appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
       if (result === "ok") {
         if (appService.currentUser && appData) {
@@ -271,11 +273,13 @@
 
                 <div class="product_list">
                   <h4>Product subscriptions</h4>
-                  {#each products as product}
-                    <div class="product_list_line">
-                      <input type="checkbox" id={product.id} name={product.id} bind:checked={apiProductChecks[product.id]}/><label for={product.id}>{product.name}</label>
-                    </div>
-                  {/each}
+                  {#if products}
+                    {#each products as product}
+                      <div class="product_list_line">
+                        <input type="checkbox" id={product.id} name={product.id} bind:checked={apiProductChecks[product.id]}/><label for={product.id}>{product.name}</label>
+                      </div>
+                    {/each}
+                  {/if}
                 </div>
 
                 <div class="controls">

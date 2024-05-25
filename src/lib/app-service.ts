@@ -51,7 +51,6 @@ export class AppService {
       fetch("/api/products").then((response) => {
         return response.json();
       }).then((result: DataProduct[]) => {
-        console.log(result);
         this.products = result;
         document.dispatchEvent(new Event("productsUpdated"));
       });

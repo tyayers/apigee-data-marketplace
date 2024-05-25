@@ -1,7 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
-import { utilsServer } from '$lib/utils.server';
 import { GoogleAuth } from 'google-auth-library';
 import { User } from '$lib/interfaces';
 
@@ -46,7 +45,6 @@ export const POST: RequestHandler = async ({ url }) => {
 		lastName = names[1];
 	}
 
-	// let userData = await utilsServer.dataService.getOrCreateUser(email, firstName, lastName, userName);
   let userData = await getOrCreateUser(email, firstName, lastName, userName);
   
 	return json(userData);

@@ -15,7 +15,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (!email) {
 		error(400, 'email is required.');
 	}
-	//let apps = utilsServer.dataService.getApiApps(email);
 	let apps = await getApiApps(email)
 
 	return json(apps);
@@ -29,13 +28,8 @@ export const POST: RequestHandler = async ({ url, request }) => {
 		error(400, 'email is required.');
 	}
 	
-  //await utilsServer.dataService.createApiApp(email.toString(), newApp.name, newApp.description, newApp.apiProducts);
   await createApiApp(email, newApp);
 
-  // Now create Apigee subscription for monetization
-  // for (let product of newApp.apiProducts) {
-  //   await utilsServer.dataService.createApigeeSubscription(email, product);
-  // }
   createSubscriptions(email, newApp);
 
 	return json(newApp);

@@ -79,10 +79,8 @@ function deleteAPIProduct(id: string) {
         "Authorization": `Bearer ${token}`
       }
     }).then((response) => {
-      // console.log(response.status + " " + response.statusText);
       return response.json();
     }).catch((error) => {
-      console.log("Error in product delete:");
       console.error(error);
     });
   });

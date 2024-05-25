@@ -27,7 +27,6 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   if (newProduct.protocols.includes("API") && (newProduct.source === "BigQuery" || newProduct.source === "API")) {
     // Set KVM entry for the data proxy to BigQuery
-    console.log(`Setting KVM entity ${newProduct.entity} and target ${newProduct.query}`);
     await setKVMEntry("marketplace-kvm", newProduct.entity, newProduct.query);
   }
 

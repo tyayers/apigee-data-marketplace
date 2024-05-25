@@ -1,7 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { ApiApp, ApigeeApp } from '$lib/interfaces';
-import { utilsServer } from '$lib/utils.server';
 import { GoogleAuth } from "google-auth-library";
 import type { ApigeeAppCredential } from 'apigee-x-module';
 
@@ -18,7 +17,6 @@ export const GET: RequestHandler = async ({ params, url }) => {
 		error(400, 'email and appid are required');
 	}
 	
-	// let appData = await utilsServer.dataService.getApiApp(email, params.id)
   let appData = await getApiApp(email, params.id);
 
 	return json(appData);
@@ -34,7 +32,6 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 		error(400, 'email and appid are required');
 	}
 
-	// let appData = await utilsServer.dataService.addApiAppKey(email, app);
   let appData = await createApiAppKey(email, app);
 
 	return json(appData);
@@ -50,7 +47,6 @@ export const PUT: RequestHandler = async ({ params, url, request }) => {
 		error(400, 'email and appid are required');
 	}
 	
-	//let appData = await utilsServer.dataService.updateApiApp(email, app);
   let appData = await updateApiApp(email, app);
 
 	return json(appData);
@@ -63,7 +59,6 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 		error(400, 'email and appid are required');
 	}
 
-	// let appData = await utilsServer.dataService.deleteApiApp(email, params.id);
   let appData = await deleteApiApp(email, params.id);
 
 	return json(appData);

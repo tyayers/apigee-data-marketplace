@@ -29,7 +29,6 @@
         return response.json();
       })
       .then((data: BucketSubscription[]) => {
-        console.log(data);
         bucketSubscriptions = data;
       });
   }

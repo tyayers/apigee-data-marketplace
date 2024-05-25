@@ -5,7 +5,6 @@
   export let plan: MonetizationRatePlan;
 
   function addBand() {
-    console.log("hello");
     let rates = plan.consumptionPricingRates;
     rates.push(new MonetizationRatePlanRate());
     plan.consumptionPricingRates = rates;

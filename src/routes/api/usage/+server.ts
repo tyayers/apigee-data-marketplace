@@ -1,6 +1,5 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { utilsServer } from '$lib/utils.server';
 import { GoogleAuth } from "google-auth-library";
 import type { UsageData } from '$lib/interfaces';
 
@@ -18,7 +17,6 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	});
 
   const email = url.searchParams.get('email') ?? '';
-	//const usageData = await utilsServer.dataService.getUsageData(email);
   const usageData = await getUsageData(email);
 
 	return json(usageData);

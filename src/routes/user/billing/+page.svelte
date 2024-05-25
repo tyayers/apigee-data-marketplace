@@ -83,15 +83,12 @@
           }
         }
       }
-
-      console.log(JSON.stringify(newAppUsage));
     }
 
     return newAppUsage;
   }
 
   function drawBasic() {
-    console.log(JSON.stringify(appUsage));
     if (appUsage) {
       let graphAppData: any[][] = [["Month"]];
       for (const [key, value] of Object.entries(appUsage)) {
@@ -107,8 +104,6 @@
           graphAppData[monthIndex].push(parseInt(value[name]));
         }
       }
-
-      console.log(JSON.stringify(graphAppData));
 
       var data = google.visualization.arrayToDataTable(graphAppData);
 

@@ -8,7 +8,6 @@ let inputString: string = "";
 let matchingData: string[] = [];
 
 function onInput(e: any) {
-  console.log(e);
 
   if (e.key == "Enter") {
     onSelectCat(inputString);

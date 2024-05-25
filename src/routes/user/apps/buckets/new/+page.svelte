@@ -29,7 +29,6 @@
     }).then((response) => {
         return response.json();
     }).then((data: BucketSubscription) => {
-        console.log(data);
         goto("/user/apps/buckets");
     });
   }

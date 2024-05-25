@@ -2,7 +2,6 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { GoogleAuth } from 'google-auth-library';
 import type { ApiAppCredential } from '$lib/interfaces';
-// import { utilsServer } from '$lib/utils.server';
 
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
 
@@ -17,7 +16,6 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 		error(400, 'email and appid are required');
 	}
 
-	// let appKeyData = await utilsServer.dataService.deleteApiAppKey(email, params.id, params.keyId)
   let appKeyData = await deleteApiAppKey(email, params.id, params.keyId);
 	return json(appKeyData);
 }

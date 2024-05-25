@@ -32,7 +32,6 @@
     fetch("/api/slas")
       .then((response) => {
         if (response.status === 404) {
-          console.log(response.statusText);
         } else if (response.status === 200) return response.json();
       })
       .then((slaResults: SLA[]) => {
@@ -40,8 +39,6 @@
         let sla = slas.find(o => o.id === product.sla.id);
         if (sla) product.sla = sla;
       });
-
-    console.log(product);
   });
 
   let categoryData: string[] = [
@@ -256,7 +253,7 @@
     </div>
 
     <div class="form_list">
-      <h4 on:click={() => {console.log(product.sla)}}>SLA</h4>
+      <h4>SLA</h4>
       <div class="select_dropdown">
         <select name="sla" id="sla" bind:value={product.sla}>
           {#each slas as sla}

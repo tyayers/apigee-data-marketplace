@@ -2,7 +2,6 @@
   import { appService } from "$lib/app-service";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import type { User, BucketSubscription, IdentityConfig } from "$lib/interfaces";
-  import type { Bucket } from "@google-cloud/storage";
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
@@ -17,7 +16,6 @@
 
     fetch("/api/identity").then((response) => {
       if (response.status === 404) {
-        console.log(response.statusText);
       }
       else if (response.status === 200)
         return response.json();
@@ -37,7 +35,7 @@
       </div>
 
       <div class="left_menu_page_right_content">
-        {#if currentUser}
+        {#if currentUser && identityConfig}
           <div class="menu_profile">
             <img
               class="panel_profile_image"

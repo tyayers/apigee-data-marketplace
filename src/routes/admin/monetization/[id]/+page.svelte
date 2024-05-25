@@ -46,7 +46,6 @@
   }
 
   function submit() {
-    console.log(plan);
     plan.apiproduct = product.id;
     plan.startTime = Date.now();
 
@@ -54,12 +53,10 @@
       method: "POST",
       body: JSON.stringify(plan)
     }).then((response: Response) => {
-      console.log("Monetization response: " + response.status + " " + response.statusText);
       return response.json();
     }).then((result: any) => {
       // Now update product with monetization name
       if (result.name) {
-        console.log("Monetization name: " + result.name);
         product.monetizationId = result.name;
         product.monetizationData = result;
         // Update in appservice

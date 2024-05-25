@@ -1,6 +1,5 @@
 import { error, json, type NumericRange } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { utilsServer } from '$lib/utils.server';
 import { GoogleAuth } from "google-auth-library";
 const projectId = import.meta.env.VITE_PROJECT_ID;
 const apigeeEnvironment = import.meta.env.VITE_APIGEE_ENV;
