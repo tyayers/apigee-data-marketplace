@@ -279,3 +279,12 @@ export interface ApigeeAPIProductName {
   apiproduct: string;
   status: string;
 }
+
+export class FlatTableData {
+  headers: FlatTableHeader[] = [];
+  styles: FlatTableStyle[] = [];
+  data: any[] = [];
+}
+
+export interface FlatTableHeader {name: string, displayName: string, sortable: boolean, searchable: boolean}
+export interface FlatTableStyle {name: string, value: string, color: string, isBold: boolean}

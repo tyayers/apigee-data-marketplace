@@ -1,21 +1,64 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import type { User, DataProduct } from "$lib/interfaces";
+  import type { User, DataProduct, FlatTableData } from "$lib/interfaces";
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
+  import FlatTable from "$lib/components.flat-table.svelte";
+
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = appService.products;
+  let productsTableConfig: FlatTableData = {
+    headers: [
+      {
+        name: "name",
+        displayName: "Name",
+        searchable: true,
+        sortable: true
+      },{
+        name: "ownerEmail",
+        displayName: "Owner",
+        searchable: true,
+        sortable: true
+      },{
+        name: "source",
+        displayName: "Data source",
+        searchable: true,
+        sortable: true
+      },{
+        name: "createdAt",
+        displayName: "Creation date",
+        searchable: true,
+        sortable: true
+      },{
+        name: "status",
+        displayName: "Status",
+        searchable: true,
+        sortable: true
+      }
+    ],
+    data: [],
+    styles: []
+  };
+  if (products)
+    productsTableConfig.data = products;
+
+
+  let sortName: boolean = false;
 
   onMount(() => {
     document.addEventListener("productsUpdated", () => {
       products = appService.products;
+      if (products)
+        productsTableConfig.data = products;
     });
 
     document.addEventListener("userUpdated", () => {
       currentUser = appService.currentUser;
       products = appService.products;
+      if (products)
+        productsTableConfig.data = products;
     });
   });
 
@@ -38,12 +81,30 @@
               "content-type": "application/json",
             },
           }).then((response) => {
-            let index = appService.products.findIndex((x) => x.id == productId);
-            appService.products.splice(index, 1);
-            products = appService.products;
+            if (appService && appService.products) {
+              let index = appService.products.findIndex((x) => x.id == productId);
+              appService.products.splice(index, 1);
+              products = appService.products;
+            }
           });
         }
       });
+  }
+
+  function sortByName() {
+    if (products) {
+      let tempProducts = products;
+
+      if (sortName) {
+        tempProducts.sort((a,b) => a.name < b.name ? -1 : 1);
+      }
+      else {
+        tempProducts.sort((a,b) => a.name > b.name ? -1 : 1);
+      }
+
+      sortName = !sortName;
+      products = tempProducts;
+    }
   }
 </script>
 
@@ -62,10 +123,11 @@
 
       <div class="left_menu_page_right_content">
         {#if products}
-          <table class="flat_table">
+          <FlatTable data={productsTableConfig} />
+          <!-- <table class="flat_table">
             <thead>
               <tr>
-                <th>Name</th>
+                <th on:click={sortByName}>Name</th>
                 <th>Owner</th>
                 <th>Data source</th>
                 <th>Creation date</th>
@@ -126,7 +188,7 @@
                 </tr>
               {/each}
             </tbody>
-          </table>
+          </table> -->
         {:else}
           <div class="lds-ring">
             <div></div>

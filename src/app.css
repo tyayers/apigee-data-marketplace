@@ -315,6 +315,7 @@ button {
   text-align: left;
   border-bottom: solid 1px #d1d1d1;
   padding-left: 12px;
+  cursor: pointer;
 }
 
 .flat_table tbody tr:hover {
