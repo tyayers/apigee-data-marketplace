@@ -4,38 +4,73 @@
   import type {
     User,
     DataProduct,
-    MonetizationRatePlan,
+    MonetizationRatePlan, FlatTableData
   } from "$lib/interfaces";
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
+  import FlatTable from "$lib/components.flat-table.svelte";
   import { onMount } from "svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = appService.products;
 
+  let monetizationTableConfig: FlatTableData = {
+    headers: [{
+      name: "name",
+      displayName: "Product name",
+      sortable: true,
+      searchable: true
+    }, {
+      name: "monetizationId",
+      displayName: "Plan Id",
+      sortable: true,
+      searchable: true
+    }, {
+      name: "ownerEmail",
+      displayName: "Owner",
+      sortable: true,
+      searchable: true
+    }, {
+      name: "source",
+      displayName: "Data source",
+      sortable: true,
+      searchable: true
+    }],
+    data: [],
+    styles: []
+  };
+  if (products) monetizationTableConfig.data = products;
+
   onMount(() => {
     document.addEventListener("productsUpdated", () => {
-      products = appService.products;
+      if (appService.products) {
+        products = appService.products;
+        monetizationTableConfig.data = appService.products;
+      }
     });
 
     document.addEventListener("userUpdated", () => {
       currentUser = appService.currentUser;
-      products = appService.products;
+
+      if (appService.products) {
+        products = appService.products;
+        monetizationTableConfig.data = appService.products;
+      }
     });
   });
 
-  function openProduct(productId: string) {
-    goto("/admin/monetization/" + productId);
+  function onRowClick(row: DataProduct) {
+    goto("/admin/monetization/" + row.id);
   }
 
-  function deleteProduct(productId: string, monetizationName: string) {
-    if (productId && monetizationName) {
-      fetch(`/api/products/${productId}/monetization/${monetizationName}`, {
+  function onRowDelete(row: DataProduct) {
+    if (row && row.id && row.monetizationId) {
+      fetch(`/api/products/${row.id}/monetization/${row.monetizationId}`, {
         method: "DELETE"
       }).then((response) => {
-        let tempProduct = products?.find(prod => prod.id === productId);
+        let tempProduct = products?.find(prod => prod.id === row.id);
         if (tempProduct) {
           tempProduct.monetizationId = "";
-          fetch("/api/products/" + productId, {
+          fetch("/api/products/" + row.id, {
             method: "PUT",
             body: JSON.stringify(tempProduct)
           });
@@ -62,69 +97,7 @@
 
       <div class="left_menu_page_right_content">
         {#if products}
-          <table class="flat_table">
-            <thead>
-              <tr>
-                <th>Product name</th>
-                <th>Monetization active</th>
-                <th>Plan Id</th>
-                <th>Owner</th>
-                <th>Data source</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each Object.values(products) as prod, i}
-                <tr on:click={() => openProduct(prod.id)}>
-                  <td>{prod.name}</td>
-                  {#if prod.monetizationId}
-                    <td>
-                      <span style="color: green; font-weight: bold;">Yes</span>
-                    </td>
-                  {:else}
-                    <td>
-                      <span style="color: orange; font-weight: bold;">No</span>
-                    </td>
-                  {/if}
-                  {#if prod.monetizationId}
-                    <td>{prod.monetizationId}</td>
-                  {:else}
-                    <td></td>
-                  {/if}
-                  <td>{prod.ownerEmail}</td>
-                  <td>{prod.source}</td>
-                  <td style="white-space: pre;">
-                    <button>
-                      <svg
-                        width="18px"
-                        viewBox="0 0 18 18"
-                        preserveAspectRatio="xMidYMid meet"
-                        focusable="false"
-                        ><path
-                          d="M2 13.12l8.49-8.488 2.878 2.878L4.878 16H2v-2.88zm13.776-8.017L14.37 6.507 11.494 3.63l1.404-1.406c.3-.3.783-.3 1.083 0l1.8 1.796c.3.3.3.784 0 1.083z"
-                          fill-rule="evenodd"
-                        ></path></svg
-                      >
-                    </button>
-                    <button
-                      on:click|stopPropagation={() => deleteProduct(prod.id, prod.monetizationId)}
-                    >
-                      <svg
-                        width="18px"
-                        viewBox="0 0 18 18"
-                        preserveAspectRatio="xMidYMid meet"
-                        focusable="false"
-                        ><path
-                          d="M6.5 3c0-.552.444-1 1-1h3c.552 0 1 .444 1 1H15v2H3V3h3.5zM4 6h10v8c0 1.105-.887 2-2 2H6c-1.105 0-2-.887-2-2V6z"
-                          fill-rule="evenodd"
-                        ></path></svg
-                      >
-                    </button>
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
+          <FlatTable data={monetizationTableConfig} {onRowClick} {onRowDelete} />
         {:else}
           <div class="lds-ring">
             <div></div>

@@ -6,6 +6,8 @@
   } from "$lib/interfaces";
 
   export let data: FlatTableData;
+  export let onRowClick: (row: any) => void;
+  export let onRowDelete: (row: any) => void;
 
   let displayData = data.data;
   let filterInput: string = "";  
@@ -52,9 +54,13 @@
     }
   }
 
-  function rowClick(row: any) {}
+  function rowClick(row: any) {
+    if (onRowClick) onRowClick(row);
+  }
 
-  function deleteClick(row: any) {}
+  function deleteClick(row: any) {
+    if (onRowDelete) onRowDelete(row);
+  }
 </script>
 
 {#if data}
@@ -160,6 +166,11 @@
 {/if}
 
 <style>
+  .filter {
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
   .header_sort_icon {
     position: absolute;
     margin-left: 4px;
