@@ -283,8 +283,8 @@
                 </div>
 
                 <div class="controls">
-                  <button type="button" class="rounded_button_filled" on:click={submit}>Save</button>
                   <button on:click={back} type="button" class="rounded_button_outlined">Cancel</button>
+                  <button type="button" class="rounded_button_filled" on:click={submit}>Save</button>
                 </div>
 
               </form>

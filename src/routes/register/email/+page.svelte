@@ -1,10 +1,6 @@
 <script lang="ts">
   import { appService } from "$lib/app-service";
   import Header from "$lib/components.header.svelte";
-  import {
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-  } from "firebase/auth";
 
   let firstName: string = "";
   let lastName: string = "";
@@ -26,7 +22,9 @@
       appService.ShowSnackbar("Email address is invalid.");
     } else if (password1 == "" || password1 != password2) {
       appService.ShowSnackbar("Passwords don't match.");
-    } else appService.RegisterWithEmail(email, password1);
+    } else if (!firstName || !lastName) {
+      appService.ShowSnackbar("Please enter a first and last name.")
+    } else appService.RegisterWithEmail(email, password1, firstName, lastName);
   }
 </script>
 
@@ -46,7 +44,7 @@
             id="firstName"
             required
             bind:value={firstName}
-            autocomplete="off"
+            autocomplete="new-password"
             title="none"
             autofocus
           />
@@ -61,7 +59,7 @@
             id="lastName"
             required
             bind:value={lastName}
-            autocomplete="off"
+            autocomplete="new-password"
             title="none"
           />
           <label for="lastName" class="input_field_placeholder">
@@ -77,7 +75,7 @@
           id="email"
           required
           bind:value={email}
-          autocomplete="off"
+          autocomplete="new-password"
           title="none"
         />
         <label for="email" class="input_field_placeholder"> Email </label>
@@ -90,7 +88,7 @@
           id="password1"
           required
           bind:value={password1}
-          autocomplete="off"
+          autocomplete="new-password"
           title="none"
         />
         <label for="password1" class="input_field_placeholder">
@@ -105,7 +103,7 @@
           id="password2"
           required
           bind:value={password2}
-          autocomplete="off"
+          autocomplete="new-password"
           title="none"
         />
         <label for="password2" class="input_field_placeholder">
@@ -115,11 +113,11 @@
     </div>
 
     <div class="controls">
-      <button on:click={registerWithEmail} class="rounded_button_filled"
-        >Register</button
-      >
       <button on:click={() => history.back()} class="rounded_button_outlined"
         >Cancel</button
+      >
+      <button on:click={registerWithEmail} class="rounded_button_filled"
+        >Register</button
       >
     </div>
   </div>

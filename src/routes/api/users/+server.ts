@@ -28,45 +28,42 @@ export const GET: RequestHandler = async ({ url }) => {
     error(404, "User could not be found.");
 };
 
-export const POST: RequestHandler = async ({ url }) => {
+export const POST: RequestHandler = async ({ request }) => {
 
-	const email = url.searchParams.get('email') ?? '';
-	const userName = url.searchParams.get('username') ?? 'newUser';
-	let firstName = url.searchParams.get('firstname') ?? 'New';
-  let lastName = url.searchParams.get('lastname') ?? 'User';
+  let userData: User = await request.json();
   
-	if (!email) {
-		error(400, 'Developer email is required');
+	if (!userData || !userData.email) {
+		error(400, 'Developer data is required');
 	}
 
-	if (lastName === '' && firstName === '' && userName.includes(' ')) {
-		let names: string[] = userName.split(' ');
-		firstName = names[0];
-		lastName = names[1];
+	if (!userData.firstName && !userData.lastName && userData.userName.includes(' ')) {
+		let names: string[] = userData.userName.split(' ');
+		userData.firstName = names[0];
+		userData.lastName = names[1];
 	}
 
-  let userData = await getOrCreateUser(email, firstName, lastName, userName);
+  let newUser = await getOrCreateUser(userData);
   
-	return json(userData);
+	return json(newUser);
 };
 
-async function getOrCreateUser(email: string, firstName: string, lastName: string, userName: string): Promise<User | undefined> {
+async function getOrCreateUser(user: User): Promise<User | undefined> {
   let response = await fetch("https://" + apiHost + "/v1/users", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      email: email,
-      userName: userName,
-      firstName: firstName,
-      lastName: lastName
+      email: user.email,
+      userName: user.userName,
+      firstName: user.firstName,
+      lastName: user.lastName
     }),
   });
     
   if (response.status == 200) {
     let data: any = await response.json();
-    let appUser: User = new User(data.userData.email, data.userData.firstName, data.userData.lastName, data.userData.userName);
+    let appUser: User = new User(data.userData.email, data.userData.userName, data.userData.firstName, data.userData.lastName);
     appUser.developerData = data.developerData;
     if (data.userData) {
       appUser.roles = data.userData.roles;
@@ -76,7 +73,7 @@ async function getOrCreateUser(email: string, firstName: string, lastName: strin
     return appUser;
   }
   else {
-    console.error(`Error getting user ${email}.`);
+    console.error(`Error getting user ${user.email}.`);
     console.error(`Response ${response.status} - ${response.statusText}`);
   }
 

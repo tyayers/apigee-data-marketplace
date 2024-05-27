@@ -54,8 +54,8 @@
     </div>
 
     <div class="controls">
-      <button on:click={signInWithEmail} class="rounded_button_filled">Sign in</button>
       <button on:click={() => history.back()} class="rounded_button_outlined">Cancel</button>
+      <button on:click={signInWithEmail} class="rounded_button_filled">Sign in</button>
     </div>
   </div>
 

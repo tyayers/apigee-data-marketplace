@@ -23,6 +23,14 @@
       identityConfig = config;
     });
   });
+
+  function deleteAccount() {
+    appService.ShowDialog("Are you sure that you would like to delete your account?", "Confirm", 0).then((result) => {
+      if (result === "ok") {
+        if (currentUser) appService.DeleteAccount(currentUser.email);
+      }
+    });
+  }
 </script>
 
 <div class="left_menu_page">
@@ -77,6 +85,15 @@
                 {/if}
               </tbody>
             </table>            
+          </div>
+          <div style="margin-top: 44px;">
+            <h4 style="color: red;">Danger</h4>
+            <button on:click|stopPropagation={deleteAccount} class="rounded_button_outlined" style="border-color: red; color: red;"
+            >Delete account</button
+            >
+            <div style="position: relative; top: 30px; font-size: 14px; font-weight: bold; margin-left: 8px;">
+              Caution, this is irrereversible, your account and all of your subscriptions will be immediately deleted with this action.
+            </div>
           </div>
         {:else}
           <div class="lds-ring">

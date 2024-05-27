@@ -1,0 +1,45 @@
+import { json, type RequestHandler } from "@sveltejs/kit";
+import { GoogleAuth } from "google-auth-library";
+import { Firestore } from '@google-cloud/firestore';
+const projectId: string = import.meta.env.VITE_PROJECT_ID;
+
+const auth = new GoogleAuth({
+  scopes: 'https://www.googleapis.com/auth/cloud-platform'
+});
+
+const firestore = new Firestore();
+
+export const DELETE: RequestHandler = async({params}) => {
+  let email: string = params.id ? params.id : "";
+  if (email) {
+    let apigeeResponse: Response = await deleteApigeeUser(email);
+    if (apigeeResponse.status != 200) {
+      console.error(`Error deleting Apigee developer ${email}.`);
+      console.error(`Response ${apigeeResponse.status} - ${apigeeResponse.statusText}`);
+    }
+
+    await deleteDatabaseUser(email);
+  }
+
+  return json({result: "OK"});
+};
+
+async function deleteApigeeUser(email: string): Promise<any> {
+  let token = await auth.getAccessToken();
+
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+
+  return response;
+}
+
+async function deleteDatabaseUser(email: string) {
+  const document = firestore.doc('data-marketplace-users/' + email);
+  await document.delete();
+
+  return;
+}

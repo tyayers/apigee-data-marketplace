@@ -152,14 +152,14 @@
 
           <div class="form_controls">
             <button
+            on:click={() => history.back()}
+            type="button"
+            class="rounded_button_outlined">Cancel</button
+            >
+            <button
               on:click={submit}
               type="button"
               class="rounded_button_filled">Create</button
-            >
-            <button
-              on:click={() => history.back()}
-              type="button"
-              class="rounded_button_outlined">Cancel</button
             >
           </div>
         </div>

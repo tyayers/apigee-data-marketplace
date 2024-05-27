@@ -63,8 +63,8 @@
         <ProductEditor {product} />
 
         <div class="form_controls">
-          <button type="button" on:click={submit} class="rounded_button_filled">Save</button>
           <button on:click={back} type="button" class="rounded_button_outlined">Cancel</button>
+          <button type="button" on:click={submit} class="rounded_button_filled">Save</button>
         </div>
       </div>
 

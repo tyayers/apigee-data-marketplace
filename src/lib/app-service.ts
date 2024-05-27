@@ -10,7 +10,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  SAMLAuthProvider
+  SAMLAuthProvider, deleteUser
 } from "firebase/auth";
 import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -26,6 +26,8 @@ export class AppService {
     apiKey: FirebaseAPIKey,
     authDomain: FirebaseAuthDomain,
   };
+  tempFirstName: string = "";
+  tempLastName: string = "";
   siteName: string = import.meta.env.VITE_SITE_NAME;
 
   // Initialize Firebase & Firebase Auth
@@ -73,17 +75,21 @@ export class AppService {
             this.firebaseUser = u;
             let email: string =  u.email ? u.email?.replaceAll("#", "") : "";
             let photoURL: string = u.photoURL ? u.photoURL : "/avatar.png";
-            let userName: string = u.displayName ? u.displayName : "New User";
+            let userName: string = u.displayName ? u.displayName : "";
+            if (!userName) userName = this.tempFirstName ? this.tempFirstName + " " + this.tempLastName : "New user";
             let provider: string = u.providerData ? u.providerData[0].providerId : "";
-            this.currentUser = new User(email, userName, "", "");
+            this.currentUser = new User(email, userName, this.tempFirstName, this.tempLastName);
             this.currentUser.photoUrl = photoURL;
             this.currentUser.providerId = provider;
 
             // Get user data
-            this.GetUser(email, userName).then((data: User) => {
-              this.currentUser = data;
-              this.currentUser.photoUrl = photoURL;
-              this.currentUser.providerId = provider;
+            this.GetUser(this.currentUser).then((data: User) => {
+              if (data) this.currentUser = data;
+
+              if (this.currentUser) {
+                this.currentUser.photoUrl = photoURL;
+                this.currentUser.providerId = provider;
+              }
 
               if (this.currentUser && this.currentUser.status == "approved") {
                 const event = new Event('userUpdated');
@@ -127,13 +133,13 @@ export class AppService {
     }
   }
 
-  GetUser(email: string, userName: string): Promise<User> {
+  GetUser(userData: User): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      fetch("/api/users?email=" + email).then((response) => {
+      fetch("/api/users?email=" + userData.email).then((response) => {
         if (response.status == 404) {
-          this.CreateUser(email, userName).then((user: User) => {
-            resolve(user);
-          })
+          return this.CreateUser(userData).then((user: User) => {
+            return user;
+          });
         }
         else
           return response.json();
@@ -143,13 +149,14 @@ export class AppService {
     });
   }
 
-  CreateUser(email: string, userName: string): Promise<User> {
+  CreateUser(userData: User): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      fetch("/api/users?email=" + email + "&userName=" + userName, {
+      fetch("/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify(userData)
       }).then((response) => {
         return response.json();
       }).then((data: User) => {
@@ -193,11 +200,12 @@ export class AppService {
     signInWithRedirect(auth, this.googleProvider);
   }
 
-  RegisterWithEmail(email: string, password: string) {
+  RegisterWithEmail(email: string, password: string, firstName: string, lastName: string) {
+    this.tempFirstName = firstName;
+    this.tempLastName = lastName;
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         sendEmailVerification(userCredential.user);
         goto("/home");
       })
@@ -233,6 +241,19 @@ export class AppService {
   SignOut(): void {
     const auth = getAuth();
     signOut(auth);
+  }
+
+  DeleteAccount(email: string): void {
+    if (this.auth && this.auth.currentUser && this.currentUser) {
+      deleteUser(this.auth.currentUser).then(() => {
+        fetch(`/api/users/${email}`, {
+          method: "DELETE"
+        });
+        goto("/home");
+      }).catch((error) => {
+        this.ShowSnackbar("Error deleting account: " + error);
+      });
+    }
   }
 
   GetIdToken(): Promise<string> {
