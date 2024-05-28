@@ -6,7 +6,8 @@ export REGION=
 export APIGEE_ENV=
 export APIGEE_ENVGROUP_HOST=
 export FIREBASE_APIKEY=
-export FIREBASE_AUTHDOMAIN=
+# This is the default for firebase authdomain, probably no need to change
+export FIREBASE_AUTHDOMAIN=$PROJECT_ID.firebaseapp.com
 
 # Internal domains are the email domains that will be considered internal for users registering (no approval needed)
 export INTERNAL_DOMAINS=
