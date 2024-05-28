@@ -35,7 +35,7 @@
     <div>
       <div class="left_menu_page_right_header">
         <span>Roles</span><a
-          href="/admin/products/new"
+          href="/admin/roles"
           class="text_button left_menu_page_right_header_button"
           >+ Add role</a
         >

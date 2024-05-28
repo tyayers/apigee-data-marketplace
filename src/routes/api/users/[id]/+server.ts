@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from "@sveltejs/kit";
+import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
 import { Firestore } from '@google-cloud/firestore';
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
@@ -9,7 +9,24 @@ const auth = new GoogleAuth({
 
 const firestore = new Firestore();
 
-export const DELETE: RequestHandler = async({params}) => {
+export const GET: RequestHandler = async ({ params }) => {
+
+  let email: string = params.id ? params.id : "";
+
+	if (!email) {
+		error(400, 'Developer email is required');
+	}
+  const document = firestore.doc('data-marketplace-users/' + email);
+  const doc = await document.get();
+
+  if (doc.exists)
+	  return json(doc.data());
+  else
+    error(404, "User could not be found.");
+};
+
+
+export const DELETE: RequestHandler = async({ params }) => {
   let email: string = params.id ? params.id : "";
   if (email) {
     let apigeeResponse: Response = await deleteApigeeUser(email);

@@ -37,7 +37,7 @@
   }
 
   function submit() {
-    productData = appService.products.find(
+    productData = appService?.products?.find(
       (productItem) => productItem.id === product
     );
 
@@ -67,7 +67,7 @@
       .then((response) => {
         if (response.ok && response.status === 200) {
           // Subscription was successfully created.
-          const productData = appService.products.find(
+          const productData = appService.products?.find(
             (productItem) => productItem.id === product
           );
           fetch(
@@ -281,11 +281,13 @@
             <h4>Product subscription</h4>
             <div class="select_dropdown">
               <select name="hubListing" id="hubListing" bind:value={product}>
-                {#each appService.products as product}
-                  {#if product.protocols.includes("Analytics Hub")}
-                    <option value={product.id}>{product.name}</option>
-                  {/if}
-                {/each}
+                {#if appService && appService.products}
+                  {#each appService.products as product}
+                    {#if product.protocols.includes("Analytics Hub")}
+                      <option value={product.id}>{product.name}</option>
+                    {/if}
+                  {/each}
+                {/if}
               </select>
             </div>
           </div>

@@ -9,7 +9,7 @@ const apiHost = import.meta.env.VITE_API_HOST;
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
 });
-// Create a new client
+
 const firestore = new Firestore();
 
 export const GET: RequestHandler = async ({ url }) => {

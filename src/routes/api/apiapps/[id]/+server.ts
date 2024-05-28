@@ -1,8 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { ApiApp, ApigeeApp } from '$lib/interfaces';
+import type { ApiApp, ApigeeApp, ApigeeAppCredential } from '$lib/interfaces';
 import { GoogleAuth } from "google-auth-library";
-import type { ApigeeAppCredential } from 'apigee-x-module';
 
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
 

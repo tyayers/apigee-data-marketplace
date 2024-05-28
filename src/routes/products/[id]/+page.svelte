@@ -130,7 +130,7 @@
 
       <div class="product_overview_buy">
         {#if product?.protocols.includes("API") || product?.protocols.includes("Event")}
-          <a href={"/user/apps/api/new?product=" + product?.id} class="rounded_button_filled">Subscribe to API</a>
+          <a href={"/user/apps/api/new?product=" + product?.id} class="rounded_button_filled">Subscribe API</a>
         {/if}
         {#if product?.protocols.includes("Analytics Hub")}
           <a href={"/user/apps/bigquery/new?product=" + product?.id} class="rounded_button_filled">
@@ -150,20 +150,20 @@
                 fill="#EA4335"
               /></g
             ></svg>  
-            Subscribe on Analytics Hub
+            Subscribe Analytics Hub
           </a>
         {/if}
         {#if product?.protocols.includes("Data sync")}
-          <a href={"/user/apps/buckets/new?product=" + product?.id} class="rounded_button_filled">Enable data sync</a>
+          <a href={"/user/apps/buckets/new?product=" + product?.id} class="rounded_button_filled">Subscribe data sync</a>
         {/if}      
         <button class="rounded_button_outlined" on:click|stopPropagation={openDataPreview}>Preview data</button>
       </div>
 
       {#if appSubscriptions.length > 0}
         <div class="product_overview_description">
-          Already subscribed in:
+          Existing subscriptions:
           {#each appSubscriptions as sub, i}
-            <a class="sub_link" href={"/user/apps/api/" + sub}>{sub}</a>
+            <a class="sub_link" style="background: #eeeeee; padding: 5px;" href={"/user/apps/api/" + sub}>{sub}</a>
           {/each}
         </div>
       {/if}

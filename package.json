@@ -34,8 +34,6 @@
 	"dependencies": {
 		"@google-cloud/firestore": "^7.3.0",
 		"@google-cloud/storage": "^7.7.0",
-		"apigee-templater-module": "^3.0.0",
-		"apigee-x-module": "^2.0.0",
 		"firebase": "^10.8.0",
 		"google-auth-library": "^9.9.0",
 		"rapidoc": "^9.3.4",

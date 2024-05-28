@@ -4,6 +4,7 @@
   import FlatTable from "$lib/components.flat-table.svelte";
   import { onMount } from "svelte";
   import { appService } from "$lib/app-service";
+  import { goto } from "$app/navigation";
 
   let users: User[] | undefined = undefined;
 
@@ -41,7 +42,7 @@
   });
 
   function onRowClick(user: User) {
-    
+    goto("/admin/users/" + user.email);
   }
 
   function onRowDelete(user: User) {
@@ -58,9 +59,9 @@
     <div>
       <div class="left_menu_page_right_header">
         <span>Users</span><a
-          href="/admin/products/new"
+          href="/admin/users"
           class="text_button left_menu_page_right_header_button"
-          >+ Add role</a
+          >+ Add user</a
         >
       </div>
 
