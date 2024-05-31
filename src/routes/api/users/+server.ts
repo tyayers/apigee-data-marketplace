@@ -12,20 +12,18 @@ const auth = new GoogleAuth({
 
 const firestore = new Firestore();
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, params }) => {
 
-	const email = url.searchParams.get('email') ?? '';
+  let prodColRef = firestore.collection("data-marketplace-users");
+  let products = await prodColRef.listDocuments();
 
-	if (!email) {
-		error(400, 'Developer email is required');
-	}
-  const document = firestore.doc('data-marketplace-users/' + email);
-  const doc = await document.get();
+  let results: User[] = [];
+  for (let doc of products.entries()) {
+    let docData = await doc[1].get()
+    results.push(docData.data() as User);
+  }
 
-  if (doc.exists)
-	  return json(doc.data());
-  else
-    error(404, "User could not be found.");
+  return json(results);
 };
 
 export const POST: RequestHandler = async ({ request }) => {

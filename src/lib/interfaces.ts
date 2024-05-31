@@ -162,6 +162,7 @@ export class AnalyticsHubSubscription {
 
 export class BucketSubscription {
   product: string = "";
+  type: string = "PARQUET";
   url: string = "";
   createdAt: string = "";
   status: string = "";
@@ -191,6 +192,10 @@ export class IdentityConfig {
     this.id = id;
     this.roles = roles;
   }
+}
+
+export class StorageConfig {
+  entities: string[] = [];
 }
 
 export class SLA {

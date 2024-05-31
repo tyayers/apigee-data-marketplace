@@ -12,7 +12,7 @@
 
   let products: DataProduct[] | undefined = appService.products;
   let product: DataProduct | undefined = undefined;
-  
+
   let selectedProductTab = "overview";
 
   let newTab = $page.url.searchParams.get('tab')
@@ -154,7 +154,7 @@
           </a>
         {/if}
         {#if product?.protocols.includes("Data sync")}
-          <a href={"/user/apps/buckets/new?product=" + product?.id} class="rounded_button_filled">Subscribe data sync</a>
+          <a href={"/user/apps/storage/new?product=" + product?.id} class="rounded_button_filled">Subscribe data sync</a>
         {/if}      
         <button class="rounded_button_outlined" on:click|stopPropagation={openDataPreview}>Preview data</button>
       </div>
@@ -189,7 +189,7 @@
         </div>
         <h3>SLA</h3>
         <div class="product_tab_content_text">
-          This API has a 99.99% availability within the provided regions (EU, UK).
+          {product?.sla.description}
         </div>
       </div>
     {:else if selectedProductTab == "documentation"}
@@ -228,12 +228,20 @@
     {:else if selectedProductTab == "pricing"}
       <div class="product_tab_content_inner">
         <h3>Pricing</h3>
-        <div class="product_tab_content_text">
-          All of our APIs use a simple, customer-friendly consumption model to sample for free, and pay in easy-to-use 
-          levels.
-        </div>
-        <div>
-          <!-- <table class="flat_table" style="max-width: 900px; color: #555;">
+        {#if product?.monetizationData}
+          <div class="product_tab_content_text">
+            This product is charged using these rates for each calendar month.
+            <br><br>
+            {#if product?.monetizationData.setupFee}
+            Setup fee: {product?.monetizationData.setupFee.units + " " + product?.monetizationData.setupFee.currencyCode}
+            {/if}
+            <br><br>
+            {#if product?.monetizationData.fixedRecurringFee}
+            Fixed recurring fee: {product?.monetizationData.fixedRecurringFee.units + " " + product?.monetizationData.fixedRecurringFee.currencyCode}
+            {/if}
+          </div>
+
+          <table class="flat_table" style="max-width: 600px; color: #555;">
             <thead>
                 <tr>
                     <th>Level</th>
@@ -242,18 +250,32 @@
                 </tr>
             </thead>
             <tbody>
-              {#if product?.pricing}
-                {#each product?.pricing as price_tier}
-                  <tr>
-                    <td>{price_tier.tier}</td>
-                    <td>{price_tier.price}</td>
-                    <td>{price_tier.range}</td>
-                  </tr>
+              {#if product?.monetizationData.consumptionPricingRates && product?.monetizationData.consumptionPricingRates.length > 0}
+                {#each product?.monetizationData.consumptionPricingRates as rate, i}
+                  {#if !rate.start}
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>{rate.fee.units + " " + rate.fee.currencyCode}</td>
+                      <td>Price per unit</td>
+                    </tr>
+                  {:else}
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>{rate.fee.units + " " + rate.fee.currencyCode}</td>
+                      <td>{rate.start + " - " + rate.end}</td>
+                    </tr>
+                  {/if}
+
                 {/each}
               {/if}
             </tbody>
-          </table> -->
-        </div>
+          </table>
+
+        {:else}
+          <div class="product_tab_content_text">
+            This product is currently free to use.
+          </div>
+        {/if}
       </div>
       {:else if selectedProductTab == "support"}
         <div class="product_tab_content_inner">

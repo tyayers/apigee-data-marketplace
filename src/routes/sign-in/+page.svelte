@@ -42,7 +42,7 @@
       </div>
 
       <div class="sign_in_option">
-        <button class="sob" on:click={signInWithGoogle} disabled>
+        <button class="sob" on:click={signInWithGoogle}>
           <div class="sobt">
             <svg width="25" height="25" class="sobti"
               ><g fill="none" fill-rule="evenodd"

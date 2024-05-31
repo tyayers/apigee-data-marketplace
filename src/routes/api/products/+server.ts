@@ -1,18 +1,14 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
-import { DataProduct } from '$lib/interfaces';
+import { DataProduct, StorageConfig } from '$lib/interfaces';
 import { GoogleAuth } from 'google-auth-library';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
 });
 
-// Create a new client
 const firestore = new Firestore();
-// Create Apigee services
-// const apigeeTemplater: ApigeeTemplateService = new ApigeeTemplater();
-// const apigeeService: ApigeeService = new ApigeeService();
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
 const apigeeHost: string = import.meta.env.VITE_API_HOST;
 const apigeeEnvironment: string = import.meta.env.VITE_APIGEE_ENV;
@@ -62,6 +58,29 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     await apiHubCreateDeployment(newProduct);
     await apiHubCreateVersion(newProduct);
     await apiHubCreateVersionSpec(newProduct);
+  } 
+  
+  if (newProduct.protocols.includes("Data sync")) {
+    // Set KVM entry for the data proxy to BigQuery
+    setKVMEntry("marketplace-kvm", newProduct.entity, newProduct.query);
+    // Create the API product to access the storage export
+    createProduct(newProduct.id + "_storage", newProduct.name + " Storage", "/", "MP-StorageAPI-v1");
+    // Add to storage entities to sync daily through integration flow
+    let storageConfigDoc = firestore.doc("data-marketplace-config/storage-sync");
+    let storageConfig = await storageConfigDoc.get();
+    let storageConfigObject: StorageConfig;
+    if (storageConfig.exists) 
+      storageConfigObject = storageConfig.data() as StorageConfig;
+    else
+      storageConfigObject = new StorageConfig();
+    
+    if (!storageConfigObject.entities.includes(newProduct.entity)) {
+      storageConfigObject.entities.push(newProduct.entity);
+      storageConfigDoc.set(storageConfigObject);
+    }
+
+    // Do first data sync
+    fetch(`https://${apigeeHost}/v1/test/data/${newProduct.entity}?export=true`);
   }
 
   // Persist defnition to Firestore...

@@ -78,7 +78,7 @@
       >
       <span class={getClassName("side_menu_button_name", "bigqueryapps")}>Analytics Hub subscriptions</span>
     </a>
-    <a href="/user/apps/buckets" class={getClassName("side_menu_button", "bucketapps")}>
+    <a href="/user/apps/storage" class={getClassName("side_menu_button", "bucketapps")}>
       <svg
         class={getClassName("side_menu_button_logo", "bucketapps")}
         width="20px"

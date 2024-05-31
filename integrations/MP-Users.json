@@ -1,10 +1,9 @@
 {
-  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/a37fd26c-d881-4b27-b794-c240fcee310f",
-  "description": "Marketplace user management.",
-  "updateTime": "2024-04-25T17:07:34.624Z",
-  "lockHolder": "tyayers@google.com",
-  "createTime": "2024-04-25T16:06:58.285Z",
-  "lastModifierEmail": "tyayers@google.com",
+  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/fd5cd479-c6f4-4a0c-ad58-245176411b0a",
+  "description": "Marketplace user management.\n # Overview\nThis integration creates a new user in the system.\n\n## Orchestration\n1. The integration starts with an API call to get user information.\n2. If the user is found, the integration maps the result and sends a welcome email.\n3. If the user is not found, the integration creates an external user and sends a welcome email.\n4. The integration then checks the user\u0027s domain to determine if they are an internal user.\n5. If the user is an internal user, the integration creates an internal user and sends a welcome email.\n6. If the user is not an internal user, the integration sends the user for approval.\n7. Once the user is approved, the integration sets their status to approved.\n8. Finally, the integration maps the result and sends a welcome email.",
+  "updateTime": "2024-05-31T04:04:32.904Z",
+  "createTime": "2024-05-31T03:44:47.229Z",
+  "lastModifierEmail": "approver@example.com",
   "triggerConfigs": [{
     "label": "Get User",
     "startTasks": [{
@@ -17,8 +16,8 @@
     "triggerNumber": "1",
     "triggerId": "api_trigger/GetUser_API1",
     "position": {
-      "x": -384,
-      "y": -352
+      "x": 324,
+      "y": 42
     }
   }],
   "taskConfigs": [{
@@ -139,18 +138,18 @@
     },
     "nextTasks": [{
       "taskId": "4",
-      "condition": "$`Task_1_responseStatus`$ \u003d \"200 OK\"\n"
+      "condition": "$userRequest.status$ \u003d \"approved\"\n"
     }, {
       "taskId": "23",
-      "condition": "$`Task_1_responseStatus`$ \u003d \"404 Not Found\""
+      "condition": "$userRequest.status$ \u003d \"registered\""
     }],
     "nextTasksExecutionPolicy": "RUN_ALL_MATCH",
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Apigee get developer",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -384,
-      "y": -16
+      "x": 324,
+      "y": 662
     }
   }, {
     "task": "GenericRestV2Task",
@@ -278,14 +277,14 @@
       }
     },
     "nextTasks": [{
-      "taskId": "21"
+      "taskId": "13"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Create Internal User",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -272,
-      "y": 240
+      "x": 324,
+      "y": 910
     }
   }, {
     "task": "EmailTask",
@@ -364,8 +363,8 @@
     "displayName": "Send welcome email",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 80,
-      "y": 560
+      "x": 748,
+      "y": 1282
     }
   }, {
     "task": "EmailTask",
@@ -375,7 +374,7 @@
         "key": "Cc",
         "value": {
           "stringArray": {
-            "stringValues": ["tyayers@google.com"]
+            "stringValues": ["approver@example.com"]
           }
         }
       },
@@ -438,8 +437,8 @@
     "displayName": "Send welcome email",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -272,
-      "y": 432
+      "x": 324,
+      "y": 1034
     }
   }, {
     "task": "FieldMappingTask",
@@ -456,8 +455,8 @@
     "displayName": "Map result",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -272,
-      "y": 512
+      "x": 324,
+      "y": 1158
     }
   }, {
     "task": "SubWorkflowExecutorV2Task",
@@ -529,14 +528,14 @@
       }
     },
     "nextTasks": [{
-      "taskId": "1"
+      "taskId": "21"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Firestore get user",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -384,
-      "y": -96
+      "x": 324,
+      "y": 414
     }
   }, {
     "task": "JavaScriptTask",
@@ -545,7 +544,7 @@
       "script": {
         "key": "script",
         "value": {
-          "stringValue": "\n/**\n * Function that is called during the JavaScript Task execution.\n * @param {IntegrationEvent} event\n */\nfunction executeScript(event) {\n    var userDomain \u003d event.getParameter(\"userDomain\");\n    var internalDomains \u003d event.getParameter(\"internalDomains\");\n\n    var userIsInternal \u003d true;\n    var userRequest \u003d event.getParameter(\"userRequest\");\n    event.setParameter(\"userEmail\", userRequest.email);\n    var createDeveloperRequest \u003d {};\n\n    createDeveloperRequest.email \u003d userRequest.email;\n    createDeveloperRequest.userName \u003d userRequest.userName;\n    createDeveloperRequest.firstName \u003d userRequest.firstName;\n    createDeveloperRequest.lastName \u003d userRequest.lastName;\n\n    if (!internalDomains.includes(userDomain)) {\n        userIsInternal \u003d false;\n        userRequest.status \u003d \"registered\";\n    }\n    else {\n        userIsInternal \u003d true;\n        userRequest.status \u003d \"approved\";\n    }\n        \n    event.setParameter(\"userRequest\", userRequest);\n    event.setParameter(\"userIsInternal\", userIsInternal);\n    event.setParameter(\"CreateDeveloperRequest\", createDeveloperRequest);\n}"
+          "stringValue": "\n/**\n * Function that is called during the JavaScript Task execution.\n * @param {IntegrationEvent} event\n */\nfunction executeScript(event) {\n    var userDomain \u003d event.getParameter(\"userDomain\");\n    var internalDomains \u003d event.getParameter(\"internalDomains\");\n    var userRole \u003d event.getParameter(\"userRole\");\n    var userRoleExternal \u003d event.getParameter(\"userRoleExternal\");\n    var userRoleInternal \u003d event.getParameter(\"userRoleInternal\");\n\n    var userIsInternal \u003d true;\n    var userRequest \u003d event.getParameter(\"userRequest\");\n    event.setParameter(\"userEmail\", userRequest.email);\n    var createDeveloperRequest \u003d {};\n\n    createDeveloperRequest.email \u003d userRequest.email;\n    createDeveloperRequest.userName \u003d userRequest.userName;\n    createDeveloperRequest.firstName \u003d userRequest.firstName;\n    createDeveloperRequest.lastName \u003d userRequest.lastName;\n\n    if (!internalDomains.includes(userDomain)) {\n        userIsInternal \u003d false;\n        userRole \u003d userRoleExternal;\n        userRequest.status \u003d \"registered\";\n    }\n    else {\n        userIsInternal \u003d true;\n        userRole \u003d userRoleInternal;\n        userRequest.status \u003d \"approved\";\n    }\n        \n    event.setParameter(\"userRequest\", userRequest);\n    event.setParameter(\"userIsInternal\", userIsInternal);\n    event.setParameter(\"userRole\", userRole);\n    event.setParameter(\"CreateDeveloperRequest\", createDeveloperRequest);\n}"
         }
       }
     },
@@ -556,8 +555,8 @@
     "displayName": "Check user domain",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -384,
-      "y": -176
+      "x": 324,
+      "y": 290
     }
   }, {
     "task": "SubWorkflowExecutorV2Task",
@@ -598,7 +597,7 @@
       "requestParamsMap": {
         "key": "requestParamsMap",
         "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userEmail\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"email\"\n      }\n    }\n  }, {\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userRoleInternal\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"role\"\n      }\n    }\n  }]\n}"
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userEmail\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"email\"\n      }\n    }\n  }, {\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userRole\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"role\"\n      }\n    }\n  }]\n}"
         }
       },
       "workflowName": {
@@ -629,93 +628,14 @@
       }
     },
     "nextTasks": [{
-      "taskId": "13"
+      "taskId": "1"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Set role internal",
+    "displayName": "Set user role",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -272,
-      "y": 336
-    }
-  }, {
-    "task": "SubWorkflowExecutorV2Task",
-    "taskId": "22",
-    "parameters": {
-      "disableEUCPropagation": {
-        "key": "disableEUCPropagation",
-        "value": {
-          "booleanValue": false
-        }
-      },
-      "executionIds": {
-        "key": "executionIds",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_22_executionIds`$"]
-          }
-        }
-      },
-      "timeInMsToSchedule": {
-        "key": "timeInMsToSchedule",
-        "value": {
-          "intValue": "0"
-        }
-      },
-      "triggerId": {
-        "key": "triggerId",
-        "value": {
-          "stringValue": "api_trigger/AddUserRole"
-        }
-      },
-      "executionStrategy": {
-        "key": "executionStrategy",
-        "value": {
-          "stringValue": "SYNC"
-        }
-      },
-      "requestParamsMap": {
-        "key": "requestParamsMap",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userEmail\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"email\"\n      }\n    }\n  }, {\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userRoleExternal\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"role\"\n      }\n    }\n  }]\n}"
-        }
-      },
-      "workflowName": {
-        "key": "workflowName",
-        "value": {
-          "stringValue": "MP-UsersRoles"
-        }
-      },
-      "inputMap": {
-        "key": "inputMap",
-        "value": {
-          "stringArray": {
-          }
-        }
-      },
-      "overrideParamsMap": {
-        "key": "overrideParamsMap",
-        "value": {
-          "stringArray": {
-          }
-        }
-      },
-      "responseParamsMap": {
-        "key": "responseParamsMap",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"userObject\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"userData\"\n      }\n    }\n  }]\n}"
-        }
-      }
-    },
-    "nextTasks": [{
-      "taskId": "6"
-    }],
-    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Set role external",
-    "externalTaskType": "NORMAL_TASK",
-    "position": {
-      "x": 80,
-      "y": 240
+      "x": 324,
+      "y": 538
     }
   }, {
     "task": "FieldMappingTask",
@@ -732,15 +652,15 @@
       "taskId": "10",
       "condition": "$userIsInternal$ \u003d true"
     }, {
-      "taskId": "22",
+      "taskId": "6",
       "condition": "$userIsInternal$ \u003d false"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Data Mapping 1",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -96,
-      "y": 96
+      "x": 536,
+      "y": 786
     }
   }, {
     "task": "SubWorkflowExecutorV2Task",
@@ -818,8 +738,8 @@
     "displayName": "Set status approved",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 80,
-      "y": 400
+      "x": 748,
+      "y": 1034
     }
   }, {
     "task": "GenericRestV2Task",
@@ -953,8 +873,8 @@
     "displayName": "Create External User",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 80,
-      "y": 480
+      "x": 748,
+      "y": 1158
     }
   }, {
     "task": "FieldMappingTask",
@@ -971,8 +891,8 @@
     "displayName": "Map result",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -608,
-      "y": 96
+      "x": 112,
+      "y": 786
     }
   }, {
     "task": "FieldMappingTask",
@@ -989,8 +909,8 @@
     "displayName": "Map result",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 80,
-      "y": 640
+      "x": 748,
+      "y": 1406
     }
   }, {
     "task": "SuspensionTask",
@@ -1033,8 +953,8 @@
     },
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 80,
-      "y": 320
+      "x": 748,
+      "y": 910
     }
   }, {
     "task": "FieldMappingTask",
@@ -1054,8 +974,8 @@
     "displayName": "Data Mapping",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": -384,
-      "y": -256
+      "x": 324,
+      "y": 166
     }
   }],
   "integrationParameters": [{
@@ -1216,12 +1136,6 @@
     },
     "displayName": "userRoleExternal"
   }, {
-    "key": "`Task_22_executionIds`",
-    "dataType": "STRING_ARRAY",
-    "displayName": "`Task_22_executionIds`",
-    "isTransient": true,
-    "producer": "1_22"
-  }, {
     "key": "userRequest",
     "dataType": "JSON_VALUE",
     "displayName": "userRequest",
@@ -1240,5 +1154,12 @@
       "stringValue": "approved"
     },
     "displayName": "userStatusApproved"
+  }, {
+    "key": "userRole",
+    "dataType": "STRING_VALUE",
+    "defaultValue": {
+      "stringValue": ""
+    },
+    "displayName": "userRole"
   }]
 }

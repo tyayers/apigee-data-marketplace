@@ -30,7 +30,7 @@
   };
 
   onMount(() => {
-    fetch("/api/identity/users").then((response) => {
+    fetch("/api/users").then((response) => {
       if (response.status === 404) {
       }
       else if (response.status === 200)

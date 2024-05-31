@@ -85,6 +85,7 @@
               let index = appService.products.findIndex((x) => x.id == row.id);
               appService.products.splice(index, 1);
               products = appService.products;
+              productsTableConfig.data = products;
             }
           });
         }

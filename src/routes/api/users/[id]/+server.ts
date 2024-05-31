@@ -1,6 +1,7 @@
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
 import { Firestore } from '@google-cloud/firestore';
+import type { User } from "$lib/interfaces";
 const projectId: string = import.meta.env.VITE_PROJECT_ID;
 
 const auth = new GoogleAuth({
@@ -25,6 +26,16 @@ export const GET: RequestHandler = async ({ params }) => {
     error(404, "User could not be found.");
 };
 
+export const PUT: RequestHandler = async({ params, url, request}) => {
+
+  let userData: User = await request.json();
+
+  // Persist defnition to Firestore...
+  let newDoc = firestore.doc("data-marketplace-users/" + userData.email);
+  newDoc.set(userData);
+
+	return json(userData);
+}
 
 export const DELETE: RequestHandler = async({ params }) => {
   let email: string = params.id ? params.id : "";

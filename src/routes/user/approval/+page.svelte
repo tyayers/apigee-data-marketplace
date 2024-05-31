@@ -7,7 +7,7 @@
 	onMount(() => {
     setInterval(() => {
       if (appService.currentUser) {
-        fetch("/api/users?email=" + appService.currentUser.email).then((response) => {
+        fetch("/api/users/" + appService.currentUser.email).then((response) => {
             return response.json();
         }).then((data: User) => {
           if (data && appService.currentUser && data.email == appService.currentUser.email && data.status === "approved") {

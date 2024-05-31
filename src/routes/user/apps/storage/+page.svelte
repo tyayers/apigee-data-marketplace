@@ -95,7 +95,7 @@
     <div>
       <div class="left_menu_page_right_header">
         <span>Data syncs</span><a
-          href="/user/apps/buckets/new"
+          href="/user/apps/storage/new"
           class="text_button left_menu_page_right_header_button"
           >+ Create sync</a
         >
@@ -108,6 +108,7 @@
               <tr>
                 <th>Product</th>
                 <th>Creation date</th>
+                <th>Format</th>
                 <th style="max-width: 200px">Download URL</th>
                 <th>Refresh schedule</th>
                 <th>Status</th>
@@ -120,6 +121,7 @@
                   <tr>
                     <td>{sub.product}</td>
                     <td>{sub.createdAt}</td>
+                    <td>{sub.type}</td>
                     <td
                       ><a href={sub.url} target="_blank"
                         >{sub.url.slice(0, 100) + "..."}</a

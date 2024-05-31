@@ -4,9 +4,14 @@
   <Properties/>
   <ExclusiveCache>false</ExclusiveCache>
   <ExpiryTimeInSecs>300</ExpiryTimeInSecs>
-  <Get assignTo="marketplaceProxy.targetUrl" index="1">
+  <Get assignTo="data.lookup" index="1">
     <Key>
       <Parameter ref="entityName"/>
+    </Key>
+  </Get>
+  <Get assignTo="storage_bucket" index="1">
+    <Key>
+      <Parameter>storage_bucket</Parameter>
     </Key>
   </Get>
   <Scope>environment</Scope>

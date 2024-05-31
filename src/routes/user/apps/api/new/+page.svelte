@@ -12,7 +12,7 @@
   let product_input: string = "";
   let selectedProducts: string[] = [];
 
-  let products: DataProduct[] = appService.products;
+  let products: DataProduct[] | undefined = appService.products;
   var urlProduct = $page.url.searchParams.get("product");
   if (urlProduct) {
     product_input = urlProduct;
@@ -138,16 +138,18 @@
 
           <div class="form_list">
             <h4>Product subscriptions</h4>
-            {#each products as product}
-              {#if product.protocols.includes("API")}
-                <div class="form_list_line">
+            {#if products}
+              {#each products as product}
+                {#if product.protocols.includes("API")}
+                  <div class="form_list_line">
 
-                  <input id={product.id} name={product.id} checked={selectedProducts.includes(product.id)} on:change={onProductChange} type="checkbox" />
-                  <label for={product.id}>{product.name}</label>
-                
-                </div>
-              {/if}
-            {/each}
+                    <input id={product.id} name={product.id} checked={selectedProducts.includes(product.id)} on:change={onProductChange} type="checkbox" />
+                    <label for={product.id}>{product.name}</label>
+                  
+                  </div>
+                {/if}
+              {/each}
+            {/if}
           </div>
 
           <div class="form_controls">

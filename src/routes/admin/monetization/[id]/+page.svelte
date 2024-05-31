@@ -40,7 +40,7 @@
         })
       }
       else {
-        plan = new MonetizationRatePlan("", "");
+        plan = new MonetizationRatePlan(product.id, product.name + " plan");
       }
     }
   }

@@ -3,6 +3,9 @@ context.targetRequest.headers['Content-Type']='application/json';
 
 var entityName = context.getVariable("entityName");
 var objectName = context.getVariable("data.lookup");
+var exportFlag = context.getVariable("request.queryparam.export");
+var storageBucket = context.getVariable("storage_bucket");
+
 if (!objectName) objectName = entityName;
 
 print("BigQuery entity name: " + entityName + "\n");
@@ -45,9 +48,20 @@ var newQuery = generateQuery(query, table, filter, orderBy, pageSize, pageToken)
 
 print("BigQuery query: " + newQuery);
 
-context.targetRequest.body = '' +
-  '{' + 
-  '   "query": "' + newQuery + '",' +            
-  '   "useLegacySql": false,' +
-  '   "maxResults": 1000' +
-  '}';
+if (exportFlag == "true") {
+  context.targetRequest.body = '' +
+    '{' + 
+    '   "query": "EXPORT DATA OPTIONS (uri=\\"gs://' + storageBucket + '/' + entityName + '.*.parquet\\", format=\\"Parquet\\", overwrite=true) AS (' + newQuery + ');",' +            
+    '   "useLegacySql": false,' +
+    '   "maxResults": 1000' +
+    '}';
+} else {
+  context.targetRequest.body = '' +
+    '{' + 
+    '   "query": "' + newQuery + '",' +            
+    '   "useLegacySql": false,' +
+    '   "maxResults": 1000' +
+    '}';
+}
+
+print(context.targetRequest.body);

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<APIProxy revision="2" name="MP-ServicesTestAPI-v1">
+<APIProxy revision="6" name="MP-DataTestAPI-v1">
   <DisplayName/>
   <Description/>
-  <CreatedAt>1714706876703</CreatedAt>
-  <LastModifiedAt>1714707452691</LastModifiedAt>
-  <BasePaths>/v1/data</BasePaths>
+  <CreatedAt>1716995692496</CreatedAt>
+  <LastModifiedAt>1716995692496</LastModifiedAt>
+  <BasePaths>/v1/test/data</BasePaths>
   <Policies>
-    <Policy>AM-SetDataVariables</Policy>
+    <Policy>AM-RemoveKey</Policy>
     <Policy>EV-ExtractName</Policy>
     <Policy>JS-RunPostTarget-Script</Policy>
     <Policy>JS-RunPreTarget-Script</Policy>
     <Policy>KVM-GetVariables</Policy>
+    <Policy>VA-VerifyKey</Policy>
   </Policies>
   <ProxyEndpoints>
     <ProxyEndpoint>default</ProxyEndpoint>

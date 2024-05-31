@@ -27,13 +27,15 @@
   });
 
   function submit() {
+    productData = appService.products?.find((x) => x.id === productId);
+
     fetch(
       "/api/storage?email=" +
         currentUser?.email +
         "&product=" +
-        productId +
+        productId + "_storage" +
         "&createdAt=" +
-        new Date().toLocaleString(),
+        new Date().toLocaleString() + "&entityName=" + productData?.entity,
       {
         method: "POST",
         headers: {
@@ -45,7 +47,7 @@
         return response.json();
       })
       .then((data: BucketSubscription) => {
-        goto("/user/apps/buckets");
+        goto("/user/apps/storage");
       });
   }
 

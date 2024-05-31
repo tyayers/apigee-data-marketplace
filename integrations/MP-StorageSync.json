@@ -1,0 +1,410 @@
+{
+  "name": "projects/779705321594/locations/europe-west1/integrations/MP-StorageSync/versions/a54c3b4e-130b-40b9-9e5c-af514381875f",
+  "description": "Creates configured data export jobs in BigQuery for marketplace users.",
+  "updateTime": "2024-05-30T08:21:21.973Z",
+  "lockHolder": "tyayers@google.com",
+  "createTime": "2024-05-30T08:18:34.446Z",
+  "lastModifierEmail": "tyayers@google.com",
+  "triggerConfigs": [{
+    "label": "Daily storage sync",
+    "startTasks": [{
+      "taskId": "2"
+    }],
+    "properties": {
+      "Timer Name": "MP-StorageSync_Timer_1",
+      "Scheduled Time spec": "0 6 * * *"
+    },
+    "triggerType": "CRON",
+    "triggerNumber": "1",
+    "triggerId": "cron_trigger/MP-StorageSync_Timer_1/0+6+*+*+*",
+    "position": {
+      "x": -320,
+      "y": -352
+    }
+  }, {
+    "label": "Sync data to storage",
+    "startTasks": [{
+      "taskId": "7"
+    }],
+    "properties": {
+      "Trigger name": "MP-StorageSync_API_1"
+    },
+    "triggerType": "API",
+    "triggerNumber": "2",
+    "triggerId": "api_trigger/MP-StorageSync_API_1",
+    "position": {
+      "x": 48,
+      "y": -352
+    }
+  }],
+  "taskConfigs": [{
+    "task": "Firestore - Document Get",
+    "taskId": "2",
+    "parameters": {
+      "documentsId": {
+        "key": "documentsId",
+        "value": {
+          "stringValue": "data-marketplace-config/storage-sync"
+        }
+      },
+      "projectsId": {
+        "key": "projectsId",
+        "value": {
+          "stringValue": "$`CONFIG_projectId`$"
+        }
+      },
+      "mask_fieldPaths": {
+        "key": "mask_fieldPaths",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "authConfigName": {
+        "key": "authConfigName",
+        "value": {
+          "stringValue": "Marketplace Auth Profile"
+        }
+      },
+      "authConfig": {
+        "key": "authConfig",
+        "value": {
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
+        }
+      },
+      "response": {
+        "key": "response",
+        "value": {
+          "stringArray": {
+            "stringValues": ["$`Task_2_response`$"]
+          }
+        }
+      },
+      "databasesId": {
+        "key": "databasesId",
+        "value": {
+          "stringValue": "(default)"
+        }
+      },
+      "readTime": {
+        "key": "readTime",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "taskTemplateId": {
+        "key": "taskTemplateId",
+        "value": {
+          "stringValue": "31694c4c-11b7-4ba7-8fdc-fc4c97bf564a"
+        }
+      },
+      "transaction": {
+        "key": "transaction",
+        "value": {
+          "stringValue": ""
+        }
+      }
+    },
+    "nextTasks": [{
+      "taskId": "4"
+    }],
+    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+    "displayName": "DB Get Storage Products",
+    "taskTemplate": "Firestore - Document Get",
+    "externalTaskType": "NORMAL_TASK",
+    "position": {
+      "x": -320,
+      "y": -240
+    }
+  }, {
+    "task": "JsonnetMapperTask",
+    "taskId": "4",
+    "parameters": {
+      "template": {
+        "key": "template",
+        "value": {
+          "stringValue": "local f \u003d import \"functions\";\nlocal data \u003d f.extVar(\"`Task_2_response`\");\nlocal storageEntities \u003d f.extVar(\"storageEntities\");\n\n{\n    storageEntities: [x.stringValue for x in data.fields.entities.arrayValue.values]\n}"
+        }
+      }
+    },
+    "nextTasks": [{
+      "taskId": "6"
+    }],
+    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+    "displayName": "Data Transformer",
+    "externalTaskType": "NORMAL_TASK",
+    "position": {
+      "x": -320,
+      "y": -144
+    }
+  }, {
+    "task": "GenericRestV2Task",
+    "taskId": "5",
+    "parameters": {
+      "throwError": {
+        "key": "throwError",
+        "value": {
+          "booleanValue": true
+        }
+      },
+      "responseBody": {
+        "key": "responseBody",
+        "value": {
+          "stringArray": {
+            "stringValues": ["$`Task_5_responseBody`$"]
+          }
+        }
+      },
+      "disableSSLValidation": {
+        "key": "disableSSLValidation",
+        "value": {
+          "booleanValue": false
+        }
+      },
+      "httpParams": {
+        "key": "httpParams"
+      },
+      "authConfigName": {
+        "key": "authConfigName",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "responseHeader": {
+        "key": "responseHeader",
+        "value": {
+          "stringArray": {
+            "stringValues": ["$`Task_5_responseHeader`$"]
+          }
+        }
+      },
+      "userAgent": {
+        "key": "userAgent",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "httpMethod": {
+        "key": "httpMethod",
+        "value": {
+          "stringValue": "GET"
+        }
+      },
+      "responseStatus": {
+        "key": "responseStatus",
+        "value": {
+          "stringArray": {
+            "stringValues": ["$`Task_5_responseStatus`$"]
+          }
+        }
+      },
+      "url": {
+        "key": "url",
+        "value": {
+          "stringValue": "$dataExportUrl$"
+        }
+      },
+      "useSSL": {
+        "key": "useSSL",
+        "value": {
+          "booleanValue": false
+        }
+      },
+      "urlFetchingService": {
+        "key": "urlFetchingService",
+        "value": {
+          "stringValue": "HARPOON"
+        }
+      },
+      "urlQueryStrings": {
+        "key": "urlQueryStrings",
+        "value": {
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"export\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"true\"\n      }\n    }\n  }]\n}"
+        }
+      },
+      "requestorId": {
+        "key": "requestorId",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "jsonAdditionalHeaders": {
+        "key": "jsonAdditionalHeaders",
+        "value": {
+          "jsonValue": "null"
+        }
+      },
+      "requestBody": {
+        "key": "requestBody",
+        "value": {
+          "stringValue": ""
+        }
+      },
+      "followRedirects": {
+        "key": "followRedirects",
+        "value": {
+          "booleanValue": true
+        }
+      },
+      "additionalHeaders": {
+        "key": "additionalHeaders"
+      }
+    },
+    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+    "displayName": "Call REST Endpoint",
+    "externalTaskType": "NORMAL_TASK",
+    "position": {
+      "x": 48,
+      "y": -160
+    }
+  }, {
+    "task": "SubWorkflowForEachLoopV2Task",
+    "taskId": "6",
+    "parameters": {
+      "iterationElementMapping": {
+        "key": "iterationElementMapping",
+        "value": {
+          "stringValue": "entityName"
+        }
+      },
+      "triggerId": {
+        "key": "triggerId",
+        "value": {
+          "stringValue": "api_trigger/MP-StorageSync_API_1"
+        }
+      },
+      "aggregatorParameterMapping": {
+        "key": "aggregatorParameterMapping"
+      },
+      "loopMetadata": {
+        "key": "loopMetadata",
+        "value": {
+          "stringArray": {
+            "stringValues": ["$`Task_6_loopMetadata`$"]
+          }
+        }
+      },
+      "disableEucPropagation": {
+        "key": "disableEucPropagation",
+        "value": {
+          "booleanValue": false
+        }
+      },
+      "listToIterate": {
+        "key": "listToIterate",
+        "value": {
+          "stringValue": "$storageEntities$"
+        }
+      },
+      "workflowName": {
+        "key": "workflowName",
+        "value": {
+          "stringValue": "MP-StorageSync"
+        }
+      },
+      "requestParameterMapping": {
+        "key": "requestParameterMapping",
+        "value": {
+        }
+      },
+      "overrideParameterMapping": {
+        "key": "overrideParameterMapping"
+      }
+    },
+    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+    "displayName": "For Each Data Entity",
+    "externalTaskType": "NORMAL_TASK",
+    "position": {
+      "x": -320,
+      "y": -32
+    }
+  }, {
+    "task": "FieldMappingTask",
+    "taskId": "7",
+    "parameters": {
+      "FieldMappingConfigTaskParameterKey": {
+        "key": "FieldMappingConfigTaskParameterKey",
+        "value": {
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"literalValue\": {\n            \"stringValue\": \"https://\"\n          }\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$`CONFIG_apigeeHost`$\"\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/v1/test/data/\"\n              }\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$entityName$\"\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$dataExportUrl$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+        }
+      }
+    },
+    "nextTasks": [{
+      "taskId": "5"
+    }],
+    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+    "displayName": "Set Url",
+    "externalTaskType": "NORMAL_TASK",
+    "position": {
+      "x": 48,
+      "y": -256
+    }
+  }],
+  "integrationParameters": [{
+    "key": "`Task_2_response`",
+    "dataType": "JSON_VALUE",
+    "displayName": "`Task_2_response`",
+    "isTransient": true,
+    "producer": "1_2",
+    "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"description\": \"The resource name of the document, for example `projects/{project_id}/databases/{database_id}/documents/{document_path}`.\",\n      \"type\": \"string\"\n    },\n    \"updateTime\": {\n      \"type\": \"string\",\n      \"format\": \"google-datetime\",\n      \"description\": \"Output only. The time at which the document was last changed. This value is initially set to the `create_time` then increases monotonically with each change to the document. It can also be compared to values from other documents and the `read_time` of a query.\"\n    },\n    \"createTime\": {\n      \"format\": \"google-datetime\",\n      \"description\": \"Output only. The time at which the document was created. This value increases monotonically when a document is deleted then recreated. It can also be compared to values from other documents and the `read_time` of a query.\",\n      \"type\": \"string\"\n    },\n    \"fields\": {\n      \"description\": \"The document\\u0027s fields. The map keys represent field names. A simple field name contains only characters `a` to `z`, `A` to `Z`, `0` to `9`, or `_`, and must not start with `0` to `9`. For example, `foo_bar_17`. Field names matching the regular expression `__.*__` are reserved. Reserved field names are forbidden except in certain documented contexts. The map keys, represented as UTF-8, must not exceed 1,500 bytes and cannot be empty. Field paths may be used in other contexts to refer to structured fields defined here. For `map_value`, the field path is represented by the simple or quoted field names of the containing fields, delimited by `.`. For example, the structured field `\\\"foo\\\" : { map_value: { \\\"x\\u0026y\\\" : { string_value: \\\"hello\\\" }}}` would be represented by the field path `foo.x\\u0026y`. Within a field path, a quoted field name starts and ends with `` ` `` and may contain any character. Some characters, including `` ` ``, must be escaped using a `\\\\`. For example, `` `x\\u0026y` `` represents `x\\u0026y` and `` `bak\\\\`tik` `` represents `` bak`tik ``.\",\n      \"additionalProperties\": {\n        \"description\": \"A message that can hold any of the supported value types.\",\n        \"properties\": {\n          \"bytesValue\": {\n            \"description\": \"A bytes value. Must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes are considered by queries.\",\n            \"format\": \"byte\",\n            \"type\": \"string\"\n          },\n          \"geoPointValue\": {\n            \"properties\": {\n            },\n            \"description\": \"An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.\",\n            \"type\": \"object\"\n          },\n          \"doubleValue\": {\n            \"description\": \"A double value.\",\n            \"type\": \"number\",\n            \"format\": \"double\"\n          },\n          \"arrayValue\": {\n            \"properties\": {\n              \"values\": {\n                \"description\": \"Values in the array.\",\n                \"items\": {\n                  \"description\": \"A message that can hold any of the supported value types.\",\n                  \"properties\": {\n                    \"bytesValue\": {\n                      \"description\": \"A bytes value. Must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes are considered by queries.\",\n                      \"format\": \"byte\",\n                      \"type\": \"string\"\n                    },\n                    \"geoPointValue\": {\n                      \"properties\": {\n                      },\n                      \"description\": \"An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.\",\n                      \"type\": \"object\"\n                    },\n                    \"doubleValue\": {\n                      \"description\": \"A double value.\",\n                      \"type\": \"number\",\n                      \"format\": \"double\"\n                    },\n                    \"arrayValue\": {\n                      \"properties\": {\n                        \"values\": {\n                          \"description\": \"Values in the array.\",\n                          \"items\": {\n                            \"description\": \"A message that can hold any of the supported value types.\",\n                            \"properties\": {\n                              \"bytesValue\": {\n                                \"description\": \"A bytes value. Must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes are considered by queries.\",\n                                \"format\": \"byte\",\n                                \"type\": \"string\"\n                              },\n                              \"geoPointValue\": {\n                                \"properties\": {\n                                },\n                                \"description\": \"An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.\",\n                                \"type\": \"object\"\n                              },\n                              \"doubleValue\": {\n                                \"description\": \"A double value.\",\n                                \"type\": \"number\",\n                                \"format\": \"double\"\n                              },\n                              \"arrayValue\": {\n                                \"properties\": {\n                                  \"values\": {\n                                    \"description\": \"Values in the array.\",\n                                    \"items\": {\n                                      \"description\": \"A message that can hold any of the supported value types.\",\n                                      \"properties\": {\n                                        \"bytesValue\": {\n                                          \"description\": \"A bytes value. Must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes are considered by queries.\",\n                                          \"format\": \"byte\",\n                                          \"type\": \"string\"\n                                        },\n                                        \"geoPointValue\": {\n                                          \"properties\": {\n                                          },\n                                          \"description\": \"An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.\",\n                                          \"type\": \"object\"\n                                        },\n                                        \"doubleValue\": {\n                                          \"description\": \"A double value.\",\n                                          \"type\": \"number\",\n                                          \"format\": \"double\"\n                                        },\n                                        \"arrayValue\": {\n                                          \"properties\": {\n                                          },\n                                          \"type\": \"object\",\n                                          \"description\": \"An array value.\"\n                                        },\n                                        \"nullValue\": {\n                                          \"enumDescriptions\": [\"Null value.\"],\n                                          \"enum\": [\"NULL_VALUE\"],\n                                          \"type\": \"string\",\n                                          \"description\": \"A null value.\"\n                                        },\n                                        \"mapValue\": {\n                                          \"description\": \"A map value.\",\n                                          \"type\": \"object\",\n                                          \"properties\": {\n                                          }\n                                        },\n                                        \"booleanValue\": {\n                                          \"type\": \"boolean\",\n                                          \"description\": \"A boolean value.\"\n                                        },\n                                        \"referenceValue\": {\n                                          \"description\": \"A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.\",\n                                          \"type\": \"string\"\n                                        },\n                                        \"integerValue\": {\n                                          \"type\": \"string\",\n                                          \"format\": \"int64\",\n                                          \"description\": \"An integer value.\"\n                                        },\n                                        \"stringValue\": {\n                                          \"type\": \"string\",\n                                          \"description\": \"A string value. The string, represented as UTF-8, must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes of the UTF-8 representation are considered by queries.\"\n                                        },\n                                        \"timestampValue\": {\n                                          \"type\": \"string\",\n                                          \"format\": \"google-datetime\",\n                                          \"description\": \"A timestamp value. Precise only to microseconds. When stored, any additional precision is rounded down.\"\n                                        }\n                                      },\n                                      \"type\": \"object\"\n                                    },\n                                    \"type\": \"array\"\n                                  }\n                                },\n                                \"type\": \"object\",\n                                \"description\": \"An array value.\"\n                              },\n                              \"nullValue\": {\n                                \"enumDescriptions\": [\"Null value.\"],\n                                \"enum\": [\"NULL_VALUE\"],\n                                \"type\": \"string\",\n                                \"description\": \"A null value.\"\n                              },\n                              \"mapValue\": {\n                                \"description\": \"A map value.\",\n                                \"type\": \"object\",\n                                \"properties\": {\n                                }\n                              },\n                              \"booleanValue\": {\n                                \"type\": \"boolean\",\n                                \"description\": \"A boolean value.\"\n                              },\n                              \"referenceValue\": {\n                                \"description\": \"A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.\",\n                                \"type\": \"string\"\n                              },\n                              \"integerValue\": {\n                                \"type\": \"string\",\n                                \"format\": \"int64\",\n                                \"description\": \"An integer value.\"\n                              },\n                              \"stringValue\": {\n                                \"type\": \"string\",\n                                \"description\": \"A string value. The string, represented as UTF-8, must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes of the UTF-8 representation are considered by queries.\"\n                              },\n                              \"timestampValue\": {\n                                \"type\": \"string\",\n                                \"format\": \"google-datetime\",\n                                \"description\": \"A timestamp value. Precise only to microseconds. When stored, any additional precision is rounded down.\"\n                              }\n                            },\n                            \"type\": \"object\"\n                          },\n                          \"type\": \"array\"\n                        }\n                      },\n                      \"type\": \"object\",\n                      \"description\": \"An array value.\"\n                    },\n                    \"nullValue\": {\n                      \"enumDescriptions\": [\"Null value.\"],\n                      \"enum\": [\"NULL_VALUE\"],\n                      \"type\": \"string\",\n                      \"description\": \"A null value.\"\n                    },\n                    \"mapValue\": {\n                      \"description\": \"A map value.\",\n                      \"type\": \"object\",\n                      \"properties\": {\n                      }\n                    },\n                    \"booleanValue\": {\n                      \"type\": \"boolean\",\n                      \"description\": \"A boolean value.\"\n                    },\n                    \"referenceValue\": {\n                      \"description\": \"A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.\",\n                      \"type\": \"string\"\n                    },\n                    \"integerValue\": {\n                      \"type\": \"string\",\n                      \"format\": \"int64\",\n                      \"description\": \"An integer value.\"\n                    },\n                    \"stringValue\": {\n                      \"type\": \"string\",\n                      \"description\": \"A string value. The string, represented as UTF-8, must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes of the UTF-8 representation are considered by queries.\"\n                    },\n                    \"timestampValue\": {\n                      \"type\": \"string\",\n                      \"format\": \"google-datetime\",\n                      \"description\": \"A timestamp value. Precise only to microseconds. When stored, any additional precision is rounded down.\"\n                    }\n                  },\n                  \"type\": \"object\"\n                },\n                \"type\": \"array\"\n              }\n            },\n            \"type\": \"object\",\n            \"description\": \"An array value.\"\n          },\n          \"nullValue\": {\n            \"enumDescriptions\": [\"Null value.\"],\n            \"enum\": [\"NULL_VALUE\"],\n            \"type\": \"string\",\n            \"description\": \"A null value.\"\n          },\n          \"mapValue\": {\n            \"description\": \"A map value.\",\n            \"type\": \"object\",\n            \"properties\": {\n            }\n          },\n          \"booleanValue\": {\n            \"type\": \"boolean\",\n            \"description\": \"A boolean value.\"\n          },\n          \"referenceValue\": {\n            \"description\": \"A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.\",\n            \"type\": \"string\"\n          },\n          \"integerValue\": {\n            \"type\": \"string\",\n            \"format\": \"int64\",\n            \"description\": \"An integer value.\"\n          },\n          \"stringValue\": {\n            \"type\": \"string\",\n            \"description\": \"A string value. The string, represented as UTF-8, must not exceed 1 MiB - 89 bytes. Only the first 1,500 bytes of the UTF-8 representation are considered by queries.\"\n          },\n          \"timestampValue\": {\n            \"type\": \"string\",\n            \"format\": \"google-datetime\",\n            \"description\": \"A timestamp value. Precise only to microseconds. When stored, any additional precision is rounded down.\"\n          }\n        },\n        \"type\": \"object\"\n      },\n      \"type\": \"object\"\n    }\n  }\n}"
+  }, {
+    "key": "storageEntities",
+    "dataType": "STRING_ARRAY",
+    "displayName": "storageEntities",
+    "inputOutputType": "OUT"
+  }, {
+    "key": "entityName",
+    "dataType": "STRING_VALUE",
+    "displayName": "entityName"
+  }, {
+    "key": "`Task_5_responseHeader`",
+    "dataType": "STRING_VALUE",
+    "displayName": "`Task_5_responseHeader`",
+    "isTransient": true,
+    "producer": "1_5"
+  }, {
+    "key": "`Task_5_responseBody`",
+    "dataType": "STRING_VALUE",
+    "displayName": "`Task_5_responseBody`",
+    "isTransient": true,
+    "producer": "1_5"
+  }, {
+    "key": "`Task_5_responseStatus`",
+    "dataType": "STRING_VALUE",
+    "displayName": "`Task_5_responseStatus`",
+    "isTransient": true,
+    "producer": "1_5"
+  }, {
+    "key": "`Task_6_loopMetadata`",
+    "dataType": "JSON_VALUE",
+    "displayName": "`Task_6_loopMetadata`",
+    "isTransient": true,
+    "producer": "1_6",
+    "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"sub_integration_execution_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"current_iteration_count\": {\n      \"type\": \"number\"\n    },\n    \"failure_message\": {\n      \"type\": \"string\"\n    },\n    \"failure_location\": {\n      \"type\": \"string\"\n    },\n    \"current_element\": {\n      \"type\": [\"string\", \"number\", \"object\", \"array\"]\n    }\n  }\n}"
+  }, {
+    "key": "dataExportUrl",
+    "dataType": "STRING_VALUE",
+    "defaultValue": {
+      "stringValue": "https://api.34-110-134-67.nip.io/v1/test/data/"
+    },
+    "displayName": "dataExportUrl"
+  }],
+  "integrationConfigParameters": [{
+    "parameter": {
+      "key": "`CONFIG_projectId`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`CONFIG_projectId`"
+    }
+  }, {
+    "parameter": {
+      "key": "`CONFIG_apigeeHost`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`CONFIG_apigeeHost`"
+    }
+  }]
+}

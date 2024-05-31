@@ -27,7 +27,9 @@
   function deleteAccount() {
     appService.ShowDialog("Are you sure that you would like to delete your account?", "Confirm", 0).then((result) => {
       if (result === "ok") {
-        if (currentUser) appService.DeleteAccount(currentUser.email);
+        if (currentUser) {
+          appService.DeleteAccount(currentUser.email);
+        }
       }
     });
   }

@@ -10,6 +10,7 @@ gcloud services enable connectors.googleapis.com
 gcloud services enable cloudkms.googleapis.com
 gcloud services enable identitytoolkit.googleapis.com
 gcloud services enable aiplatform.googleapis.com
+gcloud services enable iamcredentials.googleapis.com
 
 # Sleep 5 seconds to let the API be initialized...
 sleep 5
@@ -38,6 +39,22 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/bigquery.jobUser"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/storage.admin"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountTokenCreator"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:mpservice@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/run.invoker"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="user:$ADMIN_EMAIL" \
@@ -90,3 +107,9 @@ sed -i "/VITE_FIREBASE_AUTHDOMAIN=/c\VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMA
 
 echo "Creating Apigee KVM..."
 apigeecli kvms create -e $APIGEE_ENV -n marketplace-kvm -o $PROJECT_ID -t $(gcloud auth print-access-token)
+
+echo "Creating storage bucket..."
+gcloud storage buckets create gs://$BUCKET_NAME --location=eu
+# Set in Apigee KVM so the API knows the bucket
+apigeecli kvms entries create -m marketplace-kvm -k storage_bucket -l $BUCKET_NAME -e $APIGEE_ENV -o $PROJECT_ID -t $(gcloud auth print-access-token) 2>/dev/null
+apigeecli kvms entries update -m marketplace-kvm -k storage_bucket -l $BUCKET_NAME -e $APIGEE_ENV -o $PROJECT_ID -t $(gcloud auth print-access-token)

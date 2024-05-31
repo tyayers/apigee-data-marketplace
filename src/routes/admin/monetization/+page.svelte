@@ -76,6 +76,7 @@
           });
         }
         products = products;
+        if (products) monetizationTableConfig.data = products;
       });
     }
   }

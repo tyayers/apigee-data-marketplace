@@ -3,6 +3,7 @@ export SITE_NAME=
 export SERVICE_NAME=
 export PROJECT_ID=
 export REGION=
+export BUCKET_NAME=marketplace-
 export APIGEE_ENV=
 export APIGEE_ENVGROUP_HOST=
 export FIREBASE_APIKEY=

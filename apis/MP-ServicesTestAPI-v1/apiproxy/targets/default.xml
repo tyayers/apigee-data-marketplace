@@ -5,7 +5,7 @@
   <PreFlow name="PreFlow">
     <Request>
       <Step>
-        <Name>AM-SetTargetVariables</Name>
+        <Name>JS-RunPreTarget-Script</Name>
       </Step>
     </Request>
     <Response/>
@@ -15,11 +15,21 @@
     <Request>
     </Request>
     <Response>
+      <Step>
+        <Name>JS-RunPostTarget-Script</Name>
+      </Step>
     </Response>
   </PostFlow>
   <HTTPTargetConnection>
     <Properties>
     </Properties>
-    <URL>{marketplaceProxy.targetUrl}</URL>
+    <URL>https://bigquery.googleapis.com/bigquery/v2/projects/{organization.name}/queries</URL>
+    <Authentication>
+      <GoogleAccessToken>
+        <Scopes>
+          <Scope>https://www.googleapis.com/auth/bigquery</Scope>
+        </Scopes>
+      </GoogleAccessToken>
+    </Authentication>
   </HTTPTargetConnection>
 </TargetEndpoint>

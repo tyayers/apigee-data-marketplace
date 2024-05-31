@@ -135,7 +135,7 @@ export class AppService {
 
   GetUser(userData: User): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      fetch("/api/users?email=" + userData.email).then((response) => {
+      fetch("/api/users/" + userData.email).then((response) => {
         if (response.status == 404) {
           return this.CreateUser(userData).then((user: User) => {
             return user;
@@ -251,7 +251,8 @@ export class AppService {
         });
         goto("/home");
       }).catch((error) => {
-        this.ShowSnackbar("Error deleting account: " + error);
+        this.SignOut();
+        goto("/home");
       });
     }
   }
