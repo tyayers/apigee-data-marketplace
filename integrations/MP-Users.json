@@ -1,8 +1,8 @@
 {
-  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/fd5cd479-c6f4-4a0c-ad58-245176411b0a",
+  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/53766566-b3c1-4401-b13d-c67e1e193528",
   "description": "Marketplace user management.\n # Overview\nThis integration creates a new user in the system.\n\n## Orchestration\n1. The integration starts with an API call to get user information.\n2. If the user is found, the integration maps the result and sends a welcome email.\n3. If the user is not found, the integration creates an external user and sends a welcome email.\n4. The integration then checks the user\u0027s domain to determine if they are an internal user.\n5. If the user is an internal user, the integration creates an internal user and sends a welcome email.\n6. If the user is not an internal user, the integration sends the user for approval.\n7. Once the user is approved, the integration sets their status to approved.\n8. Finally, the integration maps the result and sends a welcome email.",
-  "updateTime": "2024-05-31T04:04:32.904Z",
-  "createTime": "2024-05-31T03:44:47.229Z",
+  "updateTime": "2024-05-31T11:35:13.683Z",
+  "createTime": "2024-05-31T11:30:34.149Z",
   "lastModifierEmail": "approver@example.com",
   "triggerConfigs": [{
     "label": "Get User",
@@ -51,7 +51,10 @@
         }
       },
       "httpParams": {
-        "key": "httpParams"
+        "key": "httpParams",
+        "value": {
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"content-type\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"application/json\"\n      }\n    }\n  }]\n}"
+        }
       },
       "authConfig": {
         "key": "authConfig",
@@ -76,140 +79,6 @@
       "httpMethod": {
         "key": "httpMethod",
         "value": {
-          "stringValue": "GET"
-        }
-      },
-      "responseStatus": {
-        "key": "responseStatus",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_1_responseStatus`$"]
-          }
-        }
-      },
-      "url": {
-        "key": "url",
-        "value": {
-          "stringValue": "https://apigee.googleapis.com/v1/organizations/$projectId$/developers/$userRequest.email$"
-        }
-      },
-      "useSSL": {
-        "key": "useSSL",
-        "value": {
-          "booleanValue": false
-        }
-      },
-      "urlFetchingService": {
-        "key": "urlFetchingService",
-        "value": {
-          "stringValue": "HARPOON"
-        }
-      },
-      "urlQueryStrings": {
-        "key": "urlQueryStrings"
-      },
-      "requestorId": {
-        "key": "requestorId",
-        "value": {
-          "stringValue": ""
-        }
-      },
-      "requestBody": {
-        "key": "requestBody",
-        "value": {
-          "stringValue": ""
-        }
-      },
-      "jsonAdditionalHeaders": {
-        "key": "jsonAdditionalHeaders",
-        "value": {
-          "jsonValue": "null"
-        }
-      },
-      "followRedirects": {
-        "key": "followRedirects",
-        "value": {
-          "booleanValue": true
-        }
-      },
-      "additionalHeaders": {
-        "key": "additionalHeaders"
-      }
-    },
-    "nextTasks": [{
-      "taskId": "4",
-      "condition": "$userRequest.status$ \u003d \"approved\"\n"
-    }, {
-      "taskId": "23",
-      "condition": "$userRequest.status$ \u003d \"registered\""
-    }],
-    "nextTasksExecutionPolicy": "RUN_ALL_MATCH",
-    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Apigee get developer",
-    "externalTaskType": "NORMAL_TASK",
-    "position": {
-      "x": 324,
-      "y": 662
-    }
-  }, {
-    "task": "GenericRestV2Task",
-    "taskId": "10",
-    "parameters": {
-      "throwError": {
-        "key": "throwError",
-        "value": {
-          "booleanValue": true
-        }
-      },
-      "responseBody": {
-        "key": "responseBody",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_10_responseBody`$"]
-          }
-        }
-      },
-      "disableSSLValidation": {
-        "key": "disableSSLValidation",
-        "value": {
-          "booleanValue": false
-        }
-      },
-      "httpParams": {
-        "key": "httpParams",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"content-type\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"application/json\"\n      }\n    }\n  }]\n}"
-        }
-      },
-      "authConfigName": {
-        "key": "authConfigName",
-        "value": {
-          "stringValue": "Marketplace Auth Profile"
-        }
-      },
-      "authConfig": {
-        "key": "authConfig",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
-        }
-      },
-      "responseHeader": {
-        "key": "responseHeader",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_10_responseHeader`$"]
-          }
-        }
-      },
-      "userAgent": {
-        "key": "userAgent",
-        "value": {
-          "stringValue": ""
-        }
-      },
-      "httpMethod": {
-        "key": "httpMethod",
-        "value": {
           "stringValue": "POST"
         }
       },
@@ -217,7 +86,7 @@
         "key": "responseStatus",
         "value": {
           "stringArray": {
-            "stringValues": ["$`Task_10_responseStatus`$"]
+            "stringValues": ["$`Task_1_responseStatus`$"]
           }
         }
       },
@@ -268,23 +137,22 @@
       },
       "additionalHeaders": {
         "key": "additionalHeaders"
-      },
-      "suspensionExpiration": {
-        "key": "suspensionExpiration",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.SuspensionExpiration\",\n  \"expireAfterMs\": 172800000\n}"
-        }
       }
     },
     "nextTasks": [{
-      "taskId": "13"
+      "taskId": "13",
+      "condition": "$userRequest.status$ \u003d \"approved\""
+    }, {
+      "taskId": "6",
+      "condition": "$userRequest.status$ \u003d \"registered\""
     }],
+    "nextTasksExecutionPolicy": "RUN_ALL_MATCH",
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Create Internal User",
+    "displayName": "Apigee create developer",
     "externalTaskType": "NORMAL_TASK",
     "position": {
       "x": 324,
-      "y": 910
+      "y": 662
     }
   }, {
     "task": "EmailTask",
@@ -363,8 +231,8 @@
     "displayName": "Send welcome email",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 748,
-      "y": 1282
+      "x": 536,
+      "y": 1034
     }
   }, {
     "task": "EmailTask",
@@ -431,32 +299,14 @@
       }
     },
     "nextTasks": [{
-      "taskId": "14"
+      "taskId": "4"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Send welcome email",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 324,
-      "y": 1034
-    }
-  }, {
-    "task": "FieldMappingTask",
-    "taskId": "14",
-    "parameters": {
-      "FieldMappingConfigTaskParameterKey": {
-        "key": "FieldMappingConfigTaskParameterKey",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$`Task_10_responseBody`$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$developerData$\",\n      \"fieldType\": \"JSON_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
-        }
-      }
-    },
-    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Map result",
-    "externalTaskType": "NORMAL_TASK",
-    "position": {
-      "x": 324,
-      "y": 1158
+      "x": 112,
+      "y": 786
     }
   }, {
     "task": "SubWorkflowExecutorV2Task",
@@ -638,31 +488,6 @@
       "y": 538
     }
   }, {
-    "task": "FieldMappingTask",
-    "taskId": "23",
-    "parameters": {
-      "FieldMappingConfigTaskParameterKey": {
-        "key": "FieldMappingConfigTaskParameterKey",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$userRequest.email$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$userEmail$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
-        }
-      }
-    },
-    "nextTasks": [{
-      "taskId": "10",
-      "condition": "$userIsInternal$ \u003d true"
-    }, {
-      "taskId": "6",
-      "condition": "$userIsInternal$ \u003d false"
-    }],
-    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Data Mapping 1",
-    "externalTaskType": "NORMAL_TASK",
-    "position": {
-      "x": 536,
-      "y": 786
-    }
-  }, {
     "task": "SubWorkflowExecutorV2Task",
     "taskId": "24",
     "parameters": {
@@ -717,6 +542,12 @@
           }
         }
       },
+      "suspensionExpiration": {
+        "key": "suspensionExpiration",
+        "value": {
+          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.SuspensionExpiration\",\n  \"expireAfterMs\": 172800000\n}"
+        }
+      },
       "overrideParamsMap": {
         "key": "overrideParamsMap",
         "value": {
@@ -732,149 +563,14 @@
       }
     },
     "nextTasks": [{
-      "taskId": "3"
+      "taskId": "12"
     }],
     "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
     "displayName": "Set status approved",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 748,
-      "y": 1034
-    }
-  }, {
-    "task": "GenericRestV2Task",
-    "taskId": "3",
-    "parameters": {
-      "throwError": {
-        "key": "throwError",
-        "value": {
-          "booleanValue": true
-        }
-      },
-      "responseBody": {
-        "key": "responseBody",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_3_responseBody`$"]
-          }
-        }
-      },
-      "disableSSLValidation": {
-        "key": "disableSSLValidation",
-        "value": {
-          "booleanValue": false
-        }
-      },
-      "httpParams": {
-        "key": "httpParams",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"content-type\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"application/json\"\n      }\n    }\n  }]\n}"
-        }
-      },
-      "authConfigName": {
-        "key": "authConfigName",
-        "value": {
-          "stringValue": "Marketplace Auth Profile"
-        }
-      },
-      "authConfig": {
-        "key": "authConfig",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
-        }
-      },
-      "responseHeader": {
-        "key": "responseHeader",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_3_responseHeader`$"]
-          }
-        }
-      },
-      "userAgent": {
-        "key": "userAgent",
-        "value": {
-          "stringValue": ""
-        }
-      },
-      "httpMethod": {
-        "key": "httpMethod",
-        "value": {
-          "stringValue": "POST"
-        }
-      },
-      "responseStatus": {
-        "key": "responseStatus",
-        "value": {
-          "stringArray": {
-            "stringValues": ["$`Task_3_responseStatus`$"]
-          }
-        }
-      },
-      "url": {
-        "key": "url",
-        "value": {
-          "stringValue": "https://apigee.googleapis.com/v1/organizations/$projectId$/developers"
-        }
-      },
-      "useSSL": {
-        "key": "useSSL",
-        "value": {
-          "booleanValue": false
-        }
-      },
-      "urlFetchingService": {
-        "key": "urlFetchingService",
-        "value": {
-          "stringValue": "HARPOON"
-        }
-      },
-      "urlQueryStrings": {
-        "key": "urlQueryStrings"
-      },
-      "requestorId": {
-        "key": "requestorId",
-        "value": {
-          "stringValue": ""
-        }
-      },
-      "requestBody": {
-        "key": "requestBody",
-        "value": {
-          "stringValue": "$CreateDeveloperRequest$"
-        }
-      },
-      "jsonAdditionalHeaders": {
-        "key": "jsonAdditionalHeaders",
-        "value": {
-          "jsonValue": "null"
-        }
-      },
-      "followRedirects": {
-        "key": "followRedirects",
-        "value": {
-          "booleanValue": true
-        }
-      },
-      "additionalHeaders": {
-        "key": "additionalHeaders"
-      },
-      "suspensionExpiration": {
-        "key": "suspensionExpiration",
-        "value": {
-          "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.SuspensionExpiration\",\n  \"expireAfterMs\": 172800000\n}"
-        }
-      }
-    },
-    "nextTasks": [{
-      "taskId": "12"
-    }],
-    "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
-    "displayName": "Create External User",
-    "externalTaskType": "NORMAL_TASK",
-    "position": {
-      "x": 748,
-      "y": 1158
+      "x": 536,
+      "y": 910
     }
   }, {
     "task": "FieldMappingTask",
@@ -892,7 +588,7 @@
     "externalTaskType": "NORMAL_TASK",
     "position": {
       "x": 112,
-      "y": 786
+      "y": 910
     }
   }, {
     "task": "FieldMappingTask",
@@ -909,8 +605,8 @@
     "displayName": "Map result",
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 748,
-      "y": 1406
+      "x": 536,
+      "y": 1158
     }
   }, {
     "task": "SuspensionTask",
@@ -939,7 +635,7 @@
       "notifications": {
         "key": "notifications",
         "value": {
-          "jsonValue": "{\n  \"protoValues\": [{\n    \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.Notification\",\n    \"emailAddress\": {\n      \"email\": \"approver@example.com\"\n    }\n  }]\n}"
+          "jsonValue": "{\n  \"protoValues\": [{\n    \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.Notification\",\n    \"emailAddress\": {\n      \"email\": \"approver@example.com\"\n    }\n  }, {\n    \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.Notification\",\n    \"emailAddress\": {\n      \"email\": \"pulkitmathur@example.com\"\n    }\n  }]\n}"
         }
       }
     },
@@ -953,8 +649,8 @@
     },
     "externalTaskType": "NORMAL_TASK",
     "position": {
-      "x": 748,
-      "y": 910
+      "x": 536,
+      "y": 786
     }
   }, {
     "task": "FieldMappingTask",
@@ -990,28 +686,6 @@
     "displayName": "`Task_1_responseStatus`",
     "isTransient": true,
     "producer": "1_1"
-  }, {
-    "key": "`Task_3_responseHeader`",
-    "dataType": "STRING_VALUE",
-    "displayName": "`Task_3_responseHeader`",
-    "isTransient": true,
-    "producer": "1_3"
-  }, {
-    "key": "`Task_3_responseStatus`",
-    "dataType": "STRING_VALUE",
-    "displayName": "`Task_3_responseStatus`",
-    "isTransient": true,
-    "producer": "1_3"
-  }, {
-    "key": "`Task_3_responseBody`",
-    "dataType": "STRING_VALUE",
-    "defaultValue": {
-      "stringValue": ""
-    },
-    "displayName": "`Task_3_responseBody`",
-    "inputOutputType": "OUT",
-    "isTransient": true,
-    "producer": "1_3"
   }, {
     "key": "`Task_1_responseBody`",
     "dataType": "STRING_VALUE",
@@ -1052,24 +726,6 @@
       "stringValue": ""
     },
     "displayName": "userDomain"
-  }, {
-    "key": "`Task_10_responseHeader`",
-    "dataType": "STRING_VALUE",
-    "displayName": "`Task_10_responseHeader`",
-    "isTransient": true,
-    "producer": "1_10"
-  }, {
-    "key": "`Task_10_responseBody`",
-    "dataType": "STRING_VALUE",
-    "displayName": "`Task_10_responseBody`",
-    "isTransient": true,
-    "producer": "1_10"
-  }, {
-    "key": "`Task_10_responseStatus`",
-    "dataType": "STRING_VALUE",
-    "displayName": "`Task_10_responseStatus`",
-    "isTransient": true,
-    "producer": "1_10"
   }, {
     "key": "userPath",
     "dataType": "STRING_VALUE",
