@@ -6,11 +6,11 @@
   export let data: DataProduct | undefined = undefined;
 
   function OpenProduct() {
-    if (window.location.pathname.startsWith("/products/")) {
-      window.location.href = "/products/" + data?.id;
-    } else {
+    // if (window.location.pathname.startsWith("/products/")) {
+    //   window.location.href = "/products/" + data?.id;
+    // } else {
       goto("/products/" + data?.id)
-    }
+    //}
   }
 
   function getTypeClass(type: string) {

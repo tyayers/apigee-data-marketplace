@@ -10,6 +10,8 @@
   import ProductCard from "$lib/components.product-card.svelte";
 
   export let data: PageServerData;
+  $: productId = data.productId;
+  $: refresh(productId);
 
   let products: DataProduct[] | undefined = appService.products;
   let product: DataProduct | undefined = undefined;
@@ -40,19 +42,21 @@
 
     document.addEventListener("productsUpdated", () => {
       products = appService.products;
-      loadProduct();
-      apiDocOpen = false;
+      refresh(productId);
     });
 
     products = appService.products;
-    loadProduct();
-
-    refreshApps();
+    refresh(productId);
   });
 
-  function loadProduct() {
-    if (products && products.length > 0) {
-      product = products.find((prod) => prod.id === data?.productId);
+  function refresh(newProductId: string) {
+    loadProduct(newProductId);
+    refreshApps();
+  }
+
+  function loadProduct(newProductId: string) {
+    if (newProductId && products && products.length > 0) {
+      product = products.find((prod) => prod.id === newProductId);
 
       relatedProducts = [];
       for (let tempProduct of products) {
@@ -85,7 +89,7 @@
   }
 
   function back() {
-    history.back();
+    goto("/home");
   }
 
   function setSelectedProductTag(tabName: string) {
@@ -411,9 +415,13 @@
           class="product_tab_content_text"
           style="display: flex; flex-wrap: wrap;"
         >
+        {#if relatedProducts.length > 0}
           {#each relatedProducts as relatedProduct}
             <ProductCard data={relatedProduct} />
           {/each}
+        {:else}
+          <div>No related products found.</div>
+        {/if}
         </div>
       </div>
     {/if}

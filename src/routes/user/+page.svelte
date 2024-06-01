@@ -51,6 +51,7 @@
             <img
               class="panel_profile_image"
               src={currentUser.photoUrl}
+              onerror="this.src='/avatar.png';"
               alt="Profile"
             />
             <div class="profile_info">

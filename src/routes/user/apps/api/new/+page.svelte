@@ -45,14 +45,17 @@
       },
       body: JSON.stringify(newApp),
     }).then((response) => {
-      appService.ShowSnackbar("Subscription created.")
+      appService.ShowSnackbar("Subscription created.");
       appService.GetUserApps();
-      goto("/user/apps/api/" + name);
+
+      if (product_input) goto("/products/" + product_input);
+      else goto("/user/apps/api/" + name);
     });
   }
 
   function back() {
-    goto("/user/apps/api");
+    if (product_input) goto("/products/" + product_input);
+    else goto("/user/apps/api");
   }
 </script>
 
@@ -142,10 +145,14 @@
               {#each products as product}
                 {#if product.protocols.includes("API")}
                   <div class="form_list_line">
-
-                    <input id={product.id} name={product.id} checked={selectedProducts.includes(product.id)} on:change={onProductChange} type="checkbox" />
+                    <input
+                      id={product.id}
+                      name={product.id}
+                      checked={selectedProducts.includes(product.id)}
+                      on:change={onProductChange}
+                      type="checkbox"
+                    />
                     <label for={product.id}>{product.name}</label>
-                  
                   </div>
                 {/if}
               {/each}
@@ -154,9 +161,9 @@
 
           <div class="form_controls">
             <button
-            on:click={() => history.back()}
-            type="button"
-            class="rounded_button_outlined">Cancel</button
+              on:click={() => history.back()}
+              type="button"
+              class="rounded_button_outlined">Cancel</button
             >
             <button
               on:click={submit}

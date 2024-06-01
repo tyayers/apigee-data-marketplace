@@ -189,6 +189,7 @@
 <style>
   .app_box {
     display: flex;
+    flex-wrap: wrap;
     margin-left: 68px;
   }
 
