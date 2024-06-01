@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { goto, invalidate, invalidateAll } from "$app/navigation";
   import type { DataProduct } from "./interfaces";
   import {capitalizeFirstLetter} from "./utils";
 
   export let data: DataProduct | undefined = undefined;
 
   function OpenProduct() {
-    goto("/products/" + data?.id);
+    if (window.location.pathname.startsWith("/products/")) {
+      window.location.href = "/products/" + data?.id;
+    } else {
+      goto("/products/" + data?.id)
+    }
   }
 
   function getTypeClass(type: string) {

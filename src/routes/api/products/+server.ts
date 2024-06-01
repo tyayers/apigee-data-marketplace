@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
-import { DataProduct, StorageConfig } from '$lib/interfaces';
+import { DataProduct, StorageConfig, User } from '$lib/interfaces';
 import { GoogleAuth } from 'google-auth-library';
 import { PUBLIC_PROJECT_ID, PUBLIC_API_HOST, PUBLIC_APIGEE_ENV, PUBLIC_APIHUB_REGION } from '$env/static/public';
 
@@ -17,13 +17,20 @@ if (!apigeeHubLocation) apigeeHubLocation = "europe-west1";
 
 export const GET: RequestHandler = async ({ url }) => {
 
+  const email = url.searchParams.get('email') ?? '';
+
+  const userDoc = await firestore.doc('data-marketplace-users/' + email).get();
+  const userData: User | undefined = userDoc.data() as User;
+
   let prodColRef = firestore.collection("data-marketplace-products");
   let products = await prodColRef.listDocuments();
 
   let results: DataProduct[] = [];
   for (let doc of products.entries()) {
-    let docData = await doc[1].get()
-    results.push(docData.data() as DataProduct);
+    let productDoc = await doc[1].get();
+    let productData: DataProduct | undefined = productDoc.data() as DataProduct;
+    if (productData && productData.audiences.some((item: string) => userData.roles.includes(item)))
+      results.push(productData);
   }
 
   return json(results);

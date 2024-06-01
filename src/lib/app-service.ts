@@ -42,9 +42,6 @@ export class AppService {
     if (!this.siteName) this.siteName = "Data Marketplace";
 
     if (browser) {
-      console.error(PUBLIC_FIREBASE_APIKEY);
-      console.error(PUBLIC_FIREBASE_AUTHDOMAIN);
-
       let firebaseConfig = {
         apiKey: PUBLIC_FIREBASE_APIKEY,
         authDomain: PUBLIC_FIREBASE_AUTHDOMAIN,
@@ -53,13 +50,6 @@ export class AppService {
       this.auth = getAuth(this.app);
 
       document.title = this.siteName;
-
-      fetch("/api/products").then((response) => {
-        return response.json();
-      }).then((result: DataProduct[]) => {
-        this.products = result;
-        document.dispatchEvent(new Event("productsUpdated"));
-      });
 
       if (!this.testMode) {
         this.auth.onAuthStateChanged((u: FirebaseUser | null) => {
@@ -85,6 +75,14 @@ export class AppService {
             this.currentUser = new User(email, userName, this.tempFirstName, this.tempLastName);
             this.currentUser.photoUrl = photoURL;
             this.currentUser.providerId = provider;
+
+            // Get product data
+            fetch(`/api/products?email=${email}`).then((response) => {
+              return response.json();
+            }).then((result: DataProduct[]) => {
+              this.products = result;
+              document.dispatchEvent(new Event("productsUpdated"));
+            });
 
             // Get user data
             this.GetUser(this.currentUser).then((data: User) => {
