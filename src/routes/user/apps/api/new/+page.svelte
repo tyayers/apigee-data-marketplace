@@ -38,7 +38,7 @@
 
   function submit() {
     let newApp: ApiApp = new ApiApp(name, description, selectedProducts);
-    fetch("/api/apiapps?email=" + appService.currentUser?.email, {
+    fetch("/api/apps/api?email=" + appService.currentUser?.email, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

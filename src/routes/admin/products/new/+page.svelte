@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import { appService } from '$lib/app-service';
-  import { DataProduct, DisplayOptions } from '$lib/interfaces';
+  import { DataProduct, DisplayOptions} from '$lib/interfaces';
   import MenuLeftAdmin from '$lib/components-menus-left/menus-left.admin.svelte';
   import ProductEditor from '$lib/components.product-edit.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';

@@ -4,6 +4,7 @@
   import type { Bucket } from "@google-cloud/storage";
   import { onMount } from "svelte";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let bucketSubscriptions: BucketSubscription[] | undefined = undefined;
@@ -19,7 +20,7 @@
   });
 
   function getSignedUrls() {
-    fetch("/api/storage?email=" + currentUser?.email, {
+    fetch("/api/apps/storage?email=" + currentUser?.email, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -38,12 +39,12 @@
       .ShowDialog(
         "Are you sure you want to delete this subscription data sync?",
         "Delete",
-        0
+        DialogType.OkCancel
       )
       .then((result) => {
         if (result === "ok") {
           fetch(
-            "/api/storage?email=" +
+            "/api/apps/storage?email=" +
               appService.currentUser?.email +
               "&product=" +
               sub.product +
@@ -72,20 +73,6 @@
         }
       });
   }
-
-  // function addSignedUrl() {
-  //     fetch("/api/storage?email=" + currentUser?.email + "&product=ESH%20Analytics", {
-  //         method: 'POST',
-  //         headers: {
-  //         'content-type': 'application/json',
-  //         },
-  //     }).then((response) => {
-  //         return response.json();
-  //     }).then((data: any) => {
-  //         console.log(data);
-  //         signedUrls = data;
-  //     });
-  // }
 </script>
 
 <div class="left_menu_page">

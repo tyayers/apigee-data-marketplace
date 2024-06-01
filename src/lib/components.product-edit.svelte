@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DataProduct, DisplayOptions, SLA } from '$lib/interfaces';
+  import { DataProduct, DisplayOptions, SLA, type DataExchange, type DataExchnageListing } from '$lib/interfaces';
   import InputSelect from '$lib/components.input.select.svelte';
   import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
@@ -7,9 +7,14 @@
   import { text } from '@sveltejs/kit';
   import { onMount } from 'svelte';
   import { appService } from './app-service';
+  import { list } from 'firebase/storage';
+  import { DialogType } from './components.modal.dialog.svelte';
 
   export let product: DataProduct;
   let slas: SLA[] = [];
+  let analyticsHubListings: {dataExchanges: DataExchange[], listings: DataExchnageListing[]} = {dataExchanges: [], listings: []};
+  let specLoading: boolean = false;
+  let payloadLoading: boolean = false;
 
   onMount(async () => {
     if (product.samplePayload && payloadEditor) {
@@ -39,6 +44,14 @@
         let sla = slas.find(o => o.id === product.sla.id);
         if (sla) product.sla = sla;
       });
+
+    // Fetch analytics hub listing data
+    fetch("/api/analytics-hub").then((response) => {
+      if (response.status != 200) console.error(`Error fetching analytics hub data: ${response.status} - ${response.statusText}`);
+      return response.json();
+    }).then((data: any) => {
+      analyticsHubListings = data;
+    });
   });
 
   let categoryData: string[] = [
@@ -103,6 +116,7 @@
   }
 
   function refreshPayload() {
+    payloadLoading = true;
     fetch("/api/products/generate", {
       method: "POST",
       headers: {
@@ -112,6 +126,7 @@
     }).then((response) => {
       fetch(`/api/products/generate?entity=${product.entity}&type=${product.source}`).then((response) => {
         response.json().then((payload: any) => {
+          payloadLoading = false;
           product.samplePayload = JSON.stringify(payload);
           samplePayloadData = payload;
           let payloadContent = {
@@ -126,6 +141,7 @@
 
   function refreshSpec() {
     if (product.samplePayload) {
+      specLoading = true;
       fetch("/api/products/generate/spec", {
         method: "POST",
         headers: {
@@ -142,9 +158,10 @@
         }
         specEditor.set(specContent);
         specEditor.refresh();
+        specLoading = false;
       });
     } else {
-      appService.ShowDialog("A sample payload is needed to generate an API spec. Please either load or enter a payload into the 'Payload' field.", "OK", 0);
+      appService.ShowDialog("A sample payload is needed to generate an API spec. Please either load or enter a payload into the 'Payload' field.", "OK", DialogType.Ok);
     }
   }
 
@@ -192,10 +209,10 @@
         <select name="source" id="source" bind:value={product.source}>
           <option value="BigQuery">BigQuery</option>
           <option value="API">API</option>
-          <option value="AlloyDB">AlloyDB</option>
-          <option value="Cloud Spanner">Cloud Spanner</option>
-          <option value="Snowflake">Snowflake</option>
-          <option value="Databricks">Databricks</option>
+          <option value="AlloyDB" disabled>AlloyDB</option>
+          <option value="Cloud Spanner" disabled>Cloud Spanner</option>
+          <option value="Snowflake" disabled>Snowflake</option>
+          <option value="Databricks" disabled>Databricks</option>
         </select>
       </div>
     </div>
@@ -227,19 +244,14 @@
 
     {#if product.protocols.includes("Analytics Hub")}
       <div class="form_list">
-        <h4>Analytics Hub configuration</h4>
-        <div class="input_field_panel">
-          <input class="input_field" required type="text" name="analyticsHubMarketplaceId" id="analyticsHubMarketplaceId" bind:value={product.analyticsHubMarketplaceId} autocomplete="off" title="none" />
-          <label for="analyticsHubMarketplaceId" class='input_field_placeholder'>
-            Marketplace Id
-          </label>
+        <h4>Analytics Hub listing</h4>
+        <div class="select_dropdown">
+          <select name="source" id="source" bind:value={product.analyticsHubName}>
+            {#each analyticsHubListings.listings as listing}
+            <option value={list.name}>{listing.displayName}</option>
+            {/each}
+          </select>
         </div>
-        <div class="input_field_panel">
-          <input class="input_field" required type="text" name="analyticsHubListingId" id="analyticsHubListingId" bind:value={product.analyticsHubListingId} autocomplete="off" title="none" />
-          <label for="analyticsHubListingId" class='input_field_placeholder'>
-            Listing Id
-          </label>
-        </div>        
       </div>
     {/if}
 
@@ -274,26 +286,36 @@
     </div>
   </div>
 
-  <div class="product_payload">
-    <h4 style="margin-block-end: 0px;">Payload</h4>
-    <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
-    <div style="overflow-y: auto; height: 90%;">
-      <!-- <andypf-json-viewer expanded="3" show-copy="true" show-toolbar="true" data={samplePayloadData}></andypf-json-viewer> -->
-      <JSONEditor bind:this={payloadEditor} />
+  <div style="display: flex; flex-wrap: wrap;">
+    <div class="product_payload">
+      <div style="height: 36px;">
+        <h4 style="margin-block-end: 0px;">Payload</h4>
+        {#if !payloadLoading}
+          <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
+        {:else}
+          <span style="position: relative; top: -20px; left: 82px; font-size: 14px;"><img width="20px" alt="generating animation" src="/gemini_sparkle.gif" /></span>
+        {/if}
+      </div>
+      <div style="overflow-y: auto; height: 91%;">
+        <JSONEditor bind:this={payloadEditor} />
+      </div>
+    </div>
+  
+    <div class="product_payload">
+      <div style="height: 36px;">
+        <h4 style="margin-block-end: 0px;">API Spec</h4>
+        {#if !specLoading}
+          <button on:click|stopPropagation={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
+        {:else}
+          <span style="position: relative; top: -20px; left: 82px; font-size: 14px;"><img width="20px" alt="generating animation" src="/gemini_sparkle.gif" /></span>
+        {/if}
+      </div>
+
+      <div style="overflow-y: auto; height: 731px; top: 14px;">
+        <JSONEditor bind:this={specEditor} mode={Mode.text} onChange="{onSpecChange}" />
+      </div>
     </div>
   </div>
-
-  <div class="product_payload">
-    <h4 style="margin-block-end: 0px;">API Spec</h4>
-    <button on:click|stopPropagation={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
-    <div style="overflow-y: auto; height: 90%;">
-      <!-- <textarea style="width: 97%; height: 96%;">
-        {product.specContents}
-      </textarea> -->
-      <JSONEditor bind:this={specEditor} mode={Mode.text} onChange="{onSpecChange}" />
-    </div>
-  </div>
-
 </div>
 <style>
 
@@ -313,9 +335,9 @@
   border: 1px solid lightgray;
   width: 600px;
   margin-right: 40px;
-  min-height: 600px;
-  max-height: 800px;
+  height: 800px;
   padding-left: 10px;
+  
 }
 
 </style>

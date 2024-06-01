@@ -30,7 +30,7 @@
     productData = appService.products?.find((x) => x.id === productId);
 
     fetch(
-      "/api/storage?email=" +
+      "/api/apps/storage?email=" +
         currentUser?.email +
         "&product=" +
         productId + "_storage" +

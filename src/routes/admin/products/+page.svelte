@@ -6,6 +6,7 @@
   import FlatTable from "$lib/components.flat-table.svelte";
 
   import { onMount } from "svelte";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = appService.products;
@@ -71,7 +72,7 @@
       .ShowDialog(
         "Are you sure you want to delete this product?",
         "Delete",
-        0
+        DialogType.OkCancel
       )
       .then((result) => {
         if (result === "ok") {

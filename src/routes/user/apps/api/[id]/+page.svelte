@@ -5,6 +5,7 @@
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import type { PageData } from "./$types";
   import { goto } from '$app/navigation';
+  import { DialogType } from '$lib/components.modal.dialog.svelte';
 
   export let data: PageData;
 
@@ -89,7 +90,7 @@
 
       setDescription();
 
-      fetch("/api/apiapps/" + appData.name + "?email=" + appService.currentUser.email, {
+      fetch("/api/apps/api/" + appData.name + "?email=" + appService.currentUser.email, {
         method: 'POST',
         body: JSON.stringify(appData),
         headers: {
@@ -112,12 +113,12 @@
   }
 
   function deleteKey(key: ApiAppCredential) {
-    appService.ShowDialog("Do you really want to delete this key?", "Delete", 0).then((result) => {
+    appService.ShowDialog("Do you really want to delete this key?", "Delete", DialogType.OkCancel).then((result) => {
       if (result === "ok") {
         if (appService.currentUser && appData) {
           // appService.DeleteAppKey(appService.currentUser?.email, appData?.name, key.consumerKey);
           
-          fetch("/api/apiapps/" + appData.name + "/keys/" + key.consumerKey + "?email=" + appService.currentUser.email, {
+          fetch("/api/apps/api/" + appData.name + "/keys/" + key.consumerKey + "?email=" + appService.currentUser.email, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json',
@@ -166,7 +167,7 @@
       appService.ShowSnackbar("App updated.");
 
       if (appService.currentUser?.email) {
-        fetch("/api/apiapps/" + appData.name + "?email=" + appService.currentUser.email, {
+        fetch("/api/apps/api/" + appData.name + "?email=" + appService.currentUser.email, {
           method: 'PUT',
           body: JSON.stringify(appData),
           headers: {

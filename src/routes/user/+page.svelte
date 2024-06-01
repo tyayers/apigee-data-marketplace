@@ -1,6 +1,7 @@
 <script lang="ts">
   import { appService } from "$lib/app-service";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
   import type { User, BucketSubscription, IdentityConfig } from "$lib/interfaces";
   import { onMount } from "svelte";
 
@@ -25,7 +26,7 @@
   });
 
   function deleteAccount() {
-    appService.ShowDialog("Are you sure that you would like to delete your account?", "Confirm", 0).then((result) => {
+    appService.ShowDialog("Are you sure that you would like to delete your account?", "Confirm", DialogType.Ok).then((result) => {
       if (result === "ok") {
         if (currentUser) {
           appService.DeleteAccount(currentUser.email);

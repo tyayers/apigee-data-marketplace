@@ -1,21 +1,29 @@
 <script lang="ts">
 
   export let message = "";
-  export let submitButtonText = "OK";
-  export let type = 0;
+  export let submitButtonText = "Ok";
+  export let type: DialogType = DialogType.OkCancel;
 
-  export let submit: (result: string) => void
+  export let submit: (result: DialogType) => void
 
   function onClick() {
     
   }
 
   function onOk() {
-    if (submit) submit("ok");
+    if (submit) submit(DialogType.Ok);
   }
 
   function onCancel() {
-    if (submit) submit("cancel");
+    if (submit) submit(DialogType.Cancel);
+  }
+</script>
+
+<script lang="ts" context="module">
+  export enum DialogType {
+    Ok = "ok",
+    OkCancel = "okCancel",
+    Cancel = "cancel"
   }
 </script>
 
@@ -27,7 +35,9 @@
       {message}
     </div>
     <div class="modal_controls">
+      {#if type == DialogType.OkCancel}
       <button class="rounded_button_outlined" on:click={onCancel}>Cancel</button>
+      {/if}
       <button class="rounded_button_filled" on:click={onOk}>{submitButtonText}</button>
     </div>
   </div>

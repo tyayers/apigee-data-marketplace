@@ -22,7 +22,7 @@ export let protocols: DisplayOptions[] = [
   {
     name: "Event",
     displayName: "Event stream",
-    active: true
+    active: false
   },
   {
     name: "Data sync",

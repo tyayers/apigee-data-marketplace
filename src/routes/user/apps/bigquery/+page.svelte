@@ -3,6 +3,7 @@
   import type { AnalyticsHubSubscription, User } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { onMount } from "svelte";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let hubSubscriptions: AnalyticsHubSubscription[] | undefined = undefined;
@@ -17,7 +18,7 @@
   });
 
   function getAHSubscriptions() {
-    fetch("/api/bigquery?email=" + currentUser?.email, {
+    fetch("/api/apps/bigquery?email=" + currentUser?.email, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -36,12 +37,12 @@
       .ShowDialog(
         "Are you sure you want to delete this subscription dataset?",
         "Delete",
-        0
+        DialogType.OkCancel
       )
       .then((result) => {
         if (result === "ok") {
           fetch(
-            "/api/bigquery?email=" +
+            "/api/apps/bigquery?email=" +
               appService.currentUser?.email +
               "&project=" +
               sub.project +
@@ -161,12 +162,5 @@
 </div>
 
 <style>
-  .right_panel_content {
-    width: 100%;
-  }
 
-  .panel_table_content {
-    width: 90%;
-    margin-left: 24px;
-  }
 </style>

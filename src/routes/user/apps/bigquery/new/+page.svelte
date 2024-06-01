@@ -7,6 +7,8 @@
   import { onMount } from "svelte";
   import type { AnalyticsHubSubscription, DataProduct } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
+  import { load } from "../../proxy+page";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let project: string = "";
   let datasetName: string = "";
@@ -17,6 +19,7 @@
 
   var urlProduct = $page.url.searchParams.get("product");
   if (urlProduct) product = urlProduct;
+  loadProduct();
 
   onMount(() => {
     if ($page.url.hash) {
@@ -25,28 +28,28 @@
       if (values["product"]) product = values["product"];
       if (values["access_token"])
         appService.googleAccessToken = values["access_token"];
+      loadProduct();
     }
   });
+
+  function loadProduct() {
+    if (product)
+      productData = appService?.products?.find(
+        (productItem) => productItem.id === product
+      );
+  }
 
   function subscribeGoogle() {
     window.location.href =
       "https://accounts.google.com/o/oauth2/v2/auth?client_id=779705321594-0npc2bffujp0kggoo6bcl8l5g81vqnt8.apps.googleusercontent.com&redirect_uri=" +
       $page.url.origin +
       $page.url.pathname +
-      "&response_type=token&scope=https://www.googleapis.com/auth/bigquery&state=product=Index%20Research";
+      "&response_type=token&scope=https://www.googleapis.com/auth/bigquery&state=product=" + product;
   }
 
   function submit() {
-    productData = appService?.products?.find(
-      (productItem) => productItem.id === product
-    );
-
     fetch(
-      "https://analyticshub.googleapis.com/v1beta1/projects/apigee-test38/locations/eu/dataExchanges/" +
-        productData?.analyticsHubMarketplaceId +
-        "/listings/" +
-        productData?.analyticsHubListingId +
-        ":subscribe",
+      "https://analyticshub.googleapis.com/v1/" + productData?.analyticsHubName + ":subscribe",
       {
         method: "POST",
         headers: {
@@ -71,7 +74,7 @@
             (productItem) => productItem.id === product
           );
           fetch(
-            "/api/bigquery?email=" +
+            "/api/apps/bigquery?email=" +
               appService.currentUser?.email +
               "&project=" +
               project +
@@ -79,10 +82,10 @@
               datasetName +
               "&product=" +
               product +
-              "&marketplaceId=" +
-              productData?.analyticsHubMarketplaceId +
-              "&listingId=" +
-              productData?.analyticsHubListingId +
+              "&listingName=" +
+              productData?.analyticsHubName +
+              "&listingDisplayName=" +
+              productData?.anaylticsHubDisplayName +
               "&createdAt=" +
               new Date().toLocaleString(),
             {
@@ -102,7 +105,7 @@
           appService.ShowDialog(
             "The dataset already exists, so no new subscription could be created.",
             "OK",
-            0
+            DialogType.Ok
           );
         }
       })

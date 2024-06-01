@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let slas: SLA[] | undefined = undefined;
 
@@ -27,7 +28,7 @@
     appService
       .ShowDialog(
         "Are you sure that you want to delete the SLA definition?",
-        "Delete", 0
+        "Delete", DialogType.OkCancel
       )
       .then((result) => {
         if (result == "ok") {

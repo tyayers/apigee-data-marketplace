@@ -34,13 +34,10 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   const project = url.searchParams.get('project') ?? '';
 	const product = url.searchParams.get('product') ?? '';
   const dataset = url.searchParams.get('dataset') ?? '';
-  const listingId = url.searchParams.get('listingId') ?? '';
-  const marketplaceId = url.searchParams.get('marketplaceId') ?? '';
+  const listingName = url.searchParams.get('listingName') ?? '';
+  const listingDisplayName = url.searchParams.get('listingDisplayName') ?? '';
   const createdAt = url.searchParams.get('createdAt') ?? '';
   const status: string = "Active";
-
-  // We now create it on the client through the BQ API with an access token
-  // var createResult = await appService.createHubSubscription(project, dataset, marketplaceId, listingId);
 
   const document = firestore.doc('data-marketplace-hub/' + email);
   const doc = await document.get();
@@ -56,8 +53,8 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   var newSubscription: AnalyticsHubSubscription = {
     product: product,
-    listingId: listingId,
-    marketplaceId: marketplaceId,
+    listingName: listingName,
+    listingDisplayName: listingDisplayName,
     createdAt: createdAt,
     project: project,
     dataset: dataset,

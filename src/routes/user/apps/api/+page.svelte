@@ -5,6 +5,7 @@
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let appData: ApiApps | undefined = appService.apiApps;
   updateApps();
@@ -33,13 +34,13 @@
 
   function deleteApp(app: ApiApp) {
     appService
-      .ShowDialog("Do you really want to delete this app?", "Delete", 0)
+      .ShowDialog("Do you really want to delete this app?", "Delete", DialogType.OkCancel)
       .then((result) => {
         if (result === "ok") {
           if (appData) {
             if (appService.currentUser) {
               fetch(
-                "/api/apiapps/" +
+                "/api/apps/api/" +
                   app.name +
                   "?email=" +
                   appService.currentUser.email,

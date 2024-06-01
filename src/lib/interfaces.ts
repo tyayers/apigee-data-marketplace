@@ -53,8 +53,9 @@ export class DataProduct {
   specContents: string = "";
   specPrompt: string = "Generate an OpenAPI spec in json format with the name ${name} at the server https://${apigeeHost}. It should have one GET operation at the ${path} path, be authorized with an API key in the x-api-key header, and return the following data structure:";
   samplePayload: string = "";
-  analyticsHubMarketplaceId: string = "";
-  analyticsHubListingId: string = "";
+  analyticsHubName: string = "";
+  anaylticsHubDisplayName: string = "";
+  analyticsHubDescription: string = "";
   monetizationId: string = "";
   monetizationData?: MonetizationRatePlan;
   status: string;
@@ -152,12 +153,14 @@ export interface Error {
 
 export class AnalyticsHubSubscription {
   product: string = "";
-  listingId: string = "";
-  marketplaceId: string = "";
+  listingName: string = "";
+  listingDisplayName: string = "";
   project: string = "";
   dataset: string = "";
   createdAt: string = "";
   status?: string = "Inactive";
+  // listingId: string = "";
+  // marketplaceId: string = "";
 }
 
 export class BucketSubscription {
@@ -293,3 +296,20 @@ export class FlatTableData {
 
 export interface FlatTableHeader {name: string, displayName: string, sortable: boolean, searchable: boolean}
 export interface FlatTableStyle {name: string, value: string, color: string, isBold: boolean}
+
+export interface DataExchange {
+  name: string;
+  displayName: string;
+  listingCount: number;
+}
+
+export interface DataExchnageListing {
+  name: string;
+  displayName: string;
+  description: string;
+  primaryContact: string;
+  documentation: string;
+  state: string;
+  categories: string[];
+  requestAccess: string;
+}

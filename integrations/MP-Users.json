@@ -1,8 +1,8 @@
 {
-  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/53766566-b3c1-4401-b13d-c67e1e193528",
+  "name": "projects/779705321594/locations/europe-west1/integrations/MP-Users/versions/451f0432-bc7f-4ce4-95c7-33b117efed9a",
   "description": "Marketplace user management.\n # Overview\nThis integration creates a new user in the system.\n\n## Orchestration\n1. The integration starts with an API call to get user information.\n2. If the user is found, the integration maps the result and sends a welcome email.\n3. If the user is not found, the integration creates an external user and sends a welcome email.\n4. The integration then checks the user\u0027s domain to determine if they are an internal user.\n5. If the user is an internal user, the integration creates an internal user and sends a welcome email.\n6. If the user is not an internal user, the integration sends the user for approval.\n7. Once the user is approved, the integration sets their status to approved.\n8. Finally, the integration maps the result and sends a welcome email.",
-  "updateTime": "2024-05-31T11:35:13.683Z",
-  "createTime": "2024-05-31T11:30:34.149Z",
+  "updateTime": "2024-05-31T16:05:45.162Z",
+  "createTime": "2024-05-31T16:05:09.559Z",
   "lastModifierEmail": "approver@example.com",
   "triggerConfigs": [{
     "label": "Get User",
@@ -162,14 +162,13 @@
         "key": "Cc",
         "value": {
           "stringArray": {
-            "stringValues": ["approver@example.com"]
           }
         }
       },
       "TextBody": {
         "key": "TextBody",
         "value": {
-          "stringValue": "Hi, congratulations, you\u0027ve been approved to use Data Marketplace! You can login with your credentials here: https://data-marketplace-utbzvczbya-ew.a.run.app/\n\nHappy data browsing!\nThe Data Marketplace team"
+          "stringValue": "Hi, congratulations, you\u0027ve been approved to use Data Marketplace! \n\nHappy data browsing!\nThe Data Marketplace team"
         }
       },
       "Bcc": {
@@ -196,6 +195,7 @@
         "key": "To",
         "value": {
           "stringArray": {
+            "stringValues": ["$userRequest.email$"]
           }
         }
       },
@@ -242,14 +242,13 @@
         "key": "Cc",
         "value": {
           "stringArray": {
-            "stringValues": ["approver@example.com"]
           }
         }
       },
       "TextBody": {
         "key": "TextBody",
         "value": {
-          "stringValue": "Hi, congratulations, you\u0027ve been approved to use Data Marketplace! You can login with your credentials here: https://data-marketplace-utbzvczbya-ew.a.run.app/\n\nHappy data browsing!\nThe Data Marketplace team"
+          "stringValue": "Hi, congratulations, you\u0027ve been approved to use Data Marketplace!\n\nHappy data browsing!\nThe Data Marketplace team"
         }
       },
       "Bcc": {
@@ -276,6 +275,7 @@
         "key": "To",
         "value": {
           "stringArray": {
+            "stringValues": ["$userRequest.email$"]
           }
         }
       },

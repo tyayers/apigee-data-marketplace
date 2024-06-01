@@ -15,6 +15,7 @@ import {
 import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { User, Developer, ApiApps, DataProduct } from "./interfaces";
+import type { DialogType } from "./components.modal.dialog.svelte";
 
 let FirebaseAPIKey: string = import.meta.env.VITE_FIREBASE_APIKEY;
 let FirebaseAuthDomain: string = import.meta.env.VITE_FIREBASE_AUTHDOMAIN;
@@ -167,7 +168,7 @@ export class AppService {
 
   GetUserApps(): void {
     // Get developer app data
-    fetch("/api/apiapps?email=" + this.currentUser?.email, {
+    fetch("/api/apps/api?email=" + this.currentUser?.email, {
       method: 'GET',
       headers: {
           'content-type': 'application/json',
@@ -283,12 +284,12 @@ export class AppService {
     }}, 3000);
   }
 
-  RegisterModalDialogHandler: ((message: string, SubmitButtonText: string, type: number) => Promise<string>) | undefined = undefined;
+  RegisterModalDialogHandler: ((message: string, SubmitButtonText: string, type: DialogType) => Promise<DialogType>) | undefined = undefined;
 
-  ShowDialog(message: string, SubmitButtonText: string, type: number): Promise<string> {
+  ShowDialog(message: string, SubmitButtonText: string, type: DialogType): Promise<DialogType> {
     return new Promise((resolve, reject) => {
       if (this.RegisterModalDialogHandler) {
-        this.RegisterModalDialogHandler(message, SubmitButtonText, type).then((result: string) => {
+        this.RegisterModalDialogHandler(message, SubmitButtonText, type).then((result: DialogType) => {
           resolve(result);
         });
       }
