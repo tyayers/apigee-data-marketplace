@@ -1,20 +1,16 @@
 <script lang="ts">
   import { goto, invalidate } from "$app/navigation";
   import { appService } from "$lib/app-service";
-  import { equalTo } from "firebase/database";
-  import type { PageData } from "./$types";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import type { AnalyticsHubSubscription, DataProduct } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
-  import { load } from "../../proxy+page";
   import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let project: string = "";
   let datasetName: string = "";
   let product: string = "";
   let hubUrl: string = "";
-  //let accessToken: string = "";
   let productData: DataProduct | undefined = undefined;
 
   var urlProduct = $page.url.searchParams.get("product");

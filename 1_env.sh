@@ -14,6 +14,8 @@ export BUCKET_NAME=marketplace-
 # Set Apigee variables
 export APIGEE_ENV=
 export APIGEE_ENVGROUP_HOST=
+# Default is EU, if another location is needed set here.
+# export APIGEE_APIHUB_REGION=
 
 # Internal domains are the email domains that will be considered internal for users registering (no approval needed)
 export INTERNAL_DOMAINS=

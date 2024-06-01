@@ -2,7 +2,7 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
 import { Firestore } from '@google-cloud/firestore';
 import type { User } from "$lib/interfaces";
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -55,7 +55,7 @@ export const DELETE: RequestHandler = async({ params }) => {
 async function deleteApigeeUser(email: string): Promise<any> {
   let token = await auth.getAccessToken();
 
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}`, {
     method: "DELETE",
     headers: {
       "Authorization": "Bearer " + token

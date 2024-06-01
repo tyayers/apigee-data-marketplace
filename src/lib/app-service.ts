@@ -1,12 +1,10 @@
 import { goto } from "$app/navigation";
 import { browser } from "$app/environment";
-
 import {
   signInWithRedirect,
   GoogleAuthProvider,
   signOut,
   getAuth,
-  getRedirectResult,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
@@ -16,24 +14,20 @@ import type { User as FirebaseUser} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { User, Developer, ApiApps, DataProduct } from "./interfaces";
 import type { DialogType } from "./components.modal.dialog.svelte";
-
-let FirebaseAPIKey: string = import.meta.env.VITE_FIREBASE_APIKEY;
-let FirebaseAuthDomain: string = import.meta.env.VITE_FIREBASE_AUTHDOMAIN;
+import {PUBLIC_FIREBASE_APIKEY, PUBLIC_FIREBASE_AUTHDOMAIN, PUBLIC_SITE_NAME} from '$env/static/public';
 
 export class AppService {
   googleProvider = new GoogleAuthProvider();
   SAMLprovider = new SAMLAuthProvider('saml.enterprise-sso');
-  firebaseConfig = {
-    apiKey: FirebaseAPIKey,
-    authDomain: FirebaseAuthDomain,
-  };
   tempFirstName: string = "";
   tempLastName: string = "";
-  siteName: string = import.meta.env.VITE_SITE_NAME;
+  siteName: string = PUBLIC_SITE_NAME;
 
   // Initialize Firebase & Firebase Auth
-  app = initializeApp(this.firebaseConfig);
-  auth = getAuth(this.app);
+  app;
+  auth;
+  // app = initializeApp(this.firebaseConfig);
+  // auth = getAuth(this.app);
   currentUser: User | undefined = undefined;
   currentUserLoaded: boolean = false;
   firebaseUser: FirebaseUser | undefined = undefined;
@@ -48,6 +42,15 @@ export class AppService {
     if (!this.siteName) this.siteName = "Data Marketplace";
 
     if (browser) {
+      console.error(PUBLIC_FIREBASE_APIKEY);
+      console.error(PUBLIC_FIREBASE_AUTHDOMAIN);
+
+      let firebaseConfig = {
+        apiKey: PUBLIC_FIREBASE_APIKEY,
+        authDomain: PUBLIC_FIREBASE_AUTHDOMAIN,
+      };
+      this.app = initializeApp(firebaseConfig);
+      this.auth = getAuth(this.app);
 
       document.title = this.siteName;
 

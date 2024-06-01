@@ -97,13 +97,14 @@ if [[ $(gcloud app describe 2>&1 || true) == *'ERROR'* ]]; then echo 'No app eng
 gcloud alpha firestore databases update --type=firestore-native
 
 echo "Setting web app variables..."
-cp .env .env.local
-sed -i "/VITE_SITE_NAME=/c\VITE_SITE_NAME=$SITE_NAME" .env.local
-sed -i "/VITE_API_HOST=/c\VITE_API_HOST=$APIGEE_ENVGROUP_HOST" .env.local
-sed -i "/VITE_PROJECT_ID=/c\VITE_PROJECT_ID=$PROJECT_ID" .env.local
-sed -i "/VITE_APIGEE_ENV=/c\VITE_APIGEE_ENV=$APIGEE_ENV" .env.local
-sed -i "/VITE_FIREBASE_APIKEY=/c\VITE_FIREBASE_APIKEY=$FIREBASE_APIKEY" .env.local
-sed -i "/VITE_FIREBASE_AUTHDOMAIN=/c\VITE_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN" .env.local
+touch .env
+echo $"PUBLIC_SITE_NAME=$SITE_NAME" >> .env
+echo $"PUBLIC_API_HOST=$APIGEE_ENVGROUP_HOST" >> .env
+echo $"PUBLIC_PROJECT_ID=$PROJECT_ID" >> .env
+echo $"PUBLIC_APIGEE_ENV=$APIGEE_ENV" >> .env
+echo $"PUBLIC_APIHUB_REGION=$APIGEE_APIHUB_REGION" >> .env
+echo $"PUBLIC_FIREBASE_APIKEY=$FIREBASE_APIKEY" >> .env
+echo $"PUBLIC_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN" >> .env
 
 echo "Creating Apigee KVM..."
 apigeecli kvms create -e $APIGEE_ENV -n marketplace-kvm -o $PROJECT_ID -t $(gcloud auth print-access-token)

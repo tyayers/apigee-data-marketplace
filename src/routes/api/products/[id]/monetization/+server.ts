@@ -2,8 +2,8 @@ import type { DataProduct, IdentityConfig, MonetizationRatePlan, MonetizationRat
 import { Firestore } from "@google-cloud/firestore";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
 });
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
   delete newPlan.name;
 
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts/${newPlan.apiproduct}/rateplans`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/apiproducts/${newPlan.apiproduct}/rateplans`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,

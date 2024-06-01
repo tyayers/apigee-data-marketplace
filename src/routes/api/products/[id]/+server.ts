@@ -2,8 +2,7 @@ import type { DataProduct } from "$lib/interfaces";
 import { Firestore } from "@google-cloud/firestore";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -73,7 +72,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 
 function deleteAPIProduct(id: string) {
   auth.getAccessToken().then((token) => {
-    fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts/${id}`, {
+    fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/apiproducts/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`

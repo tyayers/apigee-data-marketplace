@@ -2,8 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { ApiApp, ApiApps, type ApigeeApps } from '$lib/interfaces';
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -39,7 +38,7 @@ export const POST: RequestHandler = async ({ url, request }) => {
 async function getApiApps(email: string): Promise<ApiApps> {
   let result: ApiApps = new ApiApps();
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps?expand=true`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps?expand=true`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
@@ -67,7 +66,7 @@ async function getApiApps(email: string): Promise<ApiApps> {
 /* Creates an API app for a user. */
 async function createApiApp(email: string, newApp: ApiApp) {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -98,7 +97,7 @@ async function createSubscriptions(email: string, newApp: ApiApp) {
   let token = await auth.getAccessToken();
 
   for (let product of newApp.apiProducts) {
-    let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/subscriptions`, {
+    let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/subscriptions`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,

@@ -2,9 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { GoogleAuth } from "google-auth-library";
 import type { UsageData } from '$lib/interfaces';
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
-const apigeeEnvironment: string = import.meta.env.VITE_APIGEE_ENV;
+import { PUBLIC_PROJECT_ID, PUBLIC_APIGEE_ENV } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -33,7 +31,7 @@ async function getUsageData(email: string): Promise<UsageData> {
   //let timeRange = "02/01/2024+00:00~02/28/2024+23:59"
   let timeRange = startDateString + "+00:00~" + endDateString + "+23:59";
 
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/stats/developer_app?select=sum(message_count)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/environments/${PUBLIC_APIGEE_ENV}/stats/developer_app?select=sum(message_count)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`, {
     headers: {
       "Authorization": "Bearer " + token
     }

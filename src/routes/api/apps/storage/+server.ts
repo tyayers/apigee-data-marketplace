@@ -4,9 +4,7 @@ import { Storage } from '@google-cloud/storage'
 import { Firestore } from '@google-cloud/firestore';
 import type { BucketSubscription, ApigeeApp, ApigeeAppCredential, ApiApp } from '$lib/interfaces';
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
-const apigeeHost: string = import.meta.env.VITE_API_HOST;
+import { PUBLIC_PROJECT_ID, PUBLIC_API_HOST } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -42,7 +40,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
     apiKey = storageApp.credentials[0].consumerKey;
   createSubscription(email, product);
 	
-  const newUrl = `https://${apigeeHost}/v1/storage/download?file=${entity}.000000000000.parquet&apiKey=${apiKey}`;
+  const newUrl = `https://${PUBLIC_API_HOST}/v1/storage/download?file=${entity}.000000000000.parquet&apiKey=${apiKey}`;
 
   const document = firestore.doc('data-marketplace-storage/' + email);
   const doc = await document.get();
@@ -106,7 +104,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 /* Creates an API app for a user. */
 async function createApiApp(email: string, productId: string): Promise<any> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -133,7 +131,7 @@ async function createApiApp(email: string, productId: string): Promise<any> {
 /* Gets an API app from the Apigee API */
 async function getApiApp(email: string, appId: string): Promise<ApiApp | undefined> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appId}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appId}`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
@@ -155,7 +153,7 @@ async function getApiApp(email: string, appId: string): Promise<ApiApp | undefin
 async function createSubscription(email: string, productId: string) {
   let token = await auth.getAccessToken();
 
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/subscriptions`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/subscriptions`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,

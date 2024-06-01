@@ -2,8 +2,7 @@ import type { DataProduct, IdentityConfig, MonetizationRatePlan, MonetizationRat
 import { Firestore } from "@google-cloud/firestore";
 import { error, json, type NumericRange, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -19,7 +18,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
   if (params.name) name = params.name;
 
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts/${productId}/rateplans/${name}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/apiproducts/${productId}/rateplans/${name}`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`
@@ -52,7 +51,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
   if (params.name) name = params.name;
 
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/apiproducts/${productId}/rateplans/${name}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/apiproducts/${productId}/rateplans/${name}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`

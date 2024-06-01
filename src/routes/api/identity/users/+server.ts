@@ -1,9 +1,7 @@
-import type { SLA, User } from "$lib/interfaces";
+import type { User } from "$lib/interfaces";
 import { Firestore } from "@google-cloud/firestore";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { json, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'

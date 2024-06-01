@@ -4,8 +4,7 @@ import { Storage, type GetSignedUrlConfig } from '@google-cloud/storage'
 import { Firestore } from '@google-cloud/firestore';
 import { AnalyticsHubSubscription } from '$lib/interfaces';
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -105,7 +104,7 @@ export const DELETE: RequestHandler = async({ params, url, request}) => {
 
 async function createApigeeSubscription(email: string, product: string): Promise<any> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/subscriptions`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/subscriptions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

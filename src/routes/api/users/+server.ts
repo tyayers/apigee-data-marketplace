@@ -3,8 +3,7 @@ import type { RequestHandler } from './$types';
 import { Firestore } from '@google-cloud/firestore';
 import { GoogleAuth } from 'google-auth-library';
 import { User } from '$lib/interfaces';
-
-const apiHost = import.meta.env.VITE_API_HOST;
+import { PUBLIC_API_HOST } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -46,7 +45,7 @@ export const POST: RequestHandler = async ({ request }) => {
 };
 
 async function getOrCreateUser(user: User): Promise<User | undefined> {
-  let response = await fetch("https://" + apiHost + "/v1/users", {
+  let response = await fetch("https://" + PUBLIC_API_HOST + "/v1/users", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

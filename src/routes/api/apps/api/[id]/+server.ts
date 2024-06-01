@@ -2,8 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { ApiApp, ApigeeApp, ApigeeAppCredential } from '$lib/interfaces';
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -66,7 +65,7 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 /* Gets an API app from the Apigee API */
 async function getApiApp(email: string, appId: string): Promise<ApiApp | undefined> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appId}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appId}`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
@@ -87,7 +86,7 @@ async function getApiApp(email: string, appId: string): Promise<ApiApp | undefin
 /* Creates an API key for an app */
 async function createApiAppKey(email: string, app: ApiApp): Promise<ApiApp | undefined> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${app.appId}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${app.appId}`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -114,7 +113,7 @@ async function updateApiApp(email: string, app: ApiApp): Promise<ApiApp | undefi
     let updatedApp: ApigeeApp = app as ApigeeApp;
 
     let token = await auth.getAccessToken();
-    let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${app.name}`, {
+    let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${app.name}`, {
       method: "PUT",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -161,7 +160,7 @@ async function updateApiAppCredential(email: string, appName: string, cred: Apig
   }
 
   // Now update app key
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appName}/keys/${cred.consumerKey}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appName}/keys/${cred.consumerKey}`, {
     method: "PUT",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -174,7 +173,7 @@ async function updateApiAppCredential(email: string, appName: string, cred: Apig
 /* Update an API app remove product from credential */
 async function updateApiAppCredentialRemoveProduct(email: string, appName: string, keyName: string, apiProduct: string) {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appName}/keys/${keyName}/apiproducts/${apiProduct}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appName}/keys/${keyName}/apiproducts/${apiProduct}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`
@@ -192,7 +191,7 @@ async function updateApiAppCredentialRemoveProduct(email: string, appName: strin
 /* Get an API app credential */
 async function getApiAppCredentialKey(email: string, appName: string, keyName: string) {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appName}/keys/${keyName}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appName}/keys/${keyName}`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
@@ -211,7 +210,7 @@ async function getApiAppCredentialKey(email: string, appName: string, keyName: s
 /* Delete an API app */
 async function deleteApiApp(email: string, appName: string): Promise<ApiApp | undefined> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appName}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appName}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`

@@ -1,8 +1,7 @@
 import { error, json, type NumericRange } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { GoogleAuth } from "google-auth-library";
-const projectId = import.meta.env.VITE_PROJECT_ID;
-const apigeeEnvironment = import.meta.env.VITE_APIGEE_ENV;
+import { PUBLIC_PROJECT_ID, PUBLIC_APIGEE_ENV } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -25,7 +24,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
   //let timeRange = "02/01/2024+00:00~02/28/2024+23:59"
   let timeRange = startDateString + "+00:00~" + endDateString + "+23:59";
 
-  let analyticsUrl = `https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/stats/developer_app?select=sum(x_apigee_mintng_rate)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`;
+  let analyticsUrl = `https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/environments/${PUBLIC_APIGEE_ENV}/stats/developer_app?select=sum(x_apigee_mintng_rate)&timeRange=${timeRange}&timeUnit=month&filter=(developer_email%20eq%20'${email}')`;
 
   let response = await fetch(analyticsUrl, {
     headers: {

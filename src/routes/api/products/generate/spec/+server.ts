@@ -1,10 +1,7 @@
 import type { DataProduct } from "$lib/interfaces";
 import { json, text, type RequestHandler } from "@sveltejs/kit";
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
-const apigeeHost: string = import.meta.env.VITE_API_HOST;
-const apigeeEnvironment: string = import.meta.env.VITE_APIGEE_ENV;
+import { PUBLIC_PROJECT_ID, PUBLIC_API_HOST, PUBLIC_APIGEE_ENV } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -17,7 +14,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   let payload = newProduct.samplePayload.replaceAll("\"", "'");
   let callPath: string = newProduct.source === "BigQuery" ? "data" : "services"
-  newProduct.specPrompt = newProduct.specPrompt.replaceAll("${name}", newProduct.name).replaceAll("${apigeeHost}", apigeeHost).replaceAll("${path}", `/v1/${callPath}/` + newProduct.entity);
+  newProduct.specPrompt = newProduct.specPrompt.replaceAll("${name}", newProduct.name).replaceAll("${apigeeHost}", PUBLIC_API_HOST).replaceAll("${path}", `/v1/${callPath}/` + newProduct.entity);
 
   let prompt: string = newProduct.specPrompt;
 
@@ -31,7 +28,7 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
 function generateSpec(prompt: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    fetch(`https://${apigeeHost}/v1/genai/prompt`, {
+    fetch(`https://${PUBLIC_API_HOST}/v1/genai/prompt`, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -55,7 +52,7 @@ function generateSpec(prompt: string): Promise<string> {
 
 function setKVMEntry(KVMName: string, keyName: string, keyValue: string) {
   auth.getAccessToken().then((token) => {
-    fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/environments/${apigeeEnvironment}/keyvaluemaps/${KVMName}/entries`, {
+    fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/environments/${PUBLIC_APIGEE_ENV}/keyvaluemaps/${KVMName}/entries`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,

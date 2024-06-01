@@ -1,8 +1,7 @@
 import { json, type RequestHandler } from "@sveltejs/kit";
 import type { DataExchange, DataExchnageListing } from "$lib/interfaces";
 import { GoogleAuth } from "google-auth-library";
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -13,7 +12,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
   let result: {dataExchanges: DataExchange[], listings: DataExchnageListing[]} = {dataExchanges: [], listings: []};
   let exchangeData: {dataExchanges: DataExchange[]} = {dataExchanges: []};
 
-  let exchangesResponse = await fetch(`https://analyticshub.googleapis.com/v1/projects/${projectId}/locations/eu/dataExchanges`, {
+  let exchangesResponse = await fetch(`https://analyticshub.googleapis.com/v1/projects/${PUBLIC_PROJECT_ID}/locations/eu/dataExchanges`, {
     headers: {
       "Authorization": "Bearer " + token
     }
@@ -23,7 +22,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
     exchangeData = await exchangesResponse.json();
   }
   else {
-    console.error(`Error retrieving AnalyticsHub Exchanges from project ${projectId}.`);
+    console.error(`Error retrieving AnalyticsHub Exchanges from project ${PUBLIC_PROJECT_ID}.`);
     console.error(`Response ${exchangesResponse.status} - ${exchangesResponse.statusText}`);
   }
 

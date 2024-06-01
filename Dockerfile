@@ -4,12 +4,11 @@ RUN mkdir -p /opt/app
 
 WORKDIR /opt/app
 
-COPY package.json package-lock.json ./
+COPY . .
 
-RUN npm install
-
-COPY ./build .
+RUN npm i
+RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "./build/index.js" ]

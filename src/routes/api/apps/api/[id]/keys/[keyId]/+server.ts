@@ -2,8 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { GoogleAuth } from 'google-auth-library';
 import type { ApiAppCredential } from '$lib/interfaces';
-
-const projectId: string = import.meta.env.VITE_PROJECT_ID;
+import { PUBLIC_PROJECT_ID } from '$env/static/public';
 
 const auth = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -22,7 +21,7 @@ export const DELETE: RequestHandler = async({ params, url}) => {
 
 async function deleteApiAppKey(email: string, appId: string, keyId: string): Promise<ApiAppCredential | undefined> {
   let token = await auth.getAccessToken();
-  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${projectId}/developers/${email}/apps/${appId}/keys/${keyId}`, {
+  let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appId}/keys/${keyId}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`
