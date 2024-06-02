@@ -248,7 +248,7 @@
         <div class="select_dropdown">
           <select name="source" id="source" bind:value={product.analyticsHubName}>
             {#each analyticsHubListings.listings as listing}
-            <option value={list.name}>{listing.displayName}</option>
+            <option value={listing.name}>{listing.displayName}</option>
             {/each}
           </select>
         </div>

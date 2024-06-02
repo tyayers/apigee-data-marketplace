@@ -105,6 +105,7 @@ echo $"PUBLIC_APIGEE_ENV=$APIGEE_ENV" >> .env
 echo $"PUBLIC_APIHUB_REGION=$APIGEE_APIHUB_REGION" >> .env
 echo $"PUBLIC_FIREBASE_APIKEY=$FIREBASE_APIKEY" >> .env
 echo $"PUBLIC_FIREBASE_AUTHDOMAIN=$FIREBASE_AUTHDOMAIN" >> .env
+echo $"PUBLIC_OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID" >> .env
 
 echo "Creating Apigee KVM..."
 apigeecli kvms create -e $APIGEE_ENV -n marketplace-kvm -o $PROJECT_ID -t $(gcloud auth print-access-token)

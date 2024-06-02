@@ -6,41 +6,52 @@
   import type { AnalyticsHubSubscription, DataProduct } from "$lib/interfaces";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { DialogType } from "$lib/components.modal.dialog.svelte";
+  import { PUBLIC_OAUTH_CLIENT_ID } from '$env/static/public';
+
+  
+  console.log(PUBLIC_OAUTH_CLIENT_ID);
 
   let project: string = "";
   let datasetName: string = "";
-  let product: string = "";
-  let hubUrl: string = "";
+  $: productId = "";
+  $: loadProduct(productId);
   let productData: DataProduct | undefined = undefined;
-
+  let products: DataProduct[] | undefined = appService.products;
   var urlProduct = $page.url.searchParams.get("product");
-  if (urlProduct) product = urlProduct;
-  loadProduct();
+  if (urlProduct) productId = urlProduct;
 
   onMount(() => {
     if ($page.url.hash) {
       let urlHash: string = $page.url.hash;
       var values = getParameters(urlHash);
-      if (values["product"]) product = values["product"];
+      if (values["product"]) productId = values["product"];
       if (values["access_token"])
         appService.googleAccessToken = values["access_token"];
-      loadProduct();
+
+      loadProduct(productId);
     }
+
+    document.addEventListener("productsUpdated", () => {
+      products = appService.products;
+      loadProduct(productId);
+    });
   });
 
-  function loadProduct() {
-    if (product)
-      productData = appService?.products?.find(
-        (productItem) => productItem.id === product
+  function loadProduct(newProductId: string) {
+    if (newProductId)
+      productData = products?.find(
+        (productItem) => productItem.id === productId
       );
   }
 
   function subscribeGoogle() {
-    window.location.href =
-      "https://accounts.google.com/o/oauth2/v2/auth?client_id=779705321594-0npc2bffujp0kggoo6bcl8l5g81vqnt8.apps.googleusercontent.com&redirect_uri=" +
+    console.log(PUBLIC_OAUTH_CLIENT_ID);
+    let newUrl = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + PUBLIC_OAUTH_CLIENT_ID + "&redirect_uri=" +
       $page.url.origin +
       $page.url.pathname +
-      "&response_type=token&scope=https://www.googleapis.com/auth/bigquery&state=product=" + product;
+      "&response_type=token&scope=https://www.googleapis.com/auth/bigquery&state=product=" + productId;
+    // console.log(newUrl);
+    window.location.href = newUrl;
   }
 
   function submit() {
@@ -67,7 +78,7 @@
         if (response.ok && response.status === 200) {
           // Subscription was successfully created.
           const productData = appService.products?.find(
-            (productItem) => productItem.id === product
+            (productItem) => productItem.id === productId
           );
           fetch(
             "/api/apps/bigquery?email=" +
@@ -77,7 +88,7 @@
               "&dataset=" +
               datasetName +
               "&product=" +
-              product +
+              productId +
               "&listingName=" +
               productData?.analyticsHubName +
               "&listingDisplayName=" +
@@ -156,8 +167,8 @@
             ></path></svg
           >
         </button>
-        {#if product}
-          <span>Add Analytics Hub subscription for {product}</span>
+        {#if productId}
+          <span>Add Analytics Hub subscription for {productId}</span>
         {:else}
           <span>Add Analytics Hub subscription</span>
         {/if}
@@ -278,10 +289,10 @@
 
           <div class="form_list">
             <h4>Product subscription</h4>
-            <div class="select_dropdown">
-              <select name="hubListing" id="hubListing" bind:value={product}>
-                {#if appService && appService.products}
-                  {#each appService.products as product}
+            <div class="select_dropdown" style="width: 300px;">
+              <select name="hubListing" id="hubListing" bind:value={productId} style="">
+                {#if products}
+                  {#each products as product}
                     {#if product.protocols.includes("Analytics Hub")}
                       <option value={product.id}>{product.name}</option>
                     {/if}

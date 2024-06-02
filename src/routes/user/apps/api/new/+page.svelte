@@ -5,7 +5,6 @@
   import { onMount } from "svelte";
   import MenuLeftAccount from "$lib/components-menus-left/menus-left.account.svelte";
   import { ApiApp, DataProduct } from "$lib/interfaces";
-  import { protocols } from "$lib/utils";
 
   let name: string = "";
   let description: string = "";

@@ -28,10 +28,10 @@
 
     fetch("/api/products", {
       method: 'POST',
-      body: JSON.stringify(newProduct),
       headers: {
         'content-type': 'application/json',
       },
+      body: JSON.stringify(newProduct)
     }).then((response) => {
         return response.json();
     }).then((data: DataProduct) => {

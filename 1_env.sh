@@ -7,6 +7,7 @@ export SITE_NAME="Apigee Marketplace"
 # Set Identity Platform & Firebase variables
 export FIREBASE_APIKEY=
 export FIREBASE_AUTHDOMAIN=$PROJECT_ID.firebaseapp.com
+export OAUTH_CLIENT_ID=
 
 # Set Cloud Storage bucket name
 export BUCKET_NAME=marketplace-
