@@ -22,15 +22,18 @@
       let pieces: string[] = value.split(".");
       if (pieces.length == 2) {
         amount.units = pieces[0];
+        if (amount.units == "") amount.units = "0";
         amount.nanos = pieces[1];
       }
-      else if (pieces.length == 1)
+      else if (pieces.length == 1) {
         amount.units = pieces[0];
+        amount.nanos = "0";
+      }
     }
   }
 </script>
 
-<div class={small ? "input_field_panel small" : "input_field_panel"}>
+<div class={small ? "input_field_panel small" : "input_field_panel"} style="margin-top: 24px;">
   <input class="input_field" on:input={(e) => {onChange(e)}} required type="text" name={label} id={label} bind:value={input} autocomplete="off" title="none" />
   <label for={label} class='input_field_placeholder'>
     {label + " (" + amount.currencyCode + ")"}

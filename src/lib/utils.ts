@@ -1,8 +1,16 @@
 import type { DisplayOptions } from "$lib/interfaces";
+import { env } from '$env/dynamic/public';
 
 // Capitalize first letter
 export function capitalizeFirstLetter(value: string): string { 
 	return value.charAt(0).toUpperCase() + value.slice(1); 
+}
+
+export function logDebug(name: string, payload: string): void {
+  if (env.PUBLIC_LOG_DEBUG) {
+    console.log(name);
+    console.log(payload);
+  }
 }
 
 // Generates a random string of a given length. Defaults to 6 characters.

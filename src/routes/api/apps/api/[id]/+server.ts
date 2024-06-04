@@ -135,8 +135,10 @@ async function updateApiApp(email: string, app: ApiApp): Promise<ApiApp | undefi
       return result;
     }
     else {
-      console.error(`Error adding key to api app ${app.name} for user ${email}.`);
+      console.error(`Error updating api app ${app.name} for user ${email}.`);
       console.error(`Response ${response.status} - ${response.statusText}`);
+      let errorResponsePayload = await response.json();
+      if (errorResponsePayload) console.error(errorResponsePayload);
     }
 
     return;
@@ -148,13 +150,13 @@ async function updateApiAppCredential(email: string, appName: string, cred: Apig
 
   // First find any products that have been removed
   var deletedProducts = [];
-  let key = await getApiAppCredentialKey(email, appName, cred.consumerKey);
-  if (key && cred && cred.apiProducts) {
+  let key: ApigeeAppCredential | undefined = await getApiAppCredentialKey(email, appName, cred.consumerKey);
+  if (key && key.apiProducts && cred && cred.apiProducts) {
     for (var i = 0; i < key.apiProducts.length; i++) {
       var existingProduct = key.apiProducts[i];
-      let tempProd = cred.apiProducts.find(prod => prod.apiproduct === existingProduct);
+      let tempProd = cred.apiProducts.find(prod => prod.apiproduct === existingProduct.apiproduct);
       if (!tempProd) {
-        await updateApiAppCredentialRemoveProduct(email, appName, key.name, existingProduct);
+        await updateApiAppCredentialRemoveProduct(email, appName, key.consumerKey, existingProduct.apiproduct);
       }
     }
   }
@@ -189,7 +191,7 @@ async function updateApiAppCredentialRemoveProduct(email: string, appName: strin
 }
 
 /* Get an API app credential */
-async function getApiAppCredentialKey(email: string, appName: string, keyName: string) {
+async function getApiAppCredentialKey(email: string, appName: string, keyName: string): Promise<ApigeeAppCredential | undefined> {
   let token = await auth.getAccessToken();
   let response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/developers/${email}/apps/${appName}/keys/${keyName}`, {
     headers: {
@@ -198,7 +200,7 @@ async function getApiAppCredentialKey(email: string, appName: string, keyName: s
   });
 
   if (response.status == 200) {
-    let result: ApiApp = await response.json();
+    let result: ApigeeAppCredential = await response.json();
     return result;
   }
   else {

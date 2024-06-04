@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MonetizationRatePlan, MonetizationRatePlanMoney } from '$lib/interfaces';
+  import { MonetizationConsumptionTypes, MonetizationRatePlan, MonetizationRatePlanMoney } from '$lib/interfaces';
   import { onMount } from 'svelte';
   import MoneyEdit from '$lib/components.money-edit.svelte';
   import MonetizationBands from '$lib/components.monetization-bands.svelte';
@@ -65,21 +65,11 @@
       </div>
     </div>
 
-    <div class="input_field_panel">
-      <MoneyEdit amount={plan.setupFee} label="Setup fee" />
-      <!-- <input class="input_field" required type="text" name="setupFee" id="setupFee" bind:value={setupFee} autocomplete="off" title="none" />
-      <label for="setupFee" class='input_field_placeholder'>
-        Setup fee
-      </label> -->
-    </div>
+    <h4>Fees</h4>
+    
+    <MoneyEdit amount={plan.setupFee} label="Setup fee" />
 
-    <div class="input_field_panel">
-      <MoneyEdit amount={plan.fixedRecurringFee} label="Fixed recurring fee" />
-      <!-- <input class="input_field" required type="text" name="fixedRecurringFee" id="fixedRecurringFee" bind:value={fixedRecurringFee} autocomplete="off" title="none" />
-      <label for="fixedRecurringFee" class='input_field_placeholder'>
-        Fixed recurring fee
-      </label> -->
-    </div>
+    <MoneyEdit amount={plan.fixedRecurringFee} label="Fixed recurring fee" />
 
     <div class="input_field_panel">
       <input class="input_field" required type="text" name="fixedFeeFrequency" id="fixedFeeFrequency" bind:value={plan.fixedFeeFrequency} autocomplete="off" title="none" />
@@ -98,13 +88,9 @@
       </div>
     </div>
 
-    {#if plan.consumptionPricingType == "FIXED_PER_UNIT"}
+    {#if plan.consumptionPricingType == MonetizationConsumptionTypes.FIXED_PER_UNIT}
       <div class="input_field_panel">
         <MoneyEdit amount={plan.consumptionPricingRates[0].fee} label="Fixed unit fee" />
-        <!-- <input class="input_field" required type="text" name="fixedUnitFee" id="fixedUnitFee" bind:value={fixedUnitPrice} autocomplete="off" title="none" />
-        <label for="fixedUnitFee" class='input_field_placeholder'>
-          Fixed unit fee
-        </label> -->
       </div>
     {:else}
       <MonetizationBands {plan} />

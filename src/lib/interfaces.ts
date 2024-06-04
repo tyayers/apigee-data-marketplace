@@ -232,7 +232,7 @@ export class MonetizationRatePlan {
   setupFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: "0"};
   fixedRecurringFee: MonetizationRatePlanMoney = {currencyCode: "USD", units: "0", nanos: "0"};
   fixedFeeFrequency: number = 0;
-  consumptionPricingType: string = "FIXED_PER_UNIT"; // can also be BANDED
+  consumptionPricingType: MonetizationConsumptionTypes = MonetizationConsumptionTypes.FIXED_PER_UNIT; // can also be BANDED
   consumptionPricingRates: MonetizationRatePlanRate[] = [];
   state: string = "PUBLISHED" // can also be DRAFT
   startTime: number = 0;
@@ -244,10 +244,15 @@ export class MonetizationRatePlan {
   }
 }
 
+export enum MonetizationConsumptionTypes {
+  FIXED_PER_UNIT = "FIXED_PER_UNIT",
+  BANDED = "BANDED"
+}
+
 export class MonetizationRatePlanMoney {
   currencyCode: string = "USD";
-  units: string = "0";
-  nanos: string = "0";
+  units: string = "";
+  nanos: string = "";
 }
 
 export class MonetizationRatePlanRate {

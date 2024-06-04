@@ -9,6 +9,7 @@
   import MenuLeftAdmin from "$lib/components-menus-left/menus-left.admin.svelte";
   import FlatTable from "$lib/components.flat-table.svelte";
   import { onMount } from "svelte";
+  import { DialogType } from "$lib/components.modal.dialog.svelte";
 
   let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = appService.products;
@@ -64,20 +65,34 @@
 
   function onRowDelete(row: DataProduct) {
     if (row && row.id && row.monetizationId) {
-      fetch(`/api/products/${row.id}/monetization/${row.monetizationId}`, {
-        method: "DELETE"
-      }).then((response) => {
-        let tempProduct = products?.find(prod => prod.id === row.id);
-        if (tempProduct) {
-          tempProduct.monetizationId = "";
-          fetch("/api/products/" + row.id, {
-            method: "PUT",
-            body: JSON.stringify(tempProduct)
+      appService.ShowDialog(`Are you sure that you want to delete the monetization plan for product ${row.name}?`, "Delete", DialogType.OkCancel).then((value) => {
+        if (value == DialogType.Ok) {
+          fetch(`/api/products/${row.id}/monetization/${row.monetizationId}`, {
+            method: "DELETE"
+          }).then((response) => {
+            if (response.status == 200) {
+              let tempProduct = products?.find(prod => prod.id === row.id);
+              if (tempProduct) {
+                tempProduct.monetizationId = "";
+                fetch("/api/products/" + row.id, {
+                  method: "PUT",
+                  body: JSON.stringify(tempProduct)
+                });
+              }
+              products = products;
+              if (products) monetizationTableConfig.data = products;
+
+              appService.ShowSnackbar("Monetization plan deleted.");
+            } else {
+              appService.ShowSnackbar("Monetization plan could not be deleted: " + response.statusText);
+            }
+          }).catch((err) => {
+            console.error(err);
           });
         }
-        products = products;
-        if (products) monetizationTableConfig.data = products;
-      });
+      })
+    } else {
+      appService.ShowSnackbar("Product does not have a monetization plan active.")
     }
   }
 </script>

@@ -141,6 +141,8 @@
   function submit() {
     if (appData) {
 
+      appData.apiProducts = [];
+
       // First reset all the api product subscriptions
       if (appData.credentials && appData.credentials.length > 0) {
         for (let cred of appData.credentials) {
@@ -159,6 +161,8 @@
               })
             }
           }
+
+          appData.apiProducts.push(product);
         }
       }
 
@@ -178,11 +182,13 @@
         // appService.UpdateApp(appService.currentUser?.email, appData);
     }
 
-    goto("/user/apps/api");
+    history.back();
+    //goto("/user/apps/api");
   }
 
   function back() {
-    goto("/user/apps/api");
+    history.back();
+    //goto("/user/apps/api");
   }
 </script>
 
