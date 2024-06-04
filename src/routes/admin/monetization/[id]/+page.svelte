@@ -176,13 +176,16 @@
     // Make sure if there is a fixed fee, that there is also a fixed fee interval
     if (plan.fixedRecurringFee && !plan.fixedFeeFrequency)
       plan.fixedFeeFrequency = 1;
-    
-      // Make sure if there is a fixed fee, that it > 0
+
+    // Make sure if there is a fixed fee, that it > 0
     if (
       plan.consumptionPricingType ==
         MonetizationConsumptionTypes.FIXED_PER_UNIT &&
       (plan.consumptionPricingRates.length == 0 ||
-        ((plan.consumptionPricingRates[0].fee.nanos == "" || plan.consumptionPricingRates[0].fee.nanos == "0")  && (plan.consumptionPricingRates[0].fee.units == "" || plan.consumptionPricingRates[0].fee.units == "0")))
+        ((plan.consumptionPricingRates[0].fee.nanos == "" ||
+          plan.consumptionPricingRates[0].fee.nanos == "0") &&
+          (plan.consumptionPricingRates[0].fee.units == "" ||
+            plan.consumptionPricingRates[0].fee.units == "0")))
     ) {
       result = false;
       appService.ShowSnackbar("Fixed fee must be greater than 0.");
