@@ -145,7 +145,7 @@
 
     height: var(--header-height);
     background-color: rgba(255, 255, 255, 1);
-    width: 100vw;
+    /* width: 100vw; */
     border-bottom: solid 1px rgba(222, 222, 222, 1);
 
     font-weight: 560;

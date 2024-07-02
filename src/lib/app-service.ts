@@ -1,7 +1,7 @@
 import { goto } from "$app/navigation";
 import { browser } from "$app/environment";
 import {
-  signInWithRedirect,
+  signInWithPopup,
   GoogleAuthProvider,
   signOut,
   getAuth,
@@ -57,6 +57,8 @@ export class AppService {
           // if u is null, means user is signed out
           // if u is an object, means user is signed in
           this.currentUserLoaded = true;
+          console.log("Auth state event user: ");
+          console.log(u);
           if (!u) {
             this.currentUser = undefined;
             //First, we initialize our event
@@ -199,7 +201,7 @@ export class AppService {
 
   SignInWithGoogle(): void {
     const auth = getAuth();
-    signInWithRedirect(auth, this.googleProvider);
+    signInWithPopup(auth, this.googleProvider);
   }
 
   RegisterWithEmail(email: string, password: string, firstName: string, lastName: string) {
@@ -237,7 +239,7 @@ export class AppService {
 
   SignInWithSAML() {
     const auth = getAuth();
-    signInWithRedirect(auth, this.SAMLprovider);
+    signInWithPopup(auth, this.SAMLprovider);
   }
 
   SignOut(): void {
