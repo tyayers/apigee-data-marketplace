@@ -201,6 +201,10 @@ export class StorageConfig {
   entities: string[] = [];
 }
 
+export class CategoryConfig {
+  categories: string[] = [];
+}
+
 export class SLA {
   id: string;
   name: string;

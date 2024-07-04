@@ -240,7 +240,7 @@
               {/if}
             </div>
             {#each catProducts[catName] as prodName, i}
-              {#if searchText === "" || prodName.toLowerCase().includes(searchText.toLowerCase())}
+              {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase()) || prodName.toLowerCase().includes(searchText.toLowerCase())}
                 <ProductCard data={productsByName[prodName]} />
               {/if}
             {/each}

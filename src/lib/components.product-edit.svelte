@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DataProduct, DisplayOptions, SLA, type DataExchange, type DataExchnageListing } from '$lib/interfaces';
+  import { CategoryConfig, DataProduct, DisplayOptions, SLA, type DataExchange, type DataExchnageListing } from '$lib/interfaces';
   import InputSelect from '$lib/components.input.select.svelte';
   import TagCloud from '$lib/components.tag.cloud.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
@@ -15,6 +15,9 @@
   let analyticsHubListings: {dataExchanges: DataExchange[], listings: DataExchnageListing[]} = {dataExchanges: [], listings: []};
   let specLoading: boolean = false;
   let payloadLoading: boolean = false;
+  let categoryData: CategoryConfig = {
+    categories: []
+  };
 
   onMount(async () => {
     if (product.samplePayload && payloadEditor) {
@@ -52,15 +55,14 @@
     }).then((data: any) => {
       analyticsHubListings = data;
     });
-  });
 
-  let categoryData: string[] = [
-    "ESG - Environmental", "ESG - Social", "ESG - Governance",
-    "Investment - Research", "Investment - Statistics", "Investment - Management",
-    "Pre-IPO - Research", "Pre-IPO - Statistics", "Pre-IPO - Management",
-    "Listing - Research", "Listing - Statistics", "Listing - Management",
-    "Trading - Research", "Trading - Statistics", "Trading - Classes"
-  ];
+    fetch("/api/categories").then((response) => {
+      if (response.status === 200)
+        return response.json();
+    }).then((config: CategoryConfig) => {
+      categoryData = config;
+    });
+  });
 
   let samplePayloadData: any = {};
   if (product.samplePayload) samplePayloadData = JSON.parse(product.samplePayload);
@@ -103,6 +105,15 @@
       let newProductCopy = product;
       newProductCopy.categories.push(category);
       product = newProductCopy;
+    }
+
+    if (!categoryData.categories.includes(category)) {
+      // Add to database
+      fetch("/api/categories?name=" + category, {
+        method: "POST"
+      });
+
+      categoryData.categories.push(category);
     }
   }
 
@@ -229,7 +240,7 @@
 
       <TagCloud data={product.categories} onRemove={removeCategory} />
 
-      <InputSelect data={categoryData} label="Add category - subcategory" onSelect={addCategory} />
+      <InputSelect data={categoryData.categories} label="Add category - subcategory" onSelect={addCategory} />
 
     </div>
 

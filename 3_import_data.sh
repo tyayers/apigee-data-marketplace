@@ -120,3 +120,75 @@ curl -i -X POST "https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databa
   ]
 }
 EOF
+
+curl -i -X POST "https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databases/(default)/documents:batchWrite" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-binary @- << EOF
+
+{
+  "writes": [
+    {
+      "update": {
+        "name": "projects/$PROJECT_ID/databases/(default)/documents/data-marketplace-config/product",
+        "fields": {
+          "id": {
+              "stringValue": "product"
+          },
+          "categories": {
+            "arrayValue": {
+              "values": [
+                {
+                  "stringValue": "ESG - Environmental"
+                },
+                {
+                  "stringValue": "ESG - Social"
+                },
+                {
+                  "stringValue": "ESG - Governance"
+                },
+                {
+                  "stringValue": "Investment - Research"
+                },
+                {
+                  "stringValue": "Investment - Statistics"
+                },
+                {
+                  "stringValue": "Investment - Management"
+                },
+                {
+                  "stringValue": "Pre-IPO - Research"
+                },
+                {
+                  "stringValue": "Pre-IPO - Statistics"
+                },
+                {
+                  "stringValue": "Pre-IPO - Management"
+                },
+                {
+                  "stringValue": "Listing - Research"
+                },
+                {
+                  "stringValue": "Listing - Statistics"
+                },
+                {
+                  "stringValue": "Listing - Management"
+                },
+                {
+                  "stringValue": "Trading - Research"
+                },
+                {
+                  "stringValue": "Trading - Statistics"
+                },
+                {
+                  "stringValue": "Trading - Classes"
+                }
+              ]
+            },
+          },
+        }
+      }
+    }
+  ]
+}
+EOF

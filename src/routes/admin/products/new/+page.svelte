@@ -1,19 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import { appService } from '$lib/app-service';
-  import { DataProduct, DisplayOptions} from '$lib/interfaces';
+  import { CategoryConfig, DataProduct, DisplayOptions} from '$lib/interfaces';
   import MenuLeftAdmin from '$lib/components-menus-left/menus-left.admin.svelte';
   import ProductEditor from '$lib/components.product-edit.svelte';
   import { generateRandomString, protocols, audiences } from '$lib/utils';
+  import { onMount } from 'svelte';
 
   let product: DataProduct = new DataProduct(generateRandomString(4), "", "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal"], []);
-  let categoryData: string[] = [
-    "ESG - Environmental", "ESG - Social", "ESG - Governance",
-    "Investment - Research", "Investment - Statistics", "Investment - Management",
-    "Pre-IPO - Research", "Pre-IPO - Statistics", "Pre-IPO - Management",
-    "Listing - Research", "Listing - Statistics", "Listing - Management",
-    "Trading - Research", "Trading - Statistics", "Trading - Classes"
-  ];
 
   function submit() {
     product.createdAt = new Date().toString();
