@@ -210,7 +210,7 @@
             <input class="product_filter_search_input" bind:value={category_filter} placeholder="Filter categories" />
           </div>
           <div class="product_filter_header">
-            <h4>Type</h4>
+            <h3>Type</h3>
           </div>
           {#each types as type}
             <div class="product_filter_checkbox">
@@ -219,7 +219,7 @@
           {/each}
           {#each Object.keys(categories) as cat}
             <div class="product_filter_header">
-              <h4>{cat}</h4>
+              <h3>{cat}</h3>
             </div>
             {#each categories[cat] as subcat}
               {#if category_filter == "" || subcat.toLowerCase().includes(category_filter.toLowerCase())}
@@ -236,7 +236,7 @@
           {#if catProducts[catName].length > 0}
             <div class="product_list_header">
               {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase())}
-                <h3>{catName} products</h3>
+                <h2>{catName} products</h2>
               {/if}
             </div>
             {#each catProducts[catName] as prodName, i}
@@ -276,12 +276,12 @@
     width: 580px;
     margin-left: auto;
     margin-right: auto;
-    font-size: 24px;
+    font-size: xx-large;
   }
 
   .banner_subtitle {
     margin-top: 16px;
-    font-size: 14px;
+    font-size: medium;
   }
 
   .banner_search {
@@ -300,7 +300,7 @@
     width: 90%;
     margin-top: 4px;
     border-width: 0px;
-    font-size: 14px;
+    font-size: medium;
     border: none;
     background-color: #fafafa;
     position: relative;
@@ -333,7 +333,7 @@
     margin-left: 18px;
     margin-top: 8px;
     color: #333;
-    font-size: 16px;
+    font-size: medium;
     user-select: none;
   }
 
@@ -365,7 +365,7 @@
 
   .product_filter_search_input {
     border-width: 0px;
-    font-size: 14px;
+    font-size: medium;
     border: none;
     background-color: #fafafa;
     position: relative;

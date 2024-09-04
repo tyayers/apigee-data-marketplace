@@ -161,7 +161,8 @@
   }
 
   .header_left_panel1 {
-    margin-top: 12px;
+    /* margin-top: 12px; */
+    margin-top: calc(var(--header-height)*.26);
     margin-left: 24px;
     cursor: pointer;
     display: flex;
@@ -171,6 +172,7 @@
     font-family: "Open Sans", sans-serif;;
     color: #2c2c2c;
     font-weight: 550;
+    font-size: larger;
     position: relative;
     top: -12px;
     left: 4px;
@@ -181,7 +183,7 @@
   }
 
   .header_right_panel1 {
-    margin-top: 7px;
+    margin-top: calc(var(--header-height)*.20);
     margin-right: 24px;
   }
 

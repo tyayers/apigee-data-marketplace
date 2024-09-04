@@ -63,6 +63,7 @@
     height: 246px;
     margin: 14px;
     position: relative;
+    font-size: large;
   }
 
   .product-box:hover {
@@ -71,21 +72,22 @@
   }
 
   .product-owner-box {
-    font-size: 13px;
+    font-size:small;
     font-weight: 300;
     color: rgb(0,0,0,.66);
   }
 
   .product-description-box {
-    font-size: 13px;
+    font-size: medium;
+    color: rgb(0,0,0,.66);
     line-height: 20px;
     margin-top: 8px;
     max-height: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
+    -line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
 
   .tags_box {

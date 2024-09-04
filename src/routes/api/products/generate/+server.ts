@@ -48,16 +48,23 @@ async function setKVMEntry(KVMName: string, keyName: string, keyValue: string) {
 
   if (response.status === 409) {
     // Update KVM entry
-    await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/environments/${PUBLIC_APIGEE_ENV}/keyvaluemaps/${KVMName}/entries/${keyName}`, {
-    method: "PUT",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: keyName,
-      value: keyValue
-    })
-  });
+    response = await fetch(`https://apigee.googleapis.com/v1/organizations/${PUBLIC_PROJECT_ID}/environments/${PUBLIC_APIGEE_ENV}/keyvaluemaps/${KVMName}/entries/${keyName}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: keyName,
+        value: keyValue
+      })
+    });
+
+    if (response.status != 200)
+      console.error(response);
   }
+  else {
+    console.error(response);
+  }
+
 }

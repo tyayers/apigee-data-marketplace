@@ -54,12 +54,12 @@
 <style>
 .background_left {
   position: absolute;
-  top: 107px;
+  top: var(--header-height);
 }
 
 .background_right {
   position: absolute;
-  top: 108px;
+  top: var(--header-height);
   right: 0px;
 }
 
