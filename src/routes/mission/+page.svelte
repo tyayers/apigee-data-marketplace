@@ -1,5 +1,5 @@
 <script lang="ts">
-
+  import { fade, slide, fly, blur, scale } from 'svelte/transition';
 </script>
 
 <div class="header_tabs">
@@ -32,34 +32,77 @@
 
 <div class="landing_main_panel">
   <div id="overview" class="landing_heading">
-    Our mission is data access that works for everyone
-</div>
+    Our mission is data collaboration that works for everyone
+  </div>
+
+  <div class="landing_content_white" in:fade>
+    <div class="landing_content">
+      Exchanging & sharing data should be fast, easy and secure. It should also be easy for anyone to publish or consume data, just like saving and sharing any other type of digital content. Let's work together to make data sharing simple.
+    </div>
+    <div class="landing_content_divided">
+        <div class="landing_content_half">
+          <img class="landing_content_half_image" alt="frankfurt" src="/network.jpg" />
+        </div>
+        <div id="mission" class="landing_content_half_text">
+          Apigee Marketplace is a specialized online hub designed to connect data providers and consumers within and across industries. Its focus is on facilitating the exchange of highly valuable datasets through multiple protocols, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
+        </div>
+    </div>
+  </div>
+
+  <div class="landing_content_gray">
+    <div class="landing_sub_heading">
+      Transparent & simple pricing for first, second and third-party data
+    </div>
+    <div class="landing_content_divided">
+      <div id="pricing" class="landing_content_half_text">
+        Our data marketplace puts simplicity at the forefront. Pricing structures are clear and concise, with no hidden fees or complicated calculations.  You'll find tiered subscription options based on your needs, or the ability to pay-as-you-go for individual datasets.
+      </div>
+      <div class="landing_content_half">
+        <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+      </div>
+    </div>
+  </div>
 
   <div class="landing_content_white">
-    <div class="landing_content">
-      Exchanging & sharing data should be fast, easy and secure. It should also be easy for anyone to publish or consume data, just like publishing any other type of digital content. Let's work together to make data sharing simple.
+    <div class="landing_sub_heading">
+      Verified & curated data from a network of high-quality partners
     </div>
     <div class="landing_content_divided">
         <div class="landing_content_half">
           <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1540646794357-6cbbd6f3501e?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
         </div>
-        <div id="mission" class="landing_content_half_text">
+        <div id="partners" class="landing_content_half_text">
           Data Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
         </div>
     </div>
   </div>
+
+  <div class="landing_content_gray">
+    <div class="landing_sub_heading">
+      Security & privacy built-in
+    </div>
+    <div class="landing_content_divided">
+      <div id="privacy" class="landing_content_half_text">
+        Apigee Marketplace prioritizes security by providing a multi-layered approach to protect customer data and infrastructure. Built-in safeguards, like encryption and access control, are foundational to the platform. The global network, equipped with custom-designed hardware and a hardened operating system, ensures high availability and resilience against attacks.
+      </div>
+      <div class="landing_content_half">
+        <img class="landing_content_half_image" alt="frankfurt" src="/security.jpg" />
+      </div>
+    </div>
+  </div>
+
 
 </div>
 
 <style>
 .background_left {
   position: absolute;
-  top: var(--header-height);
+  top: 72px;
 }
 
 .background_right {
   position: absolute;
-  top: var(--header-height);
+  top: 72px;
   right: 0px;
 }
 
@@ -68,15 +111,16 @@
   left: 0px;
   width: 100%;
   bottom: 0px;
-  padding-top: 104px;
+  padding-top: 14px;
   text-align: center;
 }
 
 .landing_heading {
   margin: auto;
   margin-top: 75px;
+  margin-bottom: 24px;
   width: 60vw;
-  font-size: 44px;
+  font-size: 72px;
   font-style: normal;
 }
 
@@ -84,12 +128,12 @@
   width: 60vw;
   margin: auto;
   display: flex;
-  margin-top: 24px;
 }
 
 .landing_content {
   margin: auto;
-  margin-top: 46px;
+  margin-top: 86px;
+  margin-bottom: 24px;
   color: #555;
   line-height: 24px;
   width: 60vw;
@@ -144,9 +188,14 @@
   margin: auto;
   padding-top: 124px;
   width: 50vw;
-  font-size: 24px;
+  font-size: 48px;
   font-style: normal;
   padding-bottom: 22px;
+}
+
+.footer {
+  height: 200px;
+  width: 100%;
 }
 
 </style>

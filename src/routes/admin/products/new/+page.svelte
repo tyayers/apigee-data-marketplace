@@ -7,7 +7,7 @@
   import { generateRandomString, protocols, audiences } from '$lib/utils';
   import { onMount } from 'svelte';
 
-  let product: DataProduct = new DataProduct(generateRandomString(4), "", "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal"], []);
+  let product: DataProduct = new DataProduct(generateRandomString(4), "", "", "", "", "Draft", "BigQuery", "", "", "", ["API"], ["internal", "partner", "external"], []);
 
   function submit() {
     product.createdAt = new Date().toString();

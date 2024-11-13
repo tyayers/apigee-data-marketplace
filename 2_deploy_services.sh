@@ -26,7 +26,7 @@ gcloud functions add-invoker-policy-binding signedurl-function \
 SECONDS=0
 # Create artifact registry, if needed
 gcloud artifacts repositories create docker-registry --repository-format=docker \
---location="$REGION" --description="Docker registry" 2>/dev/null    
+--location="$REGION" --description="Docker registry" 2>/dev/null
 
 # Submit build
 gcloud builds submit --config=cloudbuild.yaml \

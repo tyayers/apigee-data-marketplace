@@ -106,11 +106,11 @@
 
 <div class="landing_main_panel">
     <div id="overview" class="landing_heading">
-        Let's achieve more with financial data
+        Let's achieve more with our data assets
     </div>
     <div class="landing_content">
         <div>
-          Data Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
+          Apigee Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
         </div>
     </div>
     <div class="landing_heading_small">
@@ -125,10 +125,10 @@
       </div>
       <div class="landing_content_divided">
           <div class="landing_content_half">
-            <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1540646794357-6cbbd6f3501e?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+            <img class="landing_content_half_image" alt="frankfurt" src="/network.jpg" />
           </div>
           <div id="mission" class="landing_content_half_text">
-            Data Marketplace is a specialized online hub designed to connect data providers and consumers within various industrial sectors. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
+            Apigee Marketplace is a specialized online hub designed to connect data providers and consumers within and across industries. Its focus is on facilitating the exchange of highly valuable industrial datasets, empowering businesses to optimize operations, accelerate innovation, and gain a competitive edge.
           </div>
       </div>
     </div>
@@ -165,10 +165,10 @@
       </div>
       <div class="landing_content_divided">
         <div id="privacy" class="landing_content_half_text">
-          Our data marketplace puts simplicity at the forefront. Pricing structures are clear and concise, with no hidden fees or complicated calculations.  You'll find tiered subscription options based on your needs, or the ability to pay-as-you-go for individual datasets.
+          Apigee Marketplace prioritizes security by providing a multi-layered approach to protect customer data and infrastructure. Built-in safeguards, like encryption and access control, are foundational to the platform. The global network, equipped with custom-designed hardware and a hardened operating system, ensures high availability and resilience against attacks.
         </div>
         <div class="landing_content_half">
-          <img class="landing_content_half_image" alt="frankfurt" src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+          <img class="landing_content_half_image" alt="frankfurt" src="/security.jpg" />
         </div>
       </div>
     </div>
@@ -180,12 +180,12 @@
 
 .background_left {
   position: absolute;
-  top: 107px;
+  top: 72px;
 }
 
 .background_right {
   position: absolute;
-  top: 108px;
+  top: 72px;
   right: 0px;
 }
 

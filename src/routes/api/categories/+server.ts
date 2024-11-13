@@ -20,8 +20,16 @@ export const GET: RequestHandler = async ({ url, params }) => {
     categories = doc.data() as CategoryConfig;
   }
 
-  if (categories)
+  if (categories) {
+   
+    categories.categories.sort(function(a, b) {
+      var textA = a.toUpperCase();
+      var textB = b.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
+
     return json(categories);
+  }
   else
     error(404, "Categories not found.");
 };

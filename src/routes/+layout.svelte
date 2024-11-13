@@ -47,7 +47,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:click={sendCancel} on:keyup={sendCancel}>
+<div on:click={sendCancel} on:keyup={sendCancel} in:fade={{ duration: 150, delay: 150 }} out:fade={{ duration: 150 }}>
   <Header />
 
   {#if modalDialogVisible}

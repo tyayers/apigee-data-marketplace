@@ -11,8 +11,8 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
   let newProduct: DataProduct = await request.json();
 
-
   let payload = newProduct.samplePayload.replaceAll("\"", "'");
+
   let callPath: string = newProduct.source === "BigQuery" ? "data" : "services"
   newProduct.specPrompt = newProduct.specPrompt.replaceAll("${name}", newProduct.name).replaceAll("${apigeeHost}", PUBLIC_API_HOST).replaceAll("${path}", `/v1/${callPath}/` + newProduct.entity);
 
@@ -28,7 +28,9 @@ export const POST: RequestHandler = async({ params, url, request}) => {
 
 function generateSpec(prompt: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    fetch(`https://${PUBLIC_API_HOST}/v1/genai/prompt`, {
+    let url = `https://${PUBLIC_API_HOST}/v2/genai/prompt`;
+    console.log(url);
+    fetch(url, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -37,9 +39,17 @@ function generateSpec(prompt: string): Promise<string> {
         prompt: prompt
       })
     }).then((response) => {
-      return response.json();
-    }).then((result: {answer: string}) => {
-      resolve(result.answer);
+      if (response.status != 200) {
+        console.error("Could not call Gen AI Prompt API, response code from server: " + response.status);
+        reject("Could not call Gen AI Prompt API");
+      }
+      else
+        return response.text();
+    }).then((result: string | undefined) => {
+      if (result) {
+        let jsonResult = JSON.parse(result);
+        resolve(jsonResult.answer);
+      }
     }).catch((error) => {
       console.error("Error in genai request: ");
       console.error(error);

@@ -26,6 +26,7 @@
   let apiKey: string = "";
 
   let previewDataOpen: boolean = false;
+  let previewDataType: Mode = Mode.table;
   let apiDocOpen: boolean = false;
 
   let payloadEditor: { set(content: any): void; refresh(): void };
@@ -104,8 +105,20 @@
 
     setTimeout(() => {
       if (product) {
+
+        let payloadData = JSON.parse(product.samplePayload);
+        let editorData = [];
+
+        if (payloadData[product.entity]) {
+          editorData = payloadData[product.entity];
+        }
+        else {
+          editorData = payloadData;
+          previewDataType = Mode.tree;
+        }
+        
         let payloadContent = {
-          json: JSON.parse(product.samplePayload)[product.entity],
+          json: editorData,
         };
         if (payloadEditor) {
           payloadEditor.set(payloadContent);
@@ -206,10 +219,12 @@
             class="rounded_button_filled">Subscribe data sync</a
           >
         {/if}
-        <button
-          class="rounded_button_outlined"
-          on:click|stopPropagation={openDataPreview}>Preview data</button
-        >
+        {#if product?.samplePayload}
+          <button
+            class="rounded_button_outlined"
+            on:click|stopPropagation={openDataPreview}>Preview data</button
+          >
+        {/if}
       </div>
 
       {#if appSubscriptions.length > 0}
@@ -436,10 +451,10 @@
           <h3 style="position: relative; top: -4px; left: 6px;">
             Preview data
           </h3>
-          <button
-            class="rounded_button_outlined"
-            style="margin-left: 26px; height: 39px; font-size: 12px"
-            >Download CSV</button
+          <a href={"data:application/octet-stream," + encodeURI(product.samplePayload)}
+            class="rounded_button_outlined" download={product.entity + ".json"}
+            style="margin-left: 26px; max-height: 16px; font-size: 12px"
+            >Download</a
           >
         </div>
 
@@ -454,7 +469,7 @@
         <div
           style="position: absolute; top: 70px; bottom: 10px; overflow: auto; width: 97%;"
         >
-          <JSONEditor bind:this={payloadEditor} mode={Mode.table} />
+          <JSONEditor bind:this={payloadEditor} mode={previewDataType} />
         </div>
       </div>
     </div>

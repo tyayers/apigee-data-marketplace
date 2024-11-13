@@ -10,11 +10,16 @@
   let currentUser: User | undefined = appService.currentUser;
   let products: DataProduct[] | undefined = appService.products;
   let productsByName: {[key: string]: DataProduct} = {};
+
   let productCategories: {[key: string]: string[]} = {};
   let catProducts: {[key: string]: string[]} = {};
+  let catProductsArray: string[] = [];
   let catSubProducts: {[key: string]: string[]} = {};
-  let category_filter: string = "";
+
   let categories: { [key: string]: string[] } = {};
+  let categoryArray: string[] = [];
+
+    let category_filter: string = "";
   let types: string[] = [];
   let catChecked: string[] = [];
   let typesChecked: string[] = [];
@@ -79,6 +84,14 @@
           }
         }
       }
+
+      // set categoryArray and sort alphabetically
+      categoryArray = Object.keys(categories);
+      categoryArray.sort(function(a, b) {
+        var textA = a.toUpperCase();
+        var textB = b.toUpperCase();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+      });
 
       types = tempTypes;
       refreshProductList();
@@ -161,6 +174,14 @@
       }
     }
 
+    // set catProductsArray and sort alphabetically
+    catProductsArray = Object.keys(tempCatProducts);
+    catProductsArray.sort(function(a, b) {
+      var textA = a.toUpperCase();
+      var textB = b.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
+
     catProducts = tempCatProducts;
   }
 </script>
@@ -217,7 +238,7 @@
               <input type="checkbox" id={type} name={type} on:change={onTypeChange} /><label for={type}>{type}</label>
             </div>
           {/each}
-          {#each Object.keys(categories) as cat}
+          {#each categoryArray as cat}
             <div class="product_filter_header">
               <h3>{cat}</h3>
             </div>
@@ -232,7 +253,7 @@
         </div>
       </div>
       <div class="product_list">
-        {#each Object.keys(catProducts) as catName}
+        {#each catProductsArray as catName}
           {#if catProducts[catName].length > 0}
             <div class="product_list_header">
               {#if searchText === "" || catName.toLowerCase().includes(searchText.toLowerCase())}

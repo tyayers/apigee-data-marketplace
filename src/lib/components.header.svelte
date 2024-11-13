@@ -204,7 +204,7 @@
 
   .menuPanel {
     position: absolute;
-    top: 50px;
+    top: 57px;
     margin-top: 8px;
     right: 10px;
     background: rgb(255, 255, 255);

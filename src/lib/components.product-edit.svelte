@@ -176,6 +176,11 @@
     }
   }
 
+  function onPayloadChange(updatedContent: any) {
+    if (updatedContent && updatedContent.json)
+      product.samplePayload = JSON.stringify(updatedContent.json);
+  }
+
   function onSpecChange(updatedContent: any) {
     if (updatedContent && updatedContent.text)
       product.specContents = updatedContent.text;
@@ -238,9 +243,9 @@
     <div class="form_list">
       <h4>Categories</h4>
 
-      <TagCloud data={product.categories} onRemove={removeCategory} />
-
       <InputSelect data={categoryData.categories} label="Add category - subcategory" onSelect={addCategory} />
+
+      <TagCloud data={product.categories} onRemove={removeCategory} />
 
     </div>
 
@@ -302,13 +307,13 @@
       <div style="height: 36px;">
         <h4 style="margin-block-end: 0px;">Payload</h4>
         {#if !payloadLoading}
-          <button on:click={refreshPayload} style="position: relative; top: -20px; left: 76px;">Reload</button>
+          <button on:click={refreshPayload} style="position: relative; top: -19px; left: 76px;">Reload</button>
         {:else}
           <span style="position: relative; top: -20px; left: 82px; font-size: 14px;"><img width="20px" alt="generating animation" src="/gemini_sparkle.gif" /></span>
         {/if}
       </div>
       <div style="overflow-y: auto; height: 91%;">
-        <JSONEditor bind:this={payloadEditor} />
+        <JSONEditor bind:this={payloadEditor} onChange="{onPayloadChange}"/>
       </div>
     </div>
   
@@ -316,7 +321,7 @@
       <div style="height: 36px;">
         <h4 style="margin-block-end: 0px;">API Spec</h4>
         {#if !specLoading}
-          <button on:click|stopPropagation={refreshSpec} style="position: relative; top: -20px; left: 82px;">Regenerate</button>
+          <button on:click|stopPropagation={refreshSpec} style="position: relative; top: -19px; left: 82px;">Regenerate</button>
         {:else}
           <span style="position: relative; top: -20px; left: 82px; font-size: 14px;"><img width="20px" alt="generating animation" src="/gemini_sparkle.gif" /></span>
         {/if}
